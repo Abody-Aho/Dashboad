@@ -37,7 +37,7 @@ class Dashboard extends StatelessWidget {
           computer: Row(
             children: [
               SizedBox(
-                width: 400,
+                width: 300,
                 child: DrawerPage(),
               ),
               Expanded(

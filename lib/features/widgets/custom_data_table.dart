@@ -8,12 +8,15 @@ class CustomDataTable extends StatelessWidget {
   final dynamic controller; // أي Controller فيه بيانات الجدول
   final String addButtonText; // نص الزر
   final VoidCallback? onAddPressed; // الدالة اللي تتنفذ عند الضغط
-
+  final IconData? iconOff;
+  final IconData? iconOn;
   const CustomDataTable({
     super.key,
     required this.controller,
     this.addButtonText = "إضافة",
     this.onAddPressed,
+    this.iconOff = Icons.person_off,
+    this.iconOn = Icons.person,
   });
 
   @override
@@ -148,7 +151,7 @@ class CustomDataTable extends StatelessWidget {
 
 /// مصدر البيانات العام لأي جدول
 class GenericDataSource extends DataTableSource {
-  final List<Map<String, String>> dataList;
+  final List<Map<String, dynamic>> dataList; // استخدم dynamic لدعم bool
   final RxList<bool> selectedRows;
 
   GenericDataSource(this.dataList, this.selectedRows);
@@ -156,23 +159,51 @@ class GenericDataSource extends DataTableSource {
   @override
   DataRow? getRow(int index) {
     final data = dataList[index];
+    final dynamic controller;
     return DataRow2(
-      onTap: () => print('Row ${index + 1} clicked'),
       selected: selectedRows[index],
       onSelectChanged: (value) {
         selectedRows[index] = value ?? false;
         notifyListeners();
       },
-      cells: data.values.map((v) => DataCell(Text(v))).toList(),
+      cells: [
+        DataCell(Text(data['Column1'] ?? '', overflow: TextOverflow.ellipsis)),
+        DataCell(Text(data['Column2'] ?? '', overflow: TextOverflow.ellipsis)),
+        DataCell(Text(data['Column3'] ?? '', overflow: TextOverflow.ellipsis)),
+        DataCell(Text(data['Column4'] ?? '', overflow: TextOverflow.ellipsis)),
+        DataCell(Text(data['Column5'] ?? '', overflow: TextOverflow.ellipsis)),
+        DataCell(Text(data['Column6'] ?? '', overflow: TextOverflow.ellipsis)),
+        DataCell(Text(data['Column7'] ?? '', overflow: TextOverflow.ellipsis)),
+        DataCell(
+          Row(
+            children: [
+              IconButton(
+                icon: Icon(
+                  Icons.person,
+                  color: Colors.grey,
+                ),
+                onPressed: () {
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.edit, color: Colors.blue),
+                onPressed: () => print('Edit ${data['Column1']}'),
+              ),
+              IconButton(
+                icon: const Icon(Icons.delete, color: Colors.red),
+                onPressed: () => print('Delete ${data['Column1']}'),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
   @override
   bool get isRowCountApproximate => false;
-
   @override
   int get rowCount => dataList.length;
-
   @override
   int get selectedRowCount => selectedRows.where((s) => s).length;
 }

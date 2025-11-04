@@ -85,8 +85,11 @@ class UsersPage extends StatelessWidget {
               CustomDataTable(
                 controller: controller,
                 addButtonText: "إضافة مستخدم",
-                onAddPressed: () {},
-              ),
+                onAddPressed: () {
+                  print("تم الضغط على إضافة مستخدم");
+                },
+              )
+
             ],
           ),
         ),

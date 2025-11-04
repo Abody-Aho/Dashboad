@@ -13,32 +13,88 @@ class UserController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    fetchProducts();
+    fetchUsers();
   }
 
+  List<DataCell> getDataCells(Map<String, dynamic> data) {
+    return [
+      DataCell(Text(data['Column1'] ?? '', overflow: TextOverflow.ellipsis)),
+      DataCell(Text(data['Column2'] ?? '', overflow: TextOverflow.ellipsis)),
+      DataCell(Text(data['Column3'] ?? '', overflow: TextOverflow.ellipsis)),
+      DataCell(Text(data['Column4'] ?? '', overflow: TextOverflow.ellipsis)),
+      DataCell(Text(data['Column5'] ?? '', overflow: TextOverflow.ellipsis)),
+      DataCell(Text(data['Column6'] ?? '', overflow: TextOverflow.ellipsis)),
+      DataCell(Text(data['Column7'] ?? '', overflow: TextOverflow.ellipsis)),
+      DataCell(
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.person, color: Colors.grey),
+              onPressed: () {
+                // هنا تحط الكود لتغيير الأيقونة إذا أحببت
+              },
+              iconSize: 20,
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+            ),
+            IconButton(
+              icon: const Icon(Icons.edit, color: Colors.blue),
+              onPressed: () => print('Edit ${data['Column1']}'),
+              iconSize: 20,
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+            ),
+            IconButton(
+              icon: const Icon(Icons.delete, color: Colors.red),
+              onPressed: () => print('Delete ${data['Column1']}'),
+              iconSize: 20,
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+            ),
+          ],
+        ),
+      ),
+    ];
+  }
   ///  الأعمدة الخاصة بالجدول مع الترتيب
   List<DataColumn> get tableColumns => [
     DataColumn(
-      label: const Text('Column 1'),
+      label: const Text('الاسم'),
       onSort: (columnIndex, ascending) => sortById(columnIndex, ascending),
     ),
     DataColumn(
-      label: const Text('Column 2'),
+      label: const Text('البريد الإلكتروني'),
       onSort: (columnIndex, ascending) => sortById(columnIndex, ascending),
     ),
     DataColumn(
-      label: const Text('Column 3'),
+      label: const Text('الهاتف'),
       onSort: (columnIndex, ascending) => sortById(columnIndex, ascending),
     ),
     DataColumn(
-      label: const Text('Column 4'),
+      label: const Text('النوع'),
       onSort: (columnIndex, ascending) => sortById(columnIndex, ascending),
+    ),
+    DataColumn(
+      label: const Text('الحالة'),
+      onSort: (columnIndex, ascending) => sortById(columnIndex, ascending),
+    ),
+    DataColumn(
+      label: const Text('تاريخ التسجيل'),
+      onSort: (columnIndex, ascending) => sortById(columnIndex, ascending),
+    ),
+    DataColumn(
+      label: const Text('آخر نشاط'),
+      onSort: (columnIndex, ascending) => sortById(columnIndex, ascending),
+    ),
+    const DataColumn(
+      label: Text('الإجراءات'),
     ),
   ];
 
   /// عند الضغط على زر الإضافة
   void onAddPressed() {
-    print(" تم الضغط على زر إضافة مستخدم");
+    print("تم الضغط على زر إضافة مستخدم");
   }
 
   ///  ترتيب الجدول حسب العمود
@@ -54,7 +110,6 @@ class UserController extends GetxController {
       return ascending ? valueA.compareTo(valueB) : valueB.compareTo(valueA);
     });
 
-    // تحديث العرض
     filteredDataList.refresh();
   }
 
@@ -75,22 +130,26 @@ class UserController extends GetxController {
         .assignAll(List.generate(filteredDataList.length, (index) => false));
   }
 
-  /// إنشاء البيانات التجريبية
-  void fetchProducts() {
+  /// إنشاء بيانات تجريبية مناسبة للأعمدة
+  void fetchUsers() {
     dataList.assignAll(
       List.generate(
-        36,
+        20,
             (index) => {
-          'Column1': 'User ${index + 1}',
-          'Column2': 'Email${index + 1}@gmail.com',
-          'Column3': 'Role ${index + 1}',
-          'Column4': 'Active',
+          'Column1': 'المستخدم ${index + 1}',
+          'Column2': 'user${index + 1}@gmail.com',
+          'Column3': '77${9000000 + index}',
+          'Column4': index.isEven ? 'ذكر' : 'أنثى',
+          'Column5': index.isEven ? 'نشط' : 'غير نشط',
+          'Column6': '2025-0${(index % 9) + 1}-15',
+          'Column7': '2025-11-${(index % 28) + 1}',
+          'Column8': '...',
         },
       ),
     );
 
     filteredDataList.assignAll(dataList);
-    selectedRows
-        .assignAll(List.generate(filteredDataList.length, (index) => false));
+    selectedRows.assignAll(
+        List.generate(filteredDataList.length, (index) => false));
   }
 }
