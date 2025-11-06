@@ -1,3 +1,4 @@
+ممتاز 
 <h1 align="center">🧩 Dashboard2 - Flutter Admin & Supermarket Panel</h1>
 
 <p align="center">
@@ -55,9 +56,57 @@ lib/
 │
 ├── widgets/               # Shared reusable components
 └── main.dart              # App entry point
+````
 
+---
+
+## 📸 Screenshots (Coming Soon)
+
+> Preview images will be added once UI design is completed.
+
+---
+
+## 💡 How to Run
+
+```bash
 # Install dependencies
 flutter pub get
 
 # Run the app
 flutter run
+```
+
+---
+
+## 📊 GitHub & WakaTime Stats
+
+<p align="center">
+  <img src="https://github-readme-stats.vercel.app/api?username=Abody-Aho&show_icons=true&theme=radical" height="180">
+  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Abody-Aho&layout=compact&theme=radical" height="180">
+</p>
+
+---
+
+## 👨‍💻 About the Developer
+
+**👋 Abdalwaly Samir Ali Maeyad**
+💼 *Flutter Developer | IT Student | Building Smart Apps with Modern UI/UX*
+📍 Based in Yemen 🇾🇪
+📫 **Email:** [abdalwalysamer6@gmail.com](mailto:abdalwalysamer6@gmail.com)
+🔗 [LinkedIn](https://www.linkedin.com/in/%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D9%88%D9%84%D9%8A-%D8%B3%D9%85%D9%8A%D8%B1-%D8%B9%D9%84%D9%8A-%D9%85%D8%B9%D9%8A%D8%A7%D8%AF-111a42258/?trk=opento_sprofile_details)
+
+---
+
+## 🧭 Vision
+
+> To build a **modern Flutter ecosystem** for supermarkets and delivery apps —
+> connecting users, stores, and drivers through real-time tracking, smart data, and elegant design.
+
+---
+
+## ⭐ Support
+
+If you like this project, please consider giving it a ⭐ on [GitHub](https://github.com/Abody-Aho) —
+Your support motivates me to keep improving and sharing open-source projects. ❤️
+
+```
