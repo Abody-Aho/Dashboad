@@ -28,8 +28,8 @@ class MyApp extends StatelessWidget {
       initialRoute: '/dashboard',
       getPages: [
         GetPage(name: '/login', page: () => const LoginScreen()),
-        GetPage(name: '/admin', page: () =>  AdminDashboardView()),
-        GetPage(name: '/dashboard', page: () =>  Dashboard()),
+        GetPage(name: '/admin', page: () => AdminDashboardView()),
+        GetPage(name: '/dashboard', page: () => Dashboard()),
       ],
       debugShowCheckedModeBanner: false,
     );

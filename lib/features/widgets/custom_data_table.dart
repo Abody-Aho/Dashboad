@@ -39,9 +39,9 @@ class CustomDataTable extends StatelessWidget {
                   margin: EdgeInsets.only(left: 10.w),
                   child: ElevatedButton.icon(
                     onPressed: onAddPressed ?? controller.onAddPressed,
-                    icon: const Icon(Icons.add, color: Colors.black),
+                    icon: const Icon(Icons.add, color: Colors.white),
                     label: Text(addButtonText,
-                        style: const TextStyle(color: Colors.black)),
+                        style: const TextStyle(color: Colors.white)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green.shade500,
                       padding: const EdgeInsets.symmetric(
@@ -134,9 +134,11 @@ class CustomDataTable extends StatelessWidget {
                     sortAscending: controller.sortAscending.value,
                     sortColumnIndex: controller.sortColumnIndex.value,
                     columns: controller.tableColumns,
+                    // ✅ هنا التصحيح: الـ DataSource الآن يُنشأ بشكل صحيح
                     source: GenericDataSource(
                       controller.filteredDataList,
                       controller.selectedRows,
+                      controller, // أرسلنا الكنترولر هنا
                     ),
                   ),
                 ),
@@ -153,50 +155,20 @@ class CustomDataTable extends StatelessWidget {
 class GenericDataSource extends DataTableSource {
   final List<Map<String, dynamic>> dataList; // استخدم dynamic لدعم bool
   final RxList<bool> selectedRows;
+  final dynamic controller; // ✅ أضفنا الكنترولر هنا
 
-  GenericDataSource(this.dataList, this.selectedRows);
+  GenericDataSource(this.dataList, this.selectedRows, this.controller);
 
   @override
   DataRow? getRow(int index) {
     final data = dataList[index];
-    final dynamic controller;
     return DataRow2(
       selected: selectedRows[index],
       onSelectChanged: (value) {
         selectedRows[index] = value ?? false;
         notifyListeners();
       },
-      cells: [
-        DataCell(Text(data['Column1'] ?? '', overflow: TextOverflow.ellipsis)),
-        DataCell(Text(data['Column2'] ?? '', overflow: TextOverflow.ellipsis)),
-        DataCell(Text(data['Column3'] ?? '', overflow: TextOverflow.ellipsis)),
-        DataCell(Text(data['Column4'] ?? '', overflow: TextOverflow.ellipsis)),
-        DataCell(Text(data['Column5'] ?? '', overflow: TextOverflow.ellipsis)),
-        DataCell(Text(data['Column6'] ?? '', overflow: TextOverflow.ellipsis)),
-        DataCell(Text(data['Column7'] ?? '', overflow: TextOverflow.ellipsis)),
-        DataCell(
-          Row(
-            children: [
-              IconButton(
-                icon: Icon(
-                  Icons.person,
-                  color: Colors.grey,
-                ),
-                onPressed: () {
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.edit, color: Colors.blue),
-                onPressed: () => print('Edit ${data['Column1']}'),
-              ),
-              IconButton(
-                icon: const Icon(Icons.delete, color: Colors.red),
-                onPressed: () => print('Delete ${data['Column1']}'),
-              ),
-            ],
-          ),
-        ),
-      ],
+      cells: controller.getDataCells(data), // ✅ الكنترولر جاهز هنا
     );
   }
 
