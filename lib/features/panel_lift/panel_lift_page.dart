@@ -30,14 +30,14 @@ class _PanelLeftPageState extends State<PanelLiftPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green[50],
+      backgroundColor: Constants.backgroundColor1,
       body: Stack(
         children: [
           if (ResponsiveLayout.isComputer(context))
             Container(
               width: 60,
               decoration: BoxDecoration(
-                gradient: LinearGradient(colors: [Colors.green.shade50, Colors.green.shade100]),
+                gradient: LinearGradient(colors: [Constants.backgroundColor1, Constants.backgroundColor2]),
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(50),
                   bottomLeft: Radius.circular(50),
@@ -69,7 +69,7 @@ class _PanelLeftPageState extends State<PanelLiftPage> {
                       title: const Text(
                         "Products Sold",
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Constants.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
@@ -110,8 +110,8 @@ class _PanelLeftPageState extends State<PanelLiftPage> {
                       decoration: BoxDecoration(
                         gradient:  LinearGradient(
                           colors: [
-                            Colors.green.shade100,
-                            Colors.green.shade50,
+                            Constants.backgroundColor2,
+                            Constants.backgroundColor1,
                           ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
@@ -123,7 +123,7 @@ class _PanelLeftPageState extends State<PanelLiftPage> {
                           _todos.length,
                               (index) => CheckboxListTile(
                             activeColor: Constants.primary,
-                            checkColor: Colors.white,
+                            checkColor: Constants.white,
                             title: Text(
                               _todos[index].name,
                               style: TextStyle(

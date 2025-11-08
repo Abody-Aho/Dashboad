@@ -33,7 +33,7 @@ class _PanelRightPageState extends State<PanelRightPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green[50], // خلفية خضراء باهتة
+      backgroundColor: Constants.backgroundColor1,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -60,7 +60,7 @@ class _PanelRightPageState extends State<PanelRightPage> {
                   title: const Text(
                     "Net Revenue",
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Constants.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
@@ -77,7 +77,7 @@ class _PanelRightPageState extends State<PanelRightPage> {
                     label: const Text(
                       r"$46,450",
                       style: TextStyle(
-                        color: Colors.green,
+                        color: Constants.accent,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -98,8 +98,8 @@ class _PanelRightPageState extends State<PanelRightPage> {
                 decoration: BoxDecoration(
                   gradient:  LinearGradient(
                     colors: [
-                      ?Colors.green[100],
-                      ?Colors.green[50], 
+                      Constants.backgroundColor2,
+                      Constants.backgroundColor1,
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,

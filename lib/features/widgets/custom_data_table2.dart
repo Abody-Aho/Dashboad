@@ -1,0 +1,166 @@
+import 'package:dashbord2/core/constants/app_constants.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:data_table_2/data_table_2.dart';
+
+/// ويدجت عامة للجدول يمكن ربطها بأي Controller
+class CustomDataTable2 extends StatelessWidget {
+  final dynamic controller; // أي Controller فيه بيانات الجدول
+  final IconData? iconOff;
+  final IconData? iconOn;
+  const CustomDataTable2({
+    super.key,
+    required this.controller,
+    this.iconOff = Icons.person_off,
+    this.iconOn = Icons.person,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        color: Colors.white54,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            const SizedBox(height: 10),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 20),
+              child: Text("قائمة السوبرماركت",style: TextStyle(fontWeight: FontWeight.bold),),
+            ),
+            const SizedBox(height: 8),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 20),
+              child: Text("إدارة وعرض جميع طلبات تسجيل السوبرماركت",style: TextStyle(color: Constants.grey,)),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                // مربع البحث
+                Container(
+                  height: 40,
+                  width: 120.w,
+                  margin: EdgeInsets.only(right: 5.w),
+                  child: TextFormField(
+                    controller: controller.searchTextController,
+                    onChanged: (query) => controller.searchQuery(query),
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: const BorderSide(
+                          color: Colors.green,
+                          width: 1.5,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: const BorderSide(
+                          color: Colors.green,
+                          width: 2.5,
+                        ),
+                      ),
+                      hintText: "بحث",
+                      hintStyle: TextStyle(color: Colors.green[700]),
+                      prefixIcon: const Icon(
+                        Icons.search,
+                        color: Colors.green,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 10),
+
+            // ====== الجدول ======
+            Obx(() {
+              // لجعل الجدول يتحدث عند تغير البيانات
+              Visibility(
+                visible: false,
+                child: Text(
+                  controller.filteredDataList.length.toString(),
+                ),
+              );
+              return SizedBox(
+                height: 600.h,
+                child: Theme(
+                  data: Theme.of(context).copyWith(
+                    cardTheme: const CardThemeData(
+                      color: Colors.white54,
+                      elevation: 0,
+                    ),
+                  ),
+                  child: PaginatedDataTable2(
+                    columnSpacing: 12,
+                    minWidth: 786,
+                    dividerThickness: 0.5,
+                    horizontalMargin: 12,
+                    dataRowHeight: 56,
+                    availableRowsPerPage: const [5, 10, 12, 20],
+                    rowsPerPage: 12,
+                    headingRowColor: WidgetStateColor.resolveWith(
+                          (states) => Colors.green.shade100,
+                    ),
+                    headingTextStyle: Theme.of(context)
+                        .textTheme
+                        .titleMedium
+                        ?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                    showCheckboxColumn: true,
+                    showFirstLastButtons: true,
+                    renderEmptyRowsInTheEnd: true,
+                    onRowsPerPageChanged: (value) {},
+                    sortAscending: controller.sortAscending.value,
+                    sortColumnIndex: controller.sortColumnIndex.value,
+                    columns: controller.tableColumns,
+                    // ✅ هنا التصحيح: الـ DataSource الآن يُنشأ بشكل صحيح
+                    source: GenericDataSource(
+                      controller.filteredDataList,
+                      controller.selectedRows,
+                      controller, // أرسلنا الكنترولر هنا
+                    ),
+                  ),
+                ),
+              );
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// مصدر البيانات العام لأي جدول
+class GenericDataSource extends DataTableSource {
+  final List<Map<String, dynamic>> dataList; // استخدم dynamic لدعم bool
+  final RxList<bool> selectedRows;
+  final dynamic controller; // ✅ أضفنا الكنترولر هنا
+
+  GenericDataSource(this.dataList, this.selectedRows, this.controller);
+
+  @override
+  DataRow? getRow(int index) {
+    final data = dataList[index];
+    return DataRow2(
+      selected: selectedRows[index],
+      onSelectChanged: (value) {
+        selectedRows[index] = value ?? false;
+        notifyListeners();
+      },
+      cells: controller.getDataCells(data), // ✅ الكنترولر جاهز هنا
+    );
+  }
+
+  @override
+  bool get isRowCountApproximate => false;
+  @override
+  int get rowCount => dataList.length;
+  @override
+  int get selectedRowCount => selectedRows.where((s) => s).length;
+}

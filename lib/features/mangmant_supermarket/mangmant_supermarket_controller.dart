@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 
 /// وحدة تحكم المستخدمين - User Controller
 /// مسؤولة عن إدارة بيانات المستخدمين، البحث، الفرز، والاختيار.
-class UserController extends GetxController {
+class MangmantSupermarketController extends GetxController {
   var dataList = <Map<String, String>>[].obs;        // جميع بيانات المستخدمين
   var filteredDataList = <Map<String, String>>[].obs; // البيانات بعد البحث أو التصفية
   RxList<bool> selectedRows = <bool>[].obs;          // حالة التحديد لكل صف
@@ -37,7 +37,7 @@ class UserController extends GetxController {
             children: [
               Flexible(
                 child: IconButton(
-                  icon: const Icon(Icons.person, color: Colors.grey, size: 20),
+                  icon: const Icon(Icons.remove_red_eye_outlined, color: Colors.grey, size: 20),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                   onPressed: () => print('View ${data['Column1']}'),
@@ -45,7 +45,7 @@ class UserController extends GetxController {
               ),
               Flexible(
                 child: IconButton(
-                  icon: const Icon(Icons.edit, color: Colors.blue, size: 20),
+                  icon: const Icon(Icons.check, color: Colors.green, size: 22),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                   onPressed: () => print('Edit ${data['Column1']}'),
@@ -53,7 +53,7 @@ class UserController extends GetxController {
               ),
               Flexible(
                 child: IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.red, size: 20),
+                  icon: const Icon(Icons.close, color: Colors.red, size: 22),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                   onPressed: () => print('Delete ${data['Column1']}'),
@@ -71,31 +71,31 @@ class UserController extends GetxController {
   /// تعريف أعمدة الجدول مع دعم الفرز
   List<DataColumn> get tableColumns => [
     DataColumn(
-      label: const Text('الاسم'),
+      label: const Text('اسم المتجر'),
       onSort: (columnIndex, ascending) => sortData(0, ascending),
     ),
     DataColumn(
-      label: const Text('البريد الإلكتروني'),
+      label: const Text('المالك'),
       onSort: (columnIndex, ascending) => sortData(1, ascending),
     ),
     DataColumn(
-      label: const Text('الهاتف'),
+      label: const Text('البريد الإلكتروني'),
       onSort: (columnIndex, ascending) => sortData(2, ascending),
     ),
     DataColumn(
-      label: const Text('النوع'),
+      label: const Text('الهاتف'),
       onSort: (columnIndex, ascending) => sortData(3, ascending),
     ),
     DataColumn(
-      label: const Text('الحالة'),
+      label: const Text('العنوان'),
       onSort: (columnIndex, ascending) => sortData(4, ascending),
     ),
     DataColumn(
-      label: const Text('تاريخ التسجيل'),
+      label: const Text('الحالة'),
       onSort: (columnIndex, ascending) => sortData(5, ascending),
     ),
     DataColumn(
-      label: const Text('آخر نشاط'),
+      label: const Text('تاريخ التسجيل'),
       onSort: (columnIndex, ascending) => sortData(6, ascending),
     ),
     DataColumn(
@@ -136,32 +136,38 @@ class UserController extends GetxController {
     selectedRows.assignAll(
         List.generate(filteredDataList.length, (index) => false));
   }
-
-  /// تحميل بيانات تجريبية للمستخدمين
-  /// تحميل بيانات تجريبية للمستخدمين
+  /// تحميل بيانات تجريبية لادارة السوبرماركت
   void fetchUsers() {
-    final userTypes = ['عميل', 'مندوب', 'سوبرماركت', 'أدمن'];
-    final statuses = ['نشط', 'غير نشط'];
+    final statuses = ['في انتظار', 'مقبول', 'مرفوض'];
+    final addresses = [
+      'صنعاء - الحصبة',
+      'تعز - التحرير',
+      'عدن - كريتر',
+      'إب - المركز',
+      'الحديدة - الميناء',
+      'ذمار - شارع صنعاء',
+      'المكلا - الديس',
+      'صعدة - المدينة',
+    ];
 
     dataList.assignAll(
       List.generate(
         20,
             (index) => {
-          'Column1': 'المستخدم ${index + 1}', // الاسم
-          'Column2': 'user${index + 1}@gmail.com', // البريد الإلكتروني
-          'Column3': '77${9000000 + index}', // الهاتف
-          'Column4': userTypes[index % userTypes.length], // النوع (عميل، مندوب، ...إلخ)
-          'Column5': statuses[index % statuses.length], // الحالة
-          'Column6': '2025-0${(index % 9) + 1}-15', // تاريخ التسجيل
-          'Column7': '2025-11-${(index % 28) + 1}', // آخر نشاط
+          'Column1': 'سوبرماركت ${index + 1}', // اسم المتجر
+          'Column2': 'مالك ${index + 1}', // المالك
+          'Column3': 'market${index + 1}@gmail.com', // البريد الإلكتروني
+          'Column4': '77${9000000 + index}', // الهاتف
+          'Column5': addresses[index % addresses.length], // العنوان
+          'Column6': statuses[index % statuses.length], // الحالة
+          'Column7': '2025-0${(index % 9) + 1}-15', // تاريخ التسجيل
         },
       ),
     );
 
     filteredDataList.assignAll(dataList);
     selectedRows.assignAll(
-      List.generate(filteredDataList.length, (index) => false),
-    );
+        List.generate(filteredDataList.length, (index) => false));
   }
 
 }

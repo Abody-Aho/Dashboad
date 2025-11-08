@@ -6,8 +6,10 @@ class Constants {
 
   // 🌿 الألوان الأساسية (الخضراء)
   static const Color background = Color(0xFFF4FBF4); // أخضر باهت
-  static const Color card = Colors.white;
+  static const Color white = Colors.white;
   static const Color primary = Color(0xFF2E7D32); // أخضر غامق
+  static final Color backgroundColor1 = Colors.green.shade50;
+  static final Color backgroundColor2 = Colors.green.shade100;
   static const Color accent = Color(0xFF7BC47F); // أخضر فاتح
   static const Color text = Color(0xFF2B3A2B);
 

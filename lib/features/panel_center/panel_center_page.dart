@@ -29,7 +29,7 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green[50], // خلفية خضراء باهتة
+      backgroundColor: Constants.backgroundColor1, // خلفية خضراء باهتة
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -56,7 +56,7 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
                   title: const Text(
                     "Products Available",
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Constants.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
@@ -97,8 +97,8 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
                 decoration: BoxDecoration(
                   gradient:  LinearGradient(
                     colors: [
-                      ?Colors.green[100],
-                      ?Colors.green[50],
+                      Constants.backgroundColor2,
+                      Constants.backgroundColor1,
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -114,19 +114,19 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
                         backgroundColor: _persons[index].color,
                         child: Text(
                           _persons[index].name.substring(0, 1),
-                          style: const TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Constants.white),
                         ),
                       ),
                       title: Text(
                         _persons[index].name,
                         style:  TextStyle(
-                          color: Colors.green[900],
+                          color: Constants.text,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                       trailing: IconButton(
                         onPressed: () {},
-                        icon: const Icon(Icons.message, color: Colors.green),
+                        icon: const Icon(Icons.message, color: Constants.accent),
                       ),
                     ),
                   ),
