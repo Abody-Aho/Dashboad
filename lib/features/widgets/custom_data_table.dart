@@ -3,18 +3,19 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:data_table_2/data_table_2.dart';
 
+import 'custom_bottom.dart';
+import 'custom_dropdown_button.dart';
+import 'custom_search_bar.dart';
+
 /// ويدجت عامة للجدول يمكن ربطها بأي Controller
 class CustomDataTable extends StatelessWidget {
   final dynamic controller; // أي Controller فيه بيانات الجدول
-  final String addButtonText; // نص الزر
-  final VoidCallback? onAddPressed; // الدالة اللي تتنفذ عند الضغط
   final IconData? iconOff;
   final IconData? iconOn;
+
   const CustomDataTable({
     super.key,
     required this.controller,
-    this.addButtonText = "إضافة",
-    this.onAddPressed,
     this.iconOff = Icons.person_off,
     this.iconOn = Icons.person,
   });
@@ -28,77 +29,12 @@ class CustomDataTable extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            const SizedBox(height: 10),
-
-            // ====== الصف العلوي (الزر + البحث) ======
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // زر إضافة
-                Container(
-                  margin: EdgeInsets.only(left: 10.w),
-                  child: ElevatedButton.icon(
-                    onPressed: onAddPressed ?? controller.onAddPressed,
-                    icon: const Icon(Icons.add, color: Colors.white),
-                    label: Text(addButtonText,
-                        style: const TextStyle(color: Colors.white)),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green.shade500,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      elevation: 3,
-                    ),
-                  ),
-                ),
-
-                // مربع البحث
-                Container(
-                  height: 40,
-                  width: 120.w,
-                  margin: EdgeInsets.only(right: 5.w),
-                  child: TextFormField(
-                    controller: controller.searchTextController,
-                    onChanged: (query) => controller.searchQuery(query),
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                          color: Colors.green,
-                          width: 1.5,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                          color: Colors.green,
-                          width: 2.5,
-                        ),
-                      ),
-                      hintText: "Search",
-                      hintStyle: TextStyle(color: Colors.green[700]),
-                      prefixIcon: const Icon(
-                        Icons.search,
-                        color: Colors.green,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 10),
-
             // ====== الجدول ======
             Obx(() {
               // لجعل الجدول يتحدث عند تغير البيانات
               Visibility(
                 visible: false,
-                child: Text(
-                  controller.filteredDataList.length.toString(),
-                ),
+                child: Text(controller.filteredDataList.length.toString()),
               );
               return SizedBox(
                 height: 600.h,
@@ -118,15 +54,13 @@ class CustomDataTable extends StatelessWidget {
                     availableRowsPerPage: const [5, 10, 12, 20],
                     rowsPerPage: 12,
                     headingRowColor: WidgetStateColor.resolveWith(
-                          (states) => Colors.green.shade100,
+                      (states) => Colors.green.shade100,
                     ),
-                    headingTextStyle: Theme.of(context)
-                        .textTheme
-                        .titleMedium
+                    headingTextStyle: Theme.of(context).textTheme.titleMedium
                         ?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
                     showCheckboxColumn: true,
                     showFirstLastButtons: true,
                     renderEmptyRowsInTheEnd: true,
@@ -174,8 +108,10 @@ class GenericDataSource extends DataTableSource {
 
   @override
   bool get isRowCountApproximate => false;
+
   @override
   int get rowCount => dataList.length;
+
   @override
   int get selectedRowCount => selectedRows.where((s) => s).length;
 }

@@ -4,7 +4,10 @@ import 'package:dashbord2/features/widgets/custom_data_table.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../widgets/custom_bottom.dart';
 import '../widgets/custom_card.dart';
+import '../widgets/custom_dropdown_button.dart';
+import '../widgets/custom_search_bar.dart';
 
 class UsersPage extends StatelessWidget {
   const UsersPage({super.key});
@@ -82,12 +85,36 @@ class UsersPage extends StatelessWidget {
               const SizedBox(height: 20),
 
               // جدول المستخدمين
-              CustomDataTable(
-                controller: controller,
-                addButtonText: "إضافة مستخدم",
-                onAddPressed: () {
-                  print("تم الضغط على إضافة مستخدم");
-                },
+              ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Container(
+                  color: Colors.white54,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      const SizedBox(height: 10),
+
+                      // ====== الصف العلوي (الزر + البحث) ======
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          // زر إضافة
+                          CustomBottom(controller: controller,onAddPressed: (){},),
+                          // قائمة الانواع
+                          CustomDropdownButton(controller: controller,),
+
+                          // مربع البحث
+                          CustomSearchBar(controller: controller,)
+                        ],
+                      ),
+
+                      const SizedBox(height: 10),
+
+                      // ====== الجدول ======
+                      CustomDataTable(controller: controller,),
+                    ],
+                  ),
+                ),
               )
 
             ],

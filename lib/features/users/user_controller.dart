@@ -137,7 +137,7 @@ class UserController extends GetxController {
         List.generate(filteredDataList.length, (index) => false));
   }
 
-  /// تحميل بيانات تجريبية للمستخدمين
+
   /// تحميل بيانات تجريبية للمستخدمين
   void fetchUsers() {
     final userTypes = ['عميل', 'مندوب', 'سوبرماركت', 'أدمن'];
@@ -162,6 +162,13 @@ class UserController extends GetxController {
     selectedRows.assignAll(
       List.generate(filteredDataList.length, (index) => false),
     );
+  }
+  final selectedValue = 'جميع الانواع'.obs;
+  final options = ['جميع الانواع','العملاء', 'المناديب', 'السوبرماركت'];
+
+  // عند التغيير
+  void changeValue(String newValue) {
+    selectedValue.value = newValue;
   }
 
 }
