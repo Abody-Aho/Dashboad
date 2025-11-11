@@ -16,7 +16,6 @@ class CustomBottom extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(left: 10.w),
-      width: 120,
       child: ElevatedButton.icon(
         onPressed: onAddPressed ?? controller.onAddPressed,
         icon: const Icon(Icons.add, color: Colors.white),

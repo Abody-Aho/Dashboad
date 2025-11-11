@@ -2,6 +2,7 @@ import 'package:dashbord2/core/constants/app_constants.dart';
 import 'package:dashbord2/features/users/user_controller.dart';
 import 'package:dashbord2/features/widgets/custom_data_table.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../widgets/custom_bottom.dart';
@@ -16,7 +17,8 @@ class UsersPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final UserController controller = Get.put(UserController());
 
-    final List<Widget> statCards = const [
+    // بطاقات الإحصائيات
+    List<Widget> statCards = [
       StatCard(
         title: 'Total Users',
         value: '1,245',
@@ -50,17 +52,23 @@ class UsersPage extends StatelessWidget {
         padding: const EdgeInsets.all(30),
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // العنوان
               Container(
                 alignment: Alignment.centerRight,
                 child: Text(
                   "إدارة المستخدمين",
-                  style: TextStyle(color: Constants.primary, fontSize: 15),
+                  style: TextStyle(
+                    color: Constants.primary,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
 
+              // بطاقات الإحصائيات
               LayoutBuilder(
                 builder: (context, constraints) {
                   int crossAxisCount = 1;
@@ -81,42 +89,96 @@ class UsersPage extends StatelessWidget {
                   );
                 },
               ),
-
               const SizedBox(height: 20),
 
-              // جدول المستخدمين
+              // جدول المستخدمين مع الخلفية المستديرة
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Container(
-                  color: Colors.white54,
+                  color: Colors.white,
+                  padding: const EdgeInsets.all(15),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const SizedBox(height: 10),
 
-                      // ====== الصف العلوي (الزر + البحث) ======
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // زر إضافة
-                          CustomBottom(controller: controller,onAddPressed: (){},),
-                          // قائمة الانواع
-                          CustomDropdownButton(controller: controller,),
+                      // الصف العلوي (زر + قائمة + بحث)
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          bool isPhone =
+                              constraints.maxWidth <
+                              600; // يمكن تعديل القيمة حسب الحاجة
 
-                          // مربع البحث
-                          CustomSearchBar(controller: controller,)
-                        ],
+                          if (isPhone) {
+                            // عمودي - فوق بعض
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                CustomBottom(
+                                  controller: controller,
+                                  addButtonText: 'أضافة مستخدمين',
+                                  onAddPressed: () {
+                                    print("Add user pressed");
+                                  },
+                                ),
+                                const SizedBox(height: 20),
+                                Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 10),
+                                  child: CustomDropdownButton(
+                                    controller: controller,
+                                  ),
+                                ),
+
+                                const SizedBox(height: 20),
+                                CustomSearchBar(controller: controller),
+                              ],
+                            );
+                          } else {
+                            // أفقي - بجانب بعض
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CustomBottom(
+                                  controller: controller,
+                                  addButtonText: 'أضافة مستخدمين',
+                                  onAddPressed: () {
+                                    print("Add user pressed");
+                                  },
+                                ),
+                                Container(
+                                  margin: EdgeInsets.symmetric(
+                                    horizontal: 10.w,
+                                  ),
+                                  child: CustomDropdownButton(
+                                    controller: controller,
+                                  ),
+                                ),
+
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: CustomSearchBar(
+                                      controller: controller,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }
+                        },
                       ),
 
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 15),
 
-                      // ====== الجدول ======
-                      CustomDataTable(controller: controller,),
+                      // جدول المستخدمين - مهم تحديد الارتفاع
+                      SizedBox(
+                        height: 500, // 👈 هذا يحل خطأ RenderBox
+                        child: CustomDataTable(controller: controller),
+                      ),
                     ],
                   ),
                 ),
-              )
-
+              ),
             ],
           ),
         ),

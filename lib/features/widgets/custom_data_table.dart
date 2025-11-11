@@ -22,66 +22,52 @@ class CustomDataTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        color: Colors.white54,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            // ====== الجدول ======
-            Obx(() {
-              // لجعل الجدول يتحدث عند تغير البيانات
-              Visibility(
-                visible: false,
-                child: Text(controller.filteredDataList.length.toString()),
-              );
-              return SizedBox(
-                height: 600.h,
-                child: Theme(
-                  data: Theme.of(context).copyWith(
-                    cardTheme: const CardThemeData(
-                      color: Colors.white54,
-                      elevation: 0,
-                    ),
-                  ),
-                  child: PaginatedDataTable2(
-                    columnSpacing: 12,
-                    minWidth: 786,
-                    dividerThickness: 0.5,
-                    horizontalMargin: 12,
-                    dataRowHeight: 56,
-                    availableRowsPerPage: const [5, 10, 12, 20],
-                    rowsPerPage: 12,
-                    headingRowColor: WidgetStateColor.resolveWith(
-                      (states) => Colors.green.shade100,
-                    ),
-                    headingTextStyle: Theme.of(context).textTheme.titleMedium
-                        ?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
-                    showCheckboxColumn: true,
-                    showFirstLastButtons: true,
-                    renderEmptyRowsInTheEnd: true,
-                    onRowsPerPageChanged: (value) {},
-                    sortAscending: controller.sortAscending.value,
-                    sortColumnIndex: controller.sortColumnIndex.value,
-                    columns: controller.tableColumns,
-                    // ✅ هنا التصحيح: الـ DataSource الآن يُنشأ بشكل صحيح
-                    source: GenericDataSource(
-                      controller.filteredDataList,
-                      controller.selectedRows,
-                      controller, // أرسلنا الكنترولر هنا
-                    ),
-                  ),
-                ),
-              );
-            }),
-          ],
+    return
+    // ====== الجدول ======
+    Obx(() {
+      // لجعل الجدول يتحدث عند تغير البيانات
+      Visibility(
+        visible: false,
+        child: Text(controller.filteredDataList.length.toString()),
+      );
+      return SizedBox(
+        height: 600.h,
+        child: Theme(
+          data: Theme.of(context).copyWith(
+            cardTheme: const CardThemeData(color: Colors.white54, elevation: 0),
+          ),
+          child: PaginatedDataTable2(
+            columnSpacing: 12,
+            minWidth: 786,
+            dividerThickness: 0.5,
+            horizontalMargin: 12,
+            dataRowHeight: 56,
+            availableRowsPerPage: const [5, 10, 12, 20],
+            rowsPerPage: 12,
+            headingRowColor: WidgetStateColor.resolveWith(
+              (states) => Colors.green.shade100,
+            ),
+            headingTextStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+            showCheckboxColumn: true,
+            showFirstLastButtons: true,
+            renderEmptyRowsInTheEnd: true,
+            onRowsPerPageChanged: (value) {},
+            sortAscending: controller.sortAscending.value,
+            sortColumnIndex: controller.sortColumnIndex.value,
+            columns: controller.tableColumns,
+            // ✅ هنا التصحيح: الـ DataSource الآن يُنشأ بشكل صحيح
+            source: GenericDataSource(
+              controller.filteredDataList,
+              controller.selectedRows,
+              controller, // أرسلنا الكنترولر هنا
+            ),
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
 

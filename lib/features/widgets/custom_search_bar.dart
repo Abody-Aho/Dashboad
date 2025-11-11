@@ -9,8 +9,7 @@ class CustomSearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 40,
-      width: 120.w,
-      margin: EdgeInsets.only(right: 5.w),
+      margin: EdgeInsets.symmetric(horizontal: 10.w),
       child: TextFormField(
         controller: controller.searchTextController,
         onChanged: (query) => controller.searchQuery(query),
