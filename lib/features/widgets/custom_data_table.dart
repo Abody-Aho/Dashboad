@@ -3,10 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:data_table_2/data_table_2.dart';
 
-import 'custom_bottom.dart';
-import 'custom_dropdown_button.dart';
-import 'custom_search_bar.dart';
-
 /// ويدجت عامة للجدول يمكن ربطها بأي Controller
 class CustomDataTable extends StatelessWidget {
   final dynamic controller; // أي Controller فيه بيانات الجدول

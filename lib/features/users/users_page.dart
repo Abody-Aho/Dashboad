@@ -125,12 +125,14 @@ class UsersPage extends StatelessWidget {
                                 Container(
                                   margin: EdgeInsets.symmetric(horizontal: 10),
                                   child: CustomDropdownButton(
-                                    controller: controller,
+                                    selectedValue: controller.selectedValue,
+                                    options: controller.options,
+                                    onChanged: controller.changeValue,
                                   ),
                                 ),
 
                                 const SizedBox(height: 20),
-                                CustomSearchBar(controller: controller),
+                                CustomSearchBar(controller: controller, hintText: 'بحث',),
                               ],
                             );
                           } else {
@@ -146,20 +148,19 @@ class UsersPage extends StatelessWidget {
                                   },
                                 ),
                                 Container(
-                                  margin: EdgeInsets.symmetric(
-                                    horizontal: 10.w,
+                                  margin: EdgeInsets.only(
+                                    left: 5.w,
                                   ),
                                   child: CustomDropdownButton(
-                                    controller: controller,
+                                    selectedValue: controller.selectedValue,
+                                    options: controller.options,
+                                    onChanged: controller.changeValue,
                                   ),
                                 ),
 
                                 Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 10),
-                                    child: CustomSearchBar(
-                                      controller: controller,
-                                    ),
+                                  child: CustomSearchBar(
+                                    controller: controller, hintText: 'بحث',
                                   ),
                                 ),
                               ],

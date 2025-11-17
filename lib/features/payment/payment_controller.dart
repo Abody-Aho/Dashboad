@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 
 /// وحدة تحكم المستخدمين - User Controller
 /// مسؤولة عن إدارة بيانات المستخدمين، البحث، الفرز، والاختيار.
-class ProductsController extends GetxController {
+class PaymentController extends GetxController {
   var dataList = <Map<String, String>>[].obs;        // جميع بيانات المستخدمين
   var filteredDataList = <Map<String, String>>[].obs; // البيانات بعد البحث أو التصفية
   RxList<bool> selectedRows = <bool>[].obs;          // حالة التحديد لكل صف
@@ -16,7 +16,7 @@ class ProductsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    fetchProducts();
+    fetchPayments();
   }
 
   /// إنشاء خلايا البيانات الخاصة بكل صف في الجدول
@@ -44,22 +44,6 @@ class ProductsController extends GetxController {
                   onPressed: () => print('View ${data['Column1']}'),
                 ),
               ),
-              Flexible(
-                child: IconButton(
-                  icon: const Icon(Icons.edit, color: Colors.blue, size: 20),
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                  onPressed: () => print('Edit ${data['Column1']}'),
-                ),
-              ),
-              Flexible(
-                child: IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.red, size: 20),
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                  onPressed: () => print('Delete ${data['Column1']}'),
-                ),
-              ),
             ],
           ),
         ),
@@ -72,40 +56,40 @@ class ProductsController extends GetxController {
   /// تعريف أعمدة الجدول مع دعم الفرز
   List<DataColumn> get tableColumns => [
     DataColumn(
-      label: const Text('اسم المنتج'),
+      label: const Text('رقم المعاملة'),
       onSort: (columnIndex, ascending) => sortData(0, ascending),
     ),
     DataColumn(
-      label: const Text('التصنيف'),
+      label: const Text('رقم الطلب'),
       onSort: (columnIndex, ascending) => sortData(1, ascending),
     ),
     DataColumn(
-      label: const Text('السعر'),
+      label: const Text('العميل'),
       onSort: (columnIndex, ascending) => sortData(2, ascending),
     ),
     DataColumn(
-      label: const Text('المخزون'),
+      label: const Text('المبلغ'),
       onSort: (columnIndex, ascending) => sortData(3, ascending),
     ),
     DataColumn(
-      label: const Text('السوبرماركت'),
+      label: const Text('طريقة الدفع'),
       onSort: (columnIndex, ascending) => sortData(4, ascending),
     ),
     DataColumn(
-      label: const Text('التوفر'),
+      label: const Text('الحالة'),
       onSort: (columnIndex, ascending) => sortData(5, ascending),
     ),
     DataColumn(
-      label: const Text('المبيعات'),
+      label: const Text('السوبرماركت'),
       onSort: (columnIndex, ascending) => sortData(6, ascending),
     ),
     DataColumn(
-      label: const Text('اخر تحديق'),
-      onSort: (columnIndex, ascending) => sortData(6, ascending),
+      label: const Text('التاريخ'),
+      onSort: (columnIndex, ascending) => sortData(7, ascending),
     ),
     DataColumn(
       label: const Text('الإجراءات'),
-      onSort: (columnIndex, ascending) => sortData(6, ascending),
+      onSort: (columnIndex, ascending) => sortData(8, ascending),
     ),
   ];
 
@@ -145,24 +129,23 @@ class ProductsController extends GetxController {
 
   /// تحميل بيانات تجريبية للمستخدمين
 
-  void fetchProducts() {
-    final categories = ['خضار', 'فاكهة', 'مشروبات', 'أدوات منزلية'];
+  void fetchPayments() {
+    final paymentMethods = ['نقداً', 'محفظة إلكترونية', 'حوالة', 'POS'];
+    final statuses = ['مكتملة', 'معلقة', 'فاشلة'];
     final supermarkets = ['سوبرماركت الشام', 'سوبرماركت اليمن', 'سوبرماركت المستقبل'];
-    final availability = ['متوفر', 'غير متوفر'];
 
     dataList.assignAll(
       List.generate(
         20,
             (index) => {
-          'Column1': 'منتج ${index + 1}', // اسم المنتج
-          'Column2': categories[index % categories.length], // التصنيف
-          'Column3': '${(index + 1) * 5} ريال', // السعر
-          'Column4': '${(index + 1) * 10}', // المخزون
-          'Column5': supermarkets[index % supermarkets.length], // السوبرماركت
-          'Column6': availability[index % availability.length], // التوفر
-          'Column7': '${(index + 1) * 20}', // المبيعات
-          'Column8': '2025-11-${(index % 28) + 1}', // اخر تحديث
-
+          'Column1': 'TX-${1000 + index}', // رقم المعاملة
+          'Column2': '#${500 + index}', // رقم الطلب
+          'Column3': 'العميل ${index + 1}', // اسم العميل
+          'Column4': '${(index + 1) * 1200} ريال', // المبلغ
+          'Column5': paymentMethods[index % paymentMethods.length], // طريقة الدفع
+          'Column6': statuses[index % statuses.length], // حالة الدفع
+          'Column7': supermarkets[index % supermarkets.length], // السوبرماركت
+          'Column8': '2025-11-${(index % 28) + 1}', // التاريخ
         },
       ),
     );
@@ -173,31 +156,28 @@ class ProductsController extends GetxController {
     );
   }
 
+
   final selectedValue = 'جميع الحالات'.obs;
-  final options = ['جميع الحالات','متوفر', 'غير متوفر'];
+  final options = ['جميع الحالات','مكتمل', 'في الانتظار','فشل','مسترد'];
 
   // عند التغيير
   void changeValue(String newValue) {
     selectedValue.value = newValue;
   }
 
-  final selectedCategories = 'جميع التصنيفات'.obs;
-  final List<String> supermarketCategories = [
-    'جميع التصنيفات',
-    'المخبوزات',
-    'الألبان',
-    'الحبوب',
-    'الفواكة',
-    'الخضار',
-    'اللحوم',
-    'المشروبات',
-    'المنظفات',
+  final selectedWay = 'جميع الطرق'.obs;
+  final List<String> paymentWay = [
+    'جميع الطرق',
+    'كاش',
+    'بطاقة اتمانية',
+    'محفظة رقمية',
+    'تحويل بنكي',
   ];
 
 
   // عند التغيير
-  void changeCategories(String newValue) {
-    selectedCategories.value = newValue;
+  void changeWay(String newValue) {
+    selectedWay.value = newValue;
   }
 
 }

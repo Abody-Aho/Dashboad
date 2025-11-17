@@ -3,13 +3,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomSearchBar extends StatelessWidget {
   final dynamic controller; // أي Controller فيه بيانات الجدول
-  const CustomSearchBar({super.key, required this.controller});
+   final String hintText;
+  const CustomSearchBar({super.key, required this.controller, required this.hintText,});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 40,
-      margin: EdgeInsets.symmetric(horizontal: 10.w),
+      margin: EdgeInsets.symmetric(horizontal: 5.w),
       child: TextFormField(
         controller: controller.searchTextController,
         onChanged: (query) => controller.searchQuery(query),
@@ -28,7 +29,7 @@ class CustomSearchBar extends StatelessWidget {
               width: 2.5,
             ),
           ),
-          hintText: "Search",
+          hintText: hintText,
           hintStyle: TextStyle(color: Colors.green[700]),
           prefixIcon: const Icon(Icons.search, color: Colors.green),
         ),

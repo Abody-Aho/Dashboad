@@ -86,7 +86,7 @@ class _PanelRightPageState extends State<PanelRightPage> {
               ),
             ),
             LineChartSample1(),
-            // --- قائمة المنتجات ---
+            // قائمة المنتجات
             Padding(
               padding: const EdgeInsets.only(
                 left: Constants.kPadding / 2,
