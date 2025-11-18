@@ -1,8 +1,8 @@
 import 'package:dashbord2/features/admin/views/admin_dashboard_view.dart';
-import 'package:dashbord2/features/mangmant_supermarket/mangmant_supermarket_page.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import '../auth/login_view.dart';
+import '../management_supermarket/mangmant_supermarket_page.dart';
 import '../users/users_page.dart';
 import '../orders/orders_page.dart';
 import '../products/products_page.dart';
@@ -15,7 +15,7 @@ class SidebarController extends GetxController {
   final List<Widget> pages = [
     AdminDashboardView(),
     UsersPage(),
-    MangmantSupermarketPage(),
+    ManagementSupermarketPage(),
     OrdersPage(),
     ProductsPage(),
     PaymentPage(),

@@ -14,17 +14,20 @@ class CustomBottom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton.icon(
-      onPressed: onAddPressed ?? controller.onAddPressed,
-      icon: const Icon(Icons.add, color: Colors.white),
-      label: Text(addButtonText, style: const TextStyle(color: Colors.white)),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.green.shade500,
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+    return Container(
+      margin: EdgeInsets.only(left: 5.w),
+      child: ElevatedButton.icon(
+        onPressed: onAddPressed ?? controller.onAddPressed,
+        icon: const Icon(Icons.add, color: Colors.white),
+        label: Text(addButtonText, style: const TextStyle(color: Colors.white)),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.green.shade500,
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          elevation: 3,
         ),
-        elevation: 3,
       ),
     );
   }

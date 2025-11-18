@@ -1,44 +1,44 @@
-import 'package:dashbord2/core/constants/app_constants.dart';
-import 'package:dashbord2/features/widgets/custom_data_table.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../core/constants/app_constants.dart';
 import '../widgets/custom_card.dart';
-import '../widgets/custom_dropdown_button.dart';
+import '../widgets/custom_data_table.dart';
 import '../widgets/custom_search_bar.dart';
-import 'orders_controller.dart';
+import 'mangmant_supermarket_controller.dart';
 
-class OrdersPage extends StatelessWidget {
-  const OrdersPage({super.key});
+class ManagementSupermarketPage extends StatelessWidget {
+  const ManagementSupermarketPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final OrdersController controller = Get.put(OrdersController());
+    final ManagementSupermarketController controller = Get.put(
+      ManagementSupermarketController(),
+    );
 
-    // بطاقات الإحصائيات
-    List<Widget> statCards = [
+    final List<Widget> statCards = [
       StatCard(
-        title: 'total_orders'.tr,
-        value: '2,540',
-        percent: '7%',
-        subtitle: 'compared_last_month'.tr,
+        title: 'total_supermarkets'.tr,
+        value: '120',
+        percent: '6%',
+        subtitle: 'compare_last_month'.tr,
       ),
       StatCard(
-        title: 'running_orders'.tr,
-        value: '320',
-        percent: '5%',
-        subtitle: 'increase_this_week'.tr,
+        title: 'active_supermarkets'.tr,
+        value: '98',
+        percent: '4%',
+        subtitle: 'compare_last_month'.tr,
       ),
       StatCard(
-        title: 'completed_orders'.tr,
-        value: '1,950',
-        percent: '12%',
-        subtitle: 'compared_last_month'.tr,
+        title: 'new_orders'.tr,
+        value: '245',
+        percent: '10%',
+        subtitle: 'compare_last_month'.tr,
       ),
       StatCard(
-        title: 'cancelled_orders'.tr,
-        value: '78',
-        percent: '-4%',
-        subtitle: 'decrease_this_week'.tr,
+        title: 'rejected_supermarkets'.tr,
+        value: '7',
+        percent: '-2%',
+        subtitle: 'compare_last_month'.tr,
         percentColor: Colors.red,
         percentIcon: Icons.arrow_downward,
       ),
@@ -49,13 +49,12 @@ class OrdersPage extends StatelessWidget {
         padding: const EdgeInsets.all(30),
         child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // العنوان
               Container(
                 alignment: Alignment.centerRight,
                 child: Text(
-                  "orders_management".tr,
+                  "supermarket_management".tr,
                   style: TextStyle(
                     color: Constants.primary,
                     fontSize: 18,
@@ -63,9 +62,9 @@ class OrdersPage extends StatelessWidget {
                   ),
                 ),
               ),
+
               const SizedBox(height: 20),
 
-              // بطاقات الإحصائيات
               LayoutBuilder(
                 builder: (context, constraints) {
                   int crossAxisCount = 1;
@@ -86,9 +85,9 @@ class OrdersPage extends StatelessWidget {
                   );
                 },
               ),
+
               const SizedBox(height: 20),
 
-              // جدول المستخدمين مع الخلفية المستديرة
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Container(
@@ -98,26 +97,34 @@ class OrdersPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       const SizedBox(height: 10),
+
                       Container(
-                        margin: EdgeInsets.symmetric(horizontal: 20),
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
                         child: Text(
-                          "orders_list".tr,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 20),
+                          "supermarket_list".tr,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
                         ),
                       ),
+
                       const SizedBox(height: 8),
+
                       Container(
-                        margin: EdgeInsets.symmetric(horizontal: 20),
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
                         child: Text(
-                          "orders_management_description".tr,
-                          style:
-                          TextStyle(color: Constants.grey, fontSize: 17),
+                          "manage_requests_and_data".tr,
+                          style: TextStyle(
+                            color: Constants.grey,
+                            fontSize: 17,
+                          ),
                         ),
                       ),
 
                       const SizedBox(height: 20),
 
+                      // الصف العلوي (بحث)
                       LayoutBuilder(
                         builder: (context, constraints) {
                           bool isPhone = constraints.maxWidth < 600;
@@ -130,26 +137,12 @@ class OrdersPage extends StatelessWidget {
                                   controller: controller,
                                   hintText: 'search'.tr,
                                 ),
-                                const SizedBox(height: 20),
-                                Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 10),
-                                  child: CustomDropdownButton(
-                                    selectedValue: controller.selectedValue,
-                                    options: controller.options,
-                                    onChanged: controller.changeValue,
-                                  ),
-                                ),
                               ],
                             );
                           } else {
                             return Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                CustomDropdownButton(
-                                  selectedValue: controller.selectedValue,
-                                  options: controller.options,
-                                  onChanged: controller.changeValue,
-                                ),
                                 Expanded(
                                   child: CustomSearchBar(
                                     controller: controller,
@@ -164,6 +157,7 @@ class OrdersPage extends StatelessWidget {
 
                       const SizedBox(height: 15),
 
+                      // جدول الطلابات
                       SizedBox(
                         height: 500,
                         child: CustomDataTable(controller: controller),

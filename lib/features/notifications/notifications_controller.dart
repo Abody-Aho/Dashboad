@@ -3,20 +3,21 @@ import 'package:get/get.dart';
 
 /// وحدة تحكم المستخدمين - User Controller
 /// مسؤولة عن إدارة بيانات المستخدمين، البحث، الفرز، والاختيار.
-class UserController extends GetxController {
-  var dataList = <Map<String, String>>[].obs;        // جميع بيانات المستخدمين
-  var filteredDataList = <Map<String, String>>[].obs; // البيانات بعد البحث أو التصفية
-  RxList<bool> selectedRows = <bool>[].obs;          // حالة التحديد لكل صف
+class NotificationsController extends GetxController {
+  var dataList = <Map<String, String>>[].obs; // جميع بيانات المستخدمين
+  var filteredDataList =
+      <Map<String, String>>[].obs; // البيانات بعد البحث أو التصفية
+  RxList<bool> selectedRows = <bool>[].obs; // حالة التحديد لكل صف
 
-  RxInt sortColumnIndex = 0.obs;                     // العمود المفعل للفرز
-  RxBool sortAscending = true.obs;                   // اتجاه الفرز (تصاعدي / تنازلي)
+  RxInt sortColumnIndex = 0.obs; // العمود المفعل للفرز
+  RxBool sortAscending = true.obs; // اتجاه الفرز (تصاعدي / تنازلي)
   final searchTextController = TextEditingController(); // متحكم حقل البحث
 
   /// عند إنشاء الكنترولر يتم تحميل البيانات مباشرة
   @override
   void onInit() {
     super.onInit();
-    fetchUsers();
+    fetchNotifications();
   }
 
   /// إنشاء خلايا البيانات الخاصة بكل صف في الجدول
@@ -29,37 +30,23 @@ class UserController extends GetxController {
       DataCell(Text(data['Column5'] ?? '', overflow: TextOverflow.ellipsis)),
       DataCell(Text(data['Column6'] ?? '', overflow: TextOverflow.ellipsis)),
       DataCell(Text(data['Column7'] ?? '', overflow: TextOverflow.ellipsis)),
+      DataCell(Text(data['Column8'] ?? '', overflow: TextOverflow.ellipsis)),
       DataCell(
         SizedBox(
-          width: 100, // عرض ثابت للأزرار
+          width: 100,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Flexible(
                 child: IconButton(
-                  icon: const Icon(Icons.person, color: Colors.grey, size: 20),
+                  icon: const Icon(
+                    Icons.remove_red_eye_outlined,
+                    color: Colors.grey,
+                    size: 20,
+                  ),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                   onPressed: () => print('View ${data['Column1']}'),
-                  tooltip: 'View'.tr,
-                ),
-              ),
-              Flexible(
-                child: IconButton(
-                  icon: const Icon(Icons.edit, color: Colors.blue, size: 20),
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                  onPressed: () => print('Edit ${data['Column1']}'),
-                  tooltip: 'Edit'.tr,
-                ),
-              ),
-              Flexible(
-                child: IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.red, size: 20),
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                  onPressed: () => print('Delete ${data['Column1']}'),
-                  tooltip: 'Delete'.tr,
                 ),
               ),
             ],
@@ -72,36 +59,40 @@ class UserController extends GetxController {
   /// تعريف أعمدة الجدول مع دعم الفرز
   List<DataColumn> get tableColumns => [
     DataColumn(
-      label: Text('name'.tr),
+      label: Text('title'.tr),
       onSort: (columnIndex, ascending) => sortData(0, ascending),
     ),
     DataColumn(
-      label: Text('user_email'.tr),
+      label: Text('type'.tr),
       onSort: (columnIndex, ascending) => sortData(1, ascending),
     ),
     DataColumn(
-      label: Text('phone'.tr),
+      label: Text('receivers'.tr),
       onSort: (columnIndex, ascending) => sortData(2, ascending),
     ),
     DataColumn(
-      label: Text('type'.tr),
+      label: Text('sent_count'.tr),
       onSort: (columnIndex, ascending) => sortData(3, ascending),
     ),
     DataColumn(
-      label: Text('status'.tr),
+      label: Text('read_count'.tr),
       onSort: (columnIndex, ascending) => sortData(4, ascending),
     ),
     DataColumn(
-      label: Text('registration_date'.tr),
+      label: Text('read_rate'.tr),
       onSort: (columnIndex, ascending) => sortData(5, ascending),
     ),
     DataColumn(
-      label: Text('last_activity'.tr),
+      label: Text('status'.tr),
       onSort: (columnIndex, ascending) => sortData(6, ascending),
     ),
     DataColumn(
+      label: Text('send_date'.tr),
+      onSort: (columnIndex, ascending) => sortData(7, ascending),
+    ),
+    DataColumn(
       label: Text('actions'.tr),
-      onSort: (columnIndex, ascending) => sortData(6, ascending),
+      onSort: (columnIndex, ascending) => sortData(8, ascending),
     ),
   ];
 
@@ -128,52 +119,82 @@ class UserController extends GetxController {
       results = dataList;
     } else {
       results = dataList
-          .where((item) => item.values
-          .any((value) => value.toLowerCase().contains(query.toLowerCase())))
+          .where(
+            (item) => item.values.any(
+              (value) => value.toLowerCase().contains(query.toLowerCase()),
+            ),
+          )
           .toList();
     }
 
     filteredDataList.assignAll(results);
-    selectedRows.assignAll(List.generate(filteredDataList.length, (index) => false));
+    selectedRows.assignAll(
+      List.generate(filteredDataList.length, (index) => false),
+    );
   }
 
   /// تحميل بيانات تجريبية للمستخدمين
-  void fetchUsers() {
-    final userTypes = ['Client'.tr, 'Agent'.tr, 'Supermarket'.tr, 'Admin'.tr];
-    final statuses = ['Active'.tr, 'Inactive'.tr];
+  void fetchNotifications() {
+    final types = [
+      'all_types'.tr,
+      'offer'.tr,
+      'order'.tr,
+      'update'.tr,
+      'alert'.tr,
+      'general'.tr,
+    ];
+    final receivers = [
+      'clients'.tr,
+      'supermarkets'.tr,
+      'delivery'.tr,
+      'all'.tr,
+    ];
+    final statuses = ['sent'.tr, 'pending'.tr, 'failed'.tr];
 
     dataList.assignAll(
       List.generate(
         20,
-            (index) => {
-          'Column1': '${'User'.tr} ${index + 1}', // الاسم
-          'Column2': 'user${index + 1}@gmail.com', // البريد الإلكتروني
-          'Column3': '77${9000000 + index}', // الهاتف
-          'Column4': userTypes[index % userTypes.length], // النوع
-          'Column5': statuses[index % statuses.length], // الحالة
-          'Column6': '2025-0${(index % 9) + 1}-15', // تاريخ التسجيل
-          'Column7': '2025-11-${(index % 28) + 1}', // آخر نشاط
+        (index) => {
+          'Column1': '${'notification_number'.tr} ${index + 1}', // العنوان
+          'Column2': types[index % types.length], // النوع
+          'Column3': receivers[index % receivers.length], // المستقبلين
+          'Column4': (50 + index * 3).toString(), // عدد المرسل إليهم
+          'Column5': (20 + index * 2).toString(), // عدد القراءات
+          'Column6':
+              '${(((20 + index * 2) / (50 + index * 3)) * 100).toStringAsFixed(1)}%', // معدل القراءة
+          'Column7': statuses[index % statuses.length], // الحالة
+          'Column8': '2025-11-${(index % 28) + 1}', // تاريخ الإرسال
         },
       ),
     );
 
     filteredDataList.assignAll(dataList);
+
     selectedRows.assignAll(
       List.generate(filteredDataList.length, (index) => false),
     );
   }
 
   final selectedValue = 'all_types'.obs;
-
   final options = [
     'all_types',
-    'clients',
-    'agents',
-    'supermarkets',
+    'offer',
+    'order',
+    'update',
+    'alert',
+    'general',
   ];
 
+  // عند التغيير
   void changeValue(String newValue) {
     selectedValue.value = newValue;
   }
 
+  final selectedWay = 'all_statuses'.obs;
+  final List<String> paymentWay = ['all_statuses', 'sent', 'pending', 'failed'];
+
+  // عند التغيير
+  void changeWay(String newValue) {
+    selectedWay.value = newValue;
+  }
 }

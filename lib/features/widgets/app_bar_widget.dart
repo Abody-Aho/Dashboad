@@ -1,9 +1,8 @@
 import 'package:dashbord2/features/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../core/constants/app_constants.dart';
-
-List<String> _buttonNames = ["Overview", "Revenue", "Sales", "Control"];
-int _currentSelectedButton = 0;
+import '../../core/services/lang_service.dart';
 
 class AppBarWidget extends StatefulWidget {
   const AppBarWidget({super.key});
@@ -13,6 +12,18 @@ class AppBarWidget extends StatefulWidget {
 }
 
 class _AppBarWidgetState extends State<AppBarWidget> {
+  void changeLang() async {
+    if (Get.locale?.languageCode == "ar") {
+      // تغيير اللغة للإنجليزية
+      Get.updateLocale(const Locale("en"));
+      await LangService.saveLang("en"); // حفظ اللغة
+    } else {
+      // تغيير اللغة للعربية
+      Get.updateLocale(const Locale("ar"));
+      await LangService.saveLang("ar"); // حفظ اللغة
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -62,77 +73,9 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
-              child: const Padding(
-                padding: EdgeInsets.all(Constants.kPadding / 2),
-                child: Text("Admin Panel"),
-              ),
-            ),
-
-          const Spacer(),
-
-          if (ResponsiveLayout.isComputer(context))
-            ...List.generate(
-              _buttonNames.length,
-                  (index) => TextButton(
-                onPressed: () {
-                  setState(() {
-                    _currentSelectedButton = index;
-                  });
-                },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: Constants.kPadding * 2,
-                      vertical: Constants.kPadding),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        _buttonNames[index],
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          color: _currentSelectedButton == index
-                              ? Constants.primary
-                              : Constants.accent,
-                        ),
-                      ),
-                      AnimatedContainer(
-                        duration: const Duration(milliseconds: 300),
-                        margin: const EdgeInsets.only(top: 5),
-                        width: 60,
-                        height: 2,
-                        decoration: BoxDecoration(
-                          gradient: _currentSelectedButton == index
-                              ? Constants.greenGradient
-                              : null,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            )
-          else
-            Padding(
-              padding: const EdgeInsets.all(Constants.kPadding * 2),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    _buttonNames[_currentSelectedButton],
-                    style: const TextStyle(
-                      color: Constants.primary,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 5),
-                    width: 60,
-                    height: 2,
-                    decoration: const BoxDecoration(
-                      gradient: Constants.greenGradient,
-                    ),
-                  ),
-                ],
+              child: Padding(
+                padding: const EdgeInsets.all(Constants.kPadding / 2),
+                child: Text("admin_panel".tr),
               ),
             ),
 
@@ -144,7 +87,10 @@ class _AppBarWidgetState extends State<AppBarWidget> {
             onPressed: () {},
             icon: const Icon(Icons.search),
           ),
-
+          IconButton(
+            icon: Icon(Icons.language, color: Constants.primary, size: 28),
+            onPressed: () => changeLang(),
+          ),
           Stack(
             children: [
               IconButton(

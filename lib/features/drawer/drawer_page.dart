@@ -12,14 +12,14 @@ class ButtonsInfo {
 }
 
 final List<ButtonsInfo> buttonsInfo = [
-  ButtonsInfo(title: "الرئيسية", icon: Icons.home),
-  ButtonsInfo(title: "إدارة المستخدمين", icon: Icons.people),
-  ButtonsInfo(title: "إدارة السوبرماركت", icon: Icons.store),
-  ButtonsInfo(title: "إدارة الطلبات", icon: Icons.shopping_bag),
-  ButtonsInfo(title: "إدارة المنتجات", icon: Icons.inventory_2),
-  ButtonsInfo(title: "إدارة الدفع", icon: Icons.payment),
-  ButtonsInfo(title: "الإشعارات", icon: Icons.notifications),
-  ButtonsInfo(title: "تسجيل الخروج", icon: Icons.logout),
+  ButtonsInfo(title: "home", icon: Icons.home),
+  ButtonsInfo(title: "users_management", icon: Icons.people),
+  ButtonsInfo(title: "supermarket_management", icon: Icons.store),
+  ButtonsInfo(title: "orders_management", icon: Icons.shopping_bag),
+  ButtonsInfo(title: "products_management", icon: Icons.inventory_2),
+  ButtonsInfo(title: "payment_management", icon: Icons.payment),
+  ButtonsInfo(title: "notifications", icon: Icons.notifications),
+  ButtonsInfo(title: "logout", icon: Icons.logout),
 ];
 
 class DrawerPage extends StatelessWidget {
@@ -38,7 +38,7 @@ class DrawerPage extends StatelessWidget {
             children: [
               ListTile(
                 title: Text(
-                  "Admin Menu",
+                  "admin_menu".tr,
                   style: TextStyle(color: Constants.text),
                 ),
                 trailing: ResponsiveLayout.isComputer(context)
@@ -75,8 +75,8 @@ class DrawerPage extends StatelessWidget {
                               borderRadius: BorderRadius.circular(20),
                             ),
                             title: Text(
-                              buttonsInfo[index].title,
-                              style: TextStyle(color: Constants.text),
+                              buttonsInfo[index].title.tr,
+                              style: TextStyle(color: Constants.text,fontWeight: FontWeight.bold ),
                             ),
                             leading: Icon(
                               buttonsInfo[index].icon,
@@ -84,7 +84,9 @@ class DrawerPage extends StatelessWidget {
                             ),
                             onTap: () {
                               ctrl.selectedIndex.value = index;
-                              if (!ResponsiveLayout.isComputer(context)) Navigator.pop(context);
+                              if (!ResponsiveLayout.isComputer(context)) {
+                                Navigator.pop(context);
+                              }
                             },
                           ),
                         ),

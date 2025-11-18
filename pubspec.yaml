@@ -36,7 +36,8 @@ dependencies:
   fl_chart: ^1.1.1
   google_fonts: ^6.3.2
   curved_navigation_bar: ^1.0.6
-  data_table_2: ^2.6.0
+  data_table_2: ^2.7.1
+  shared_preferences: ^2.5.3
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

@@ -42,53 +42,52 @@ class PaymentController extends GetxController {
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                   onPressed: () => print('View ${data['Column1']}'),
+                  tooltip: 'view'.tr,
                 ),
               ),
             ],
           ),
         ),
       ),
-
-
     ];
   }
 
   /// تعريف أعمدة الجدول مع دعم الفرز
   List<DataColumn> get tableColumns => [
     DataColumn(
-      label: const Text('رقم المعاملة'),
+      label: Text('transaction_number'.tr),
       onSort: (columnIndex, ascending) => sortData(0, ascending),
     ),
     DataColumn(
-      label: const Text('رقم الطلب'),
+      label: Text('order_number'.tr),
       onSort: (columnIndex, ascending) => sortData(1, ascending),
     ),
     DataColumn(
-      label: const Text('العميل'),
+      label: Text('customer'.tr),
       onSort: (columnIndex, ascending) => sortData(2, ascending),
     ),
     DataColumn(
-      label: const Text('المبلغ'),
+      label: Text('amount'.tr),
       onSort: (columnIndex, ascending) => sortData(3, ascending),
     ),
     DataColumn(
-      label: const Text('طريقة الدفع'),
+      label: Text('payment_method'.tr),
       onSort: (columnIndex, ascending) => sortData(4, ascending),
     ),
     DataColumn(
-      label: const Text('الحالة'),
+      label: Text('status'.tr),
       onSort: (columnIndex, ascending) => sortData(5, ascending),
     ),
     DataColumn(
-      label: const Text('السوبرماركت'),
+      label: Text('supermarket'.tr),
       onSort: (columnIndex, ascending) => sortData(6, ascending),
     ),
     DataColumn(
-      label: const Text('التاريخ'),
+      label: Text('date'.tr),
       onSort: (columnIndex, ascending) => sortData(7, ascending),
     ),
     DataColumn(
-      label: const Text('الإجراءات'),
+      label: Text('actions'.tr),
       onSort: (columnIndex, ascending) => sortData(8, ascending),
     ),
   ];
@@ -126,26 +125,24 @@ class PaymentController extends GetxController {
         List.generate(filteredDataList.length, (index) => false));
   }
 
-
   /// تحميل بيانات تجريبية للمستخدمين
-
   void fetchPayments() {
-    final paymentMethods = ['نقداً', 'محفظة إلكترونية', 'حوالة', 'POS'];
-    final statuses = ['مكتملة', 'معلقة', 'فاشلة'];
-    final supermarkets = ['سوبرماركت الشام', 'سوبرماركت اليمن', 'سوبرماركت المستقبل'];
+    final paymentMethods = ['Cash'.tr, 'E-Wallet'.tr, 'Bank Transfer'.tr, 'POS'.tr];
+    final statuses = ['Completed'.tr, 'Pending'.tr, 'Failed'.tr];
+    final supermarkets = ['Sham Supermarket'.tr, 'Yemen Supermarket'.tr, 'Future Supermarket'.tr];
 
     dataList.assignAll(
       List.generate(
         20,
             (index) => {
-          'Column1': 'TX-${1000 + index}', // رقم المعاملة
-          'Column2': '#${500 + index}', // رقم الطلب
-          'Column3': 'العميل ${index + 1}', // اسم العميل
-          'Column4': '${(index + 1) * 1200} ريال', // المبلغ
-          'Column5': paymentMethods[index % paymentMethods.length], // طريقة الدفع
-          'Column6': statuses[index % statuses.length], // حالة الدفع
-          'Column7': supermarkets[index % supermarkets.length], // السوبرماركت
-          'Column8': '2025-11-${(index % 28) + 1}', // التاريخ
+          'Column1': 'TX-${1000 + index}',
+          'Column2': '#${500 + index}',
+          'Column3': '${'Customer'.tr} ${index + 1}',
+          'Column4': '${(index + 1) * 1200} ريال',
+          'Column5': paymentMethods[index % paymentMethods.length],
+          'Column6': statuses[index % statuses.length],
+          'Column7': supermarkets[index % supermarkets.length],
+          'Column8': '2025-11-${(index % 28) + 1}',
         },
       ),
     );
@@ -156,24 +153,22 @@ class PaymentController extends GetxController {
     );
   }
 
-
-  final selectedValue = 'جميع الحالات'.obs;
-  final options = ['جميع الحالات','مكتمل', 'في الانتظار','فشل','مسترد'];
+  final selectedValue = 'all_statuses'.obs;
+  final options = ['all_statuses','completed', 'pending','failed','refunded'];
 
   // عند التغيير
   void changeValue(String newValue) {
     selectedValue.value = newValue;
   }
 
-  final selectedWay = 'جميع الطرق'.obs;
+  final selectedWay = 'all_methods'.obs;
   final List<String> paymentWay = [
-    'جميع الطرق',
-    'كاش',
-    'بطاقة اتمانية',
-    'محفظة رقمية',
-    'تحويل بنكي',
+    'all_methods',
+    'Cash',
+    'Credit Card',
+    'Digital Wallet',
+    'Bank Transfer',
   ];
-
 
   // عند التغيير
   void changeWay(String newValue) {

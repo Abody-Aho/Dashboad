@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CustomDropdownButton<T> extends StatelessWidget {
-  final Rx<T> selectedValue; // القيمة المختارة بشكل عام
+  final Rx<T> selectedValue; // القيمة المختارة
   final List<T> options;      // الخيارات
-  final void Function(T value)? onChanged; // حدث عند تغيير القيمة
+  final void Function(T value)? onChanged;
   final double height;
   final Color backgroundColor;
   final Color borderColor;
@@ -46,7 +46,9 @@ class CustomDropdownButton<T> extends StatelessWidget {
             items: options
                 .map((item) => DropdownMenuItem<T>(
               value: item,
-              child: Text(item.toString()),
+              child: Text(
+                item.toString().tr,
+              ),
             ))
                 .toList(),
             onChanged: (value) {

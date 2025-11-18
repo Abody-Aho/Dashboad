@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../core/constants/app_constants.dart';
 import '../widgets/responsive_layout.dart';
 import 'circle_graph.dart';
@@ -19,12 +20,12 @@ class PanelLiftPage extends StatefulWidget {
 
 class _PanelLeftPageState extends State<PanelLiftPage> {
   final List<Todo> _todos = [
-    Todo(name: "Purchase Paper", enable: true),
-    Todo(name: "Refill the inventory of speakers", enable: true),
-    Todo(name: "Hire someone", enable: true),
-    Todo(name: "Marketing Strategy", enable: true),
-    Todo(name: "Selling furniture", enable: true),
-    Todo(name: "Finish the disclosure", enable: true),
+    Todo(name: "purchase_paper".tr, enable: true),
+    Todo(name: "refill_speakers".tr, enable: true),
+    Todo(name: "hire_someone".tr, enable: true),
+    Todo(name: "marketing_strategy".tr, enable: true),
+    Todo(name: "selling_furniture".tr, enable: true),
+    Todo(name: "finish_disclosure".tr, enable: true),
   ];
 
   @override
@@ -66,26 +67,26 @@ class _PanelLeftPageState extends State<PanelLiftPage> {
                         horizontal: 25,
                         vertical: 15,
                       ),
-                      title: const Text(
-                        "Products Sold",
-                        style: TextStyle(
+                      title: Text(
+                        "products_sold".tr,
+                        style: const TextStyle(
                           color: Constants.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
                       ),
-                      subtitle: const Text(
-                        "18% of Products Sold",
-                        style: TextStyle(
+                      subtitle: Text(
+                        "products_sold_percent".tr,
+                        style: const TextStyle(
                           color: Colors.white70,
                           fontSize: 13,
                         ),
                       ),
                       trailing: Chip(
                         backgroundColor: Colors.white24,
-                        label: const Text(
-                          "4,500",
-                          style: TextStyle(
+                        label: Text(
+                          "4500_value".tr,
+                          style: const TextStyle(
                             color: Constants.accent,
                             fontWeight: FontWeight.bold,
                           ),
@@ -108,7 +109,7 @@ class _PanelLeftPageState extends State<PanelLiftPage> {
                     ),
                     child: Container(
                       decoration: BoxDecoration(
-                        gradient:  LinearGradient(
+                        gradient: LinearGradient(
                           colors: [
                             Constants.backgroundColor2,
                             Constants.backgroundColor1,

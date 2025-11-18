@@ -19,33 +19,32 @@ class ProductsPage extends StatelessWidget {
     // بطاقات الإحصائيات
     List<Widget> statCards = [
       StatCard(
-        title: 'إجمالي المنتجات',
+        title: 'total_products'.tr,
         value: '1,245',
         percent: '8%',
-        subtitle: 'مقارنة بالشهر الماضي',
+        subtitle: 'compared_to_last_month'.tr,
       ),
       StatCard(
-        title: 'المنتجات النشطة',
+        title: 'active_products'.tr,
         value: '984',
         percent: '5%',
-        subtitle: 'مقارنة بالشهر الماضي',
+        subtitle: 'compared_to_last_month'.tr,
       ),
       StatCard(
-        title: 'المنتجات الجديدة',
+        title: 'new_products'.tr,
         value: '124',
         percent: '12%',
-        subtitle: 'مقارنة بالشهر الماضي',
+        subtitle: 'compared_to_last_month'.tr,
       ),
       StatCard(
-        title: 'المنتجات غير المتاحة',
+        title: 'unavailable_products'.tr,
         value: '15',
         percent: '-3%',
-        subtitle: 'مقارنة بالشهر الماضي',
+        subtitle: 'compared_to_last_month'.tr,
         percentColor: Colors.red,
         percentIcon: Icons.arrow_downward,
       ),
     ];
-
 
     return Scaffold(
       body: Padding(
@@ -58,7 +57,7 @@ class ProductsPage extends StatelessWidget {
               Container(
                 alignment: Alignment.centerRight,
                 child: Text(
-                  "إدارة المنتجات",
+                  "manage_products".tr,
                   style: TextStyle(
                     color: Constants.primary,
                     fontSize: 18,
@@ -106,15 +105,14 @@ class ProductsPage extends StatelessWidget {
                       LayoutBuilder(
                         builder: (context, constraints) {
                           bool isPhone =
-                              constraints.maxWidth <
-                                  600; // يمكن تعديل القيمة حسب الحاجة
+                              constraints.maxWidth < 600; // يمكن تعديل القيمة حسب الحاجة
 
                           if (isPhone) {
                             // عمودي - فوق بعض
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                CustomSearchBar(controller: controller, hintText: 'بحث',),
+                                CustomSearchBar(controller: controller, hintText: 'search'.tr,),
                                 const SizedBox(height: 20),
                                 Container(
                                   margin: EdgeInsets.symmetric(horizontal: 10),
@@ -138,9 +136,9 @@ class ProductsPage extends StatelessWidget {
                                   margin: EdgeInsets.symmetric(horizontal: 12),
                                   child: CustomBottom(
                                     controller: controller,
-                                    addButtonText: 'أضافة منتج',
+                                    addButtonText: 'add_product'.tr,
                                     onAddPressed: () {
-                                      print("Add user pressed");
+                                      print("Add product pressed");
                                     },
                                   ),
                                 ),
@@ -155,9 +153,9 @@ class ProductsPage extends StatelessWidget {
                               children: [
                                 CustomBottom(
                                   controller: controller,
-                                  addButtonText: 'أضافة منتج',
+                                  addButtonText: 'add_product'.tr,
                                   onAddPressed: () {
-                                    print("Add user pressed");
+                                    print("Add product pressed");
                                   },
                                 ),
                                 Container(
@@ -183,7 +181,7 @@ class ProductsPage extends StatelessWidget {
 
                                 Expanded(
                                   child: CustomSearchBar(
-                                    controller: controller, hintText: 'بحث',
+                                    controller: controller, hintText: 'search'.tr,
                                   ),
                                 ),
                               ],

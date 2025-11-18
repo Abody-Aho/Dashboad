@@ -1,6 +1,5 @@
-import 'package:dashbord2/features/mangmant_supermarket/mangmant_supermarket_page.dart';
 import 'package:get/get.dart';
-
+import '../../management_supermarket/mangmant_supermarket_page.dart';
 import '../../notifications/notifications_page.dart';
 import '../../orders/orders_page.dart';
 import '../../payment/payment_page.dart';
@@ -16,7 +15,7 @@ class AdminDashboardController extends GetxController {
   final pages = [
     const AdminDashboardView(),
     const UsersPage(),
-    const MangmantSupermarketPage(),
+    const ManagementSupermarketPage(),
     const OrdersPage(),
     const ProductsPage(),
     const PaymentPage(),

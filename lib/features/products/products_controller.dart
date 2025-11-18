@@ -42,6 +42,7 @@ class ProductsController extends GetxController {
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                   onPressed: () => print('View ${data['Column1']}'),
+                  tooltip: 'view'.tr,
                 ),
               ),
               Flexible(
@@ -50,6 +51,7 @@ class ProductsController extends GetxController {
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                   onPressed: () => print('Edit ${data['Column1']}'),
+                  tooltip: 'edit'.tr,
                 ),
               ),
               Flexible(
@@ -58,53 +60,52 @@ class ProductsController extends GetxController {
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                   onPressed: () => print('Delete ${data['Column1']}'),
+                  tooltip: 'delete'.tr,
                 ),
               ),
             ],
           ),
         ),
       ),
-
-
     ];
   }
 
   /// تعريف أعمدة الجدول مع دعم الفرز
   List<DataColumn> get tableColumns => [
     DataColumn(
-      label: const Text('اسم المنتج'),
+      label: Text('product_name'.tr),
       onSort: (columnIndex, ascending) => sortData(0, ascending),
     ),
     DataColumn(
-      label: const Text('التصنيف'),
+      label: Text('category'.tr),
       onSort: (columnIndex, ascending) => sortData(1, ascending),
     ),
     DataColumn(
-      label: const Text('السعر'),
+      label: Text('price'.tr),
       onSort: (columnIndex, ascending) => sortData(2, ascending),
     ),
     DataColumn(
-      label: const Text('المخزون'),
+      label: Text('stock'.tr),
       onSort: (columnIndex, ascending) => sortData(3, ascending),
     ),
     DataColumn(
-      label: const Text('السوبرماركت'),
+      label: Text('supermarket'.tr),
       onSort: (columnIndex, ascending) => sortData(4, ascending),
     ),
     DataColumn(
-      label: const Text('التوفر'),
+      label: Text('availability'.tr),
       onSort: (columnIndex, ascending) => sortData(5, ascending),
     ),
     DataColumn(
-      label: const Text('المبيعات'),
+      label: Text('sales'.tr),
       onSort: (columnIndex, ascending) => sortData(6, ascending),
     ),
     DataColumn(
-      label: const Text('اخر تحديق'),
+      label: Text('last_update'.tr),
       onSort: (columnIndex, ascending) => sortData(6, ascending),
     ),
     DataColumn(
-      label: const Text('الإجراءات'),
+      label: Text('actions'.tr),
       onSort: (columnIndex, ascending) => sortData(6, ascending),
     ),
   ];
@@ -142,9 +143,7 @@ class ProductsController extends GetxController {
         List.generate(filteredDataList.length, (index) => false));
   }
 
-
   /// تحميل بيانات تجريبية للمستخدمين
-
   void fetchProducts() {
     final categories = ['خضار', 'فاكهة', 'مشروبات', 'أدوات منزلية'];
     final supermarkets = ['سوبرماركت الشام', 'سوبرماركت اليمن', 'سوبرماركت المستقبل'];
@@ -162,7 +161,6 @@ class ProductsController extends GetxController {
           'Column6': availability[index % availability.length], // التوفر
           'Column7': '${(index + 1) * 20}', // المبيعات
           'Column8': '2025-11-${(index % 28) + 1}', // اخر تحديث
-
         },
       ),
     );
@@ -173,31 +171,29 @@ class ProductsController extends GetxController {
     );
   }
 
-  final selectedValue = 'جميع الحالات'.obs;
-  final options = ['جميع الحالات','متوفر', 'غير متوفر'];
+  final selectedValue = 'all_status'.obs;
+  final options = ['all_status','available', 'not_available'];
 
   // عند التغيير
   void changeValue(String newValue) {
     selectedValue.value = newValue;
   }
 
-  final selectedCategories = 'جميع التصنيفات'.obs;
+  final selectedCategories = 'all_categories'.obs;
   final List<String> supermarketCategories = [
-    'جميع التصنيفات',
-    'المخبوزات',
-    'الألبان',
-    'الحبوب',
-    'الفواكة',
-    'الخضار',
-    'اللحوم',
-    'المشروبات',
-    'المنظفات',
+    'all_categories',
+    'bakery',
+    'dairy',
+    'grains',
+    'fruits',
+    'vegetables',
+    'meat',
+    'drinks',
+    'detergents',
   ];
-
 
   // عند التغيير
   void changeCategories(String newValue) {
     selectedCategories.value = newValue;
   }
-
 }

@@ -1,5 +1,6 @@
 import 'package:dashbord2/features/panel_right/wiggte_graph.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../core/constants/app_constants.dart';
 
 class Product {
@@ -18,16 +19,16 @@ class PanelRightPage extends StatefulWidget {
 
 class _PanelRightPageState extends State<PanelRightPage> {
   final List<Product> _products = [
-    Product(name: "LED Submersible Lights", enable: true),
-    Product(name: "Wireless Headphones", enable: true),
-    Product(name: "Smart Watch Series 8", enable: false),
-    Product(name: "Bluetooth Speaker", enable: true),
-    Product(name: "USB-C Fast Charger", enable: true),
-    Product(name: "Portable Power Bank", enable: false),
-    Product(name: "Gaming Mouse RGB", enable: true),
-    Product(name: "Mechanical Keyboard", enable: true),
-    Product(name: "HDMI Cable 2M", enable: false),
-    Product(name: "Smart Home Plug", enable: true),
+    Product(name: "led_lights".tr, enable: true),
+    Product(name: "wireless_headphones".tr, enable: true),
+    Product(name: "smart_watch".tr, enable: false),
+    Product(name: "speaker".tr, enable: true),
+    Product(name: "charger".tr, enable: true),
+    Product(name: "power_bank".tr, enable: false),
+    Product(name: "mouse".tr, enable: true),
+    Product(name: "keyboard".tr, enable: true),
+    Product(name: "hdmi".tr, enable: false),
+    Product(name: "smart_plug".tr, enable: true),
   ];
 
   @override
@@ -42,7 +43,7 @@ class _PanelRightPageState extends State<PanelRightPage> {
               padding: const EdgeInsets.all(Constants.kPadding),
               child: Container(
                 decoration: BoxDecoration(
-                  gradient: Constants.greenGradient, // نفس التدرج الجميل
+                  gradient: Constants.greenGradient,
                   borderRadius: BorderRadius.circular(30),
                   boxShadow: [
                     BoxShadow(
@@ -57,26 +58,26 @@ class _PanelRightPageState extends State<PanelRightPage> {
                     horizontal: 25,
                     vertical: 15,
                   ),
-                  title: const Text(
-                    "Net Revenue",
-                    style: TextStyle(
+                  title: Text(
+                    "net_revenue".tr,
+                    style: const TextStyle(
                       color: Constants.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
                   ),
-                  subtitle: const Text(
-                    "7% of Sales Avg",
-                    style: TextStyle(
+                  subtitle: Text(
+                    "sales_avg".tr,
+                    style: const TextStyle(
                       color: Colors.white70,
                       fontSize: 13,
                     ),
                   ),
                   trailing: Chip(
                     backgroundColor: Colors.white24,
-                    label: const Text(
+                    label: Text(
                       r"$46,450",
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Constants.accent,
                         fontWeight: FontWeight.bold,
                       ),
@@ -85,7 +86,9 @@ class _PanelRightPageState extends State<PanelRightPage> {
                 ),
               ),
             ),
+
             LineChartSample1(),
+
             // قائمة المنتجات
             Padding(
               padding: const EdgeInsets.only(
@@ -96,7 +99,7 @@ class _PanelRightPageState extends State<PanelRightPage> {
               ),
               child: Container(
                 decoration: BoxDecoration(
-                  gradient:  LinearGradient(
+                  gradient: LinearGradient(
                     colors: [
                       Constants.backgroundColor2,
                       Constants.backgroundColor1,
@@ -110,9 +113,9 @@ class _PanelRightPageState extends State<PanelRightPage> {
                   children: List.generate(
                     _products.length,
                         (index) => SwitchListTile.adaptive(
-                          activeThumbColor: Constants.success, // لون المقبض عند التشغيل
-                          activeTrackColor: Constants.success.withValues(alpha: 0.5), // لون المسار النشط (اختياري)
-                          inactiveTrackColor: Colors.white24,
+                      activeThumbColor: Constants.success,
+                      activeTrackColor: Constants.success.withValues(alpha: 0.5),
+                      inactiveTrackColor: Colors.white24,
                       title: Text(
                         _products[index].name,
                         style: const TextStyle(

@@ -4,7 +4,6 @@ import 'package:dashbord2/features/widgets/custom_data_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../widgets/custom_bottom.dart';
 import '../widgets/custom_card.dart';
 import '../widgets/custom_dropdown_button.dart';
 import '../widgets/custom_search_bar.dart';
@@ -19,34 +18,32 @@ class PaymentPage extends StatelessWidget {
     // بطاقات الإحصائيات
     List<Widget> statCards = [
       StatCard(
-        title: 'إجمالي المدفوعات',
+        title: 'total_payments'.tr,
         value: '4,560,000 ر.ي',
         percent: '12%',
-        subtitle: 'مقارنة بالشهر الماضي',
+        subtitle: 'compared_last_month'.tr,
       ),
       StatCard(
-        title: 'المدفوعات المكتملة',
+        title: 'completed_payments'.tr,
         value: '3,980',
         percent: '7%',
-        subtitle: 'مقارنة بالشهر الماضي',
+        subtitle: 'compared_last_month'.tr,
       ),
       StatCard(
-        title: 'المدفوعات المعلقة',
+        title: 'pending_payments'.tr,
         value: '215',
         percent: '3%',
-        subtitle: 'بانتظار التأكيد',
+        subtitle: 'awaiting_confirmation'.tr,
       ),
       StatCard(
-        title: 'المدفوعات الفاشلة',
+        title: 'failed_payments'.tr,
         value: '45',
         percent: '-4%',
-        subtitle: 'مقارنة بالشهر الماضي',
+        subtitle: 'compared_last_month'.tr,
         percentColor: Colors.red,
         percentIcon: Icons.arrow_downward,
       ),
     ];
-
-
 
     return Scaffold(
       body: Padding(
@@ -59,7 +56,7 @@ class PaymentPage extends StatelessWidget {
               Container(
                 alignment: Alignment.centerRight,
                 child: Text(
-                  "إدارة الدفع",
+                  "payment_management".tr,
                   style: TextStyle(
                     color: Constants.primary,
                     fontSize: 18,
@@ -107,15 +104,14 @@ class PaymentPage extends StatelessWidget {
                       LayoutBuilder(
                         builder: (context, constraints) {
                           bool isPhone =
-                              constraints.maxWidth <
-                                  600; // يمكن تعديل القيمة حسب الحاجة
+                              constraints.maxWidth < 600; // يمكن تعديل القيمة حسب الحاجة
 
                           if (isPhone) {
                             // عمودي - فوق بعض
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                CustomSearchBar(controller: controller, hintText: 'بحث',),
+                                CustomSearchBar(controller: controller, hintText: 'search'.tr),
                                 const SizedBox(height: 20),
                                 Container(
                                   margin: EdgeInsets.symmetric(horizontal: 10),
@@ -143,9 +139,7 @@ class PaymentPage extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Container(
-                                  margin: EdgeInsets.only(
-                                    left: 5.w,
-                                  ),
+                                  margin: EdgeInsets.only(left: 5.w),
                                   child: CustomDropdownButton(
                                     selectedValue: controller.selectedWay,
                                     options: controller.paymentWay,
@@ -153,19 +147,17 @@ class PaymentPage extends StatelessWidget {
                                   ),
                                 ),
                                 Container(
-                                  margin: EdgeInsets.only(
-                                    left: 5.w,
-                                  ),
+                                  margin: EdgeInsets.only(left: 5.w),
                                   child: CustomDropdownButton(
                                     selectedValue: controller.selectedValue,
                                     options: controller.options,
                                     onChanged: controller.changeValue,
                                   ),
                                 ),
-
                                 Expanded(
                                   child: CustomSearchBar(
-                                    controller: controller, hintText: 'بحث',
+                                    controller: controller,
+                                    hintText: 'search'.tr,
                                   ),
                                 ),
                               ],
@@ -175,7 +167,6 @@ class PaymentPage extends StatelessWidget {
                       ),
 
                       const SizedBox(height: 15),
-
 
                       SizedBox(
                         height: 500,

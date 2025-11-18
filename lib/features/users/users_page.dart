@@ -17,31 +17,31 @@ class UsersPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final UserController controller = Get.put(UserController());
 
-    // بطاقات الإحصائيات
+    // بطاقات الإحصائيات / Statistics Cards
     List<Widget> statCards = [
       StatCard(
-        title: 'Total Users',
+        title: 'total_users'.tr, // مترجم
         value: '1,245',
         percent: '8%',
-        subtitle: 'Compared to last month',
+        subtitle: 'compared_last_month'.tr,
       ),
       StatCard(
-        title: 'Active Users',
+        title: 'active_users'.tr,
         value: '984',
         percent: '5%',
-        subtitle: 'Compared to last month',
+        subtitle: 'compared_last_month'.tr,
       ),
       StatCard(
-        title: 'New Signups',
+        title: 'new_signups'.tr,
         value: '124',
         percent: '12%',
-        subtitle: 'Compared to last month',
+        subtitle: 'compared_last_month'.tr,
       ),
       StatCard(
-        title: 'Banned Users',
+        title: 'banned_users'.tr,
         value: '15',
         percent: '-3%',
-        subtitle: 'Compared to last month',
+        subtitle: 'compared_last_month'.tr,
         percentColor: Colors.red,
         percentIcon: Icons.arrow_downward,
       ),
@@ -54,11 +54,11 @@ class UsersPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // العنوان
+              // العنوان / Page Title
               Container(
                 alignment: Alignment.centerRight,
                 child: Text(
-                  "إدارة المستخدمين",
+                  'user_management'.tr,
                   style: TextStyle(
                     color: Constants.primary,
                     fontSize: 18,
@@ -68,7 +68,7 @@ class UsersPage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // بطاقات الإحصائيات
+              // بطاقات الإحصائيات / Statistics Cards Layout
               LayoutBuilder(
                 builder: (context, constraints) {
                   int crossAxisCount = 1;
@@ -91,7 +91,7 @@ class UsersPage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // جدول المستخدمين مع الخلفية المستديرة
+              // جدول المستخدمين مع الخلفية المستديرة / Users Table with Rounded Background
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Container(
@@ -102,24 +102,20 @@ class UsersPage extends StatelessWidget {
                     children: [
                       const SizedBox(height: 10),
 
-                      // الصف العلوي (زر + قائمة + بحث)
+                      // الصف العلوي (زر + قائمة + بحث) / Top Row (Button + Dropdown + Search)
                       LayoutBuilder(
                         builder: (context, constraints) {
                           bool isPhone =
-                              constraints.maxWidth <
-                              600; // يمكن تعديل القيمة حسب الحاجة
+                              constraints.maxWidth < 600;
 
                           if (isPhone) {
-                            // عمودي - فوق بعض
+                            // عمودي / Vertical layout
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                CustomBottom(
+                                CustomSearchBar(
                                   controller: controller,
-                                  addButtonText: 'أضافة مستخدمين',
-                                  onAddPressed: () {
-                                    print("Add user pressed");
-                                  },
+                                  hintText: 'search'.tr,
                                 ),
                                 const SizedBox(height: 20),
                                 Container(
@@ -130,37 +126,46 @@ class UsersPage extends StatelessWidget {
                                     onChanged: controller.changeValue,
                                   ),
                                 ),
-
                                 const SizedBox(height: 20),
-                                CustomSearchBar(controller: controller, hintText: 'بحث',),
+                                Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 11),
+                                  child: CustomBottom(
+                                    controller: controller,
+                                    addButtonText: 'add_users'.tr,
+                                    onAddPressed: () {
+                                      print("Add user pressed");
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
                               ],
                             );
                           } else {
-                            // أفقي - بجانب بعض
+                            // أفقي / Horizontal layout
                             return Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 CustomBottom(
                                   controller: controller,
-                                  addButtonText: 'أضافة مستخدمين',
+                                  addButtonText: 'add_users'.tr,
                                   onAddPressed: () {
                                     print("Add user pressed");
                                   },
                                 ),
                                 Container(
-                                  margin: EdgeInsets.only(
-                                    left: 5.w,
-                                  ),
+                                  margin: EdgeInsets.only(left: 5.w),
                                   child: CustomDropdownButton(
                                     selectedValue: controller.selectedValue,
                                     options: controller.options,
                                     onChanged: controller.changeValue,
+
                                   ),
                                 ),
 
                                 Expanded(
                                   child: CustomSearchBar(
-                                    controller: controller, hintText: 'بحث',
+                                    controller: controller,
+                                    hintText: 'search'.tr,
                                   ),
                                 ),
                               ],
@@ -171,9 +176,9 @@ class UsersPage extends StatelessWidget {
 
                       const SizedBox(height: 15),
 
-                      // جدول المستخدمين - مهم تحديد الارتفاع
+                      // جدول المستخدمين / Users Table
                       SizedBox(
-                        height: 500, // 👈 هذا يحل خطأ RenderBox
+                        height: 500,
                         child: CustomDataTable(controller: controller),
                       ),
                     ],

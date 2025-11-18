@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../core/constants/app_constants.dart';
 import 'linear_graph.dart';
 
@@ -18,18 +19,18 @@ class PanelCenterPage extends StatefulWidget {
 
 class _PanelCenterPageState extends State<PanelCenterPage> {
   final List<Person> _persons = [
-    Person(name: "Person 1", color: Colors.red),
-    Person(name: "Person 2", color: Colors.pink),
-    Person(name: "Person 3", color: Colors.blue),
-    Person(name: "Person 4", color: Colors.yellow),
-    Person(name: "Person 5", color: Colors.orange),
-    Person(name: "Person 6", color: Colors.purple),
+    Person(name: "person1".tr, color: Colors.red),
+    Person(name: "person2".tr, color: Colors.pink),
+    Person(name: "person3".tr, color: Colors.blue),
+    Person(name: "person4".tr, color: Colors.yellow),
+    Person(name: "person5".tr, color: Colors.orange),
+    Person(name: "person6".tr, color: Colors.purple),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Constants.backgroundColor1, // خلفية خضراء باهتة
+      backgroundColor: Constants.backgroundColor1,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -53,26 +54,26 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
                     horizontal: 25,
                     vertical: 15,
                   ),
-                  title: const Text(
-                    "Products Available",
-                    style: TextStyle(
+                  title: Text(
+                    "products_available".tr,
+                    style: const TextStyle(
                       color: Constants.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
                   ),
-                  subtitle: const Text(
-                    "82% of the Products are Available",
-                    style: TextStyle(
+                  subtitle: Text(
+                    "products_available_percent".tr,
+                    style: const TextStyle(
                       color: Colors.white70,
                       fontSize: 13,
                     ),
                   ),
                   trailing: Chip(
                     backgroundColor: Colors.white24,
-                    label: const Text(
-                      "20,500",
-                      style: TextStyle(
+                    label: Text(
+                      "20500_value".tr,
+                      style: const TextStyle(
                         color: Constants.accent,
                         fontWeight: FontWeight.bold,
                       ),
@@ -83,7 +84,7 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
             ),
 
             // --- الرسم البياني ---
-             BarChartSample2(),
+            BarChartSample2(),
 
             // --- قائمة الأشخاص ---
             Padding(
@@ -95,7 +96,7 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
               ),
               child: Container(
                 decoration: BoxDecoration(
-                  gradient:  LinearGradient(
+                  gradient: LinearGradient(
                     colors: [
                       Constants.backgroundColor2,
                       Constants.backgroundColor1,
@@ -108,7 +109,7 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
                 child: Column(
                   children: List.generate(
                     _persons.length,
-                    (index) => ListTile(
+                        (index) => ListTile(
                       leading: CircleAvatar(
                         radius: 18,
                         backgroundColor: _persons[index].color,
@@ -119,7 +120,7 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
                       ),
                       title: Text(
                         _persons[index].name,
-                        style:  TextStyle(
+                        style: TextStyle(
                           color: Constants.text,
                           fontWeight: FontWeight.w600,
                         ),

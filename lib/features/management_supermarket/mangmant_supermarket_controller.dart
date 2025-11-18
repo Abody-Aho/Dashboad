@@ -3,13 +3,13 @@ import 'package:get/get.dart';
 
 /// وحدة تحكم المستخدمين - User Controller
 /// مسؤولة عن إدارة بيانات المستخدمين، البحث، الفرز، والاختيار.
-class MangmantSupermarketController extends GetxController {
+class ManagementSupermarketController extends GetxController {
   var dataList = <Map<String, String>>[].obs;        // جميع بيانات المستخدمين
   var filteredDataList = <Map<String, String>>[].obs; // البيانات بعد البحث أو التصفية
   RxList<bool> selectedRows = <bool>[].obs;          // حالة التحديد لكل صف
 
   RxInt sortColumnIndex = 0.obs;                     // العمود المفعل للفرز
-  RxBool sortAscending = true.obs;                   // اتجاه الفرز (تصاعدي / تنازلي)
+  RxBool sortAscending = true.obs;                   // اتجاه الفرز
   final searchTextController = TextEditingController(); // متحكم حقل البحث
 
   /// عند إنشاء الكنترولر يتم تحميل البيانات مباشرة
@@ -31,7 +31,7 @@ class MangmantSupermarketController extends GetxController {
       DataCell(Text(data['Column7'] ?? '', overflow: TextOverflow.ellipsis)),
       DataCell(
         SizedBox(
-          width: 100, //  حدد عرض ثابت كافي لكل الأزرار
+          width: 100,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -63,43 +63,41 @@ class MangmantSupermarketController extends GetxController {
           ),
         ),
       ),
-
-
     ];
   }
 
-  /// تعريف أعمدة الجدول مع دعم الفرز
+  /// تعريف أعمدة الجدول مع دعم الترجمة
   List<DataColumn> get tableColumns => [
     DataColumn(
-      label: const Text('اسم المتجر'),
+      label: Text('store_name'.tr),
       onSort: (columnIndex, ascending) => sortData(0, ascending),
     ),
     DataColumn(
-      label: const Text('المالك'),
+      label: Text('owner'.tr),
       onSort: (columnIndex, ascending) => sortData(1, ascending),
     ),
     DataColumn(
-      label: const Text('البريد الإلكتروني'),
+      label: Text('email'.tr),
       onSort: (columnIndex, ascending) => sortData(2, ascending),
     ),
     DataColumn(
-      label: const Text('الهاتف'),
+      label: Text('phone'.tr),
       onSort: (columnIndex, ascending) => sortData(3, ascending),
     ),
     DataColumn(
-      label: const Text('العنوان'),
+      label: Text('address'.tr),
       onSort: (columnIndex, ascending) => sortData(4, ascending),
     ),
     DataColumn(
-      label: const Text('الحالة'),
+      label: Text('status'.tr),
       onSort: (columnIndex, ascending) => sortData(5, ascending),
     ),
     DataColumn(
-      label: const Text('تاريخ التسجيل'),
+      label: Text('register_date'.tr),
       onSort: (columnIndex, ascending) => sortData(6, ascending),
     ),
     DataColumn(
-      label: const Text('الإجراءات'),
+      label: Text('actions'.tr),
       onSort: (columnIndex, ascending) => sortData(6, ascending),
     ),
   ];
@@ -136,31 +134,32 @@ class MangmantSupermarketController extends GetxController {
     selectedRows.assignAll(
         List.generate(filteredDataList.length, (index) => false));
   }
+
   /// تحميل بيانات تجريبية لادارة السوبرماركت
   void fetchUsers() {
-    final statuses = ['في انتظار', 'مقبول', 'مرفوض'];
+    final statuses = ['pending'.tr, 'accepted'.tr, 'rejected'.tr];
     final addresses = [
-      'صنعاء - الحصبة',
-      'تعز - التحرير',
-      'عدن - كريتر',
-      'إب - المركز',
-      'الحديدة - الميناء',
-      'ذمار - شارع صنعاء',
-      'المكلا - الديس',
-      'صعدة - المدينة',
+      'sanaa_hisaba'.tr,
+      'taiz_tahrir'.tr,
+      'aden_khor_maksar'.tr,
+      'ib_center'.tr,
+      'hodieda_port'.tr,
+      'dhamar_street'.tr,
+      'mukalla_dis'.tr,
+      'saada_city'.tr,
     ];
 
     dataList.assignAll(
       List.generate(
         20,
             (index) => {
-          'Column1': 'سوبرماركت ${index + 1}', // اسم المتجر
-          'Column2': 'مالك ${index + 1}', // المالك
-          'Column3': 'market${index + 1}@gmail.com', // البريد الإلكتروني
-          'Column4': '77${9000000 + index}', // الهاتف
-          'Column5': addresses[index % addresses.length], // العنوان
-          'Column6': statuses[index % statuses.length], // الحالة
-          'Column7': '2025-0${(index % 9) + 1}-15', // تاريخ التسجيل
+          'Column1': '${'supermarket'.tr} ${index + 1}',
+          'Column2': '${'owner'.tr} ${index + 1}',
+          'Column3': 'market${index + 1}@gmail.com',
+          'Column4': '77${9000000 + index}',
+          'Column5': addresses[index % addresses.length],
+          'Column6': statuses[index % statuses.length],
+          'Column7': '2025-0${(index % 9) + 1}-15',
         },
       ),
     );
