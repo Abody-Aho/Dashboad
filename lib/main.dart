@@ -1,11 +1,10 @@
 import 'package:dashbord2/core/constants/app_constants.dart';
+import 'package:dashbord2/routes/app_pages.dart';
+import 'package:dashbord2/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'core/lang/translations.dart';
 import 'core/services/lang_service.dart';
-import 'features/admin/views/admin_dashboard_view.dart';
-import 'features/admin/views/users_view.dart';
-import 'features/auth/login_view.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {
@@ -15,7 +14,7 @@ void main() async {
   runApp(
     ScreenUtilInit(
       designSize: const Size(375, 812),
-      builder: (_, __) => MyApp(locale: locale),
+      builder: (_, _) => MyApp(locale: locale),
     ),
   );
 }
@@ -38,12 +37,8 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.green[50],
         canvasColor: Constants.background,
       ),
-      initialRoute: '/dashboard',
-      getPages: [
-        GetPage(name: '/login', page: () => const LoginScreen()),
-        GetPage(name: '/admin', page: () => AdminDashboardView()),
-        GetPage(name: '/dashboard', page: () => Dashboard()),
-      ],
+      initialRoute: AppRoutes.dashboard,
+      getPages: AppPages.routes,
       debugShowCheckedModeBanner: false,
     );
   }

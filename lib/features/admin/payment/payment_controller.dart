@@ -3,20 +3,20 @@ import 'package:get/get.dart';
 
 /// وحدة تحكم المستخدمين - User Controller
 /// مسؤولة عن إدارة بيانات المستخدمين، البحث، الفرز، والاختيار.
-class ManagementSupermarketController extends GetxController {
+class PaymentController extends GetxController {
   var dataList = <Map<String, String>>[].obs;        // جميع بيانات المستخدمين
   var filteredDataList = <Map<String, String>>[].obs; // البيانات بعد البحث أو التصفية
   RxList<bool> selectedRows = <bool>[].obs;          // حالة التحديد لكل صف
 
   RxInt sortColumnIndex = 0.obs;                     // العمود المفعل للفرز
-  RxBool sortAscending = true.obs;                   // اتجاه الفرز
+  RxBool sortAscending = true.obs;                   // اتجاه الفرز (تصاعدي / تنازلي)
   final searchTextController = TextEditingController(); // متحكم حقل البحث
 
   /// عند إنشاء الكنترولر يتم تحميل البيانات مباشرة
   @override
   void onInit() {
     super.onInit();
-    fetchUsers();
+    fetchPayments();
   }
 
   /// إنشاء خلايا البيانات الخاصة بكل صف في الجدول
@@ -29,6 +29,7 @@ class ManagementSupermarketController extends GetxController {
       DataCell(Text(data['Column5'] ?? '', overflow: TextOverflow.ellipsis)),
       DataCell(Text(data['Column6'] ?? '', overflow: TextOverflow.ellipsis)),
       DataCell(Text(data['Column7'] ?? '', overflow: TextOverflow.ellipsis)),
+      DataCell(Text(data['Column8'] ?? '', overflow: TextOverflow.ellipsis)),
       DataCell(
         SizedBox(
           width: 100,
@@ -37,26 +38,11 @@ class ManagementSupermarketController extends GetxController {
             children: [
               Flexible(
                 child: IconButton(
-                  icon: const Icon(Icons.remove_red_eye_outlined, color: Colors.grey, size: 20),
+                  icon: const Icon(Icons.remove_red_eye_outlined, color: Colors.grey, size: 25),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                   onPressed: () => print('View ${data['Column1']}'),
-                ),
-              ),
-              Flexible(
-                child: IconButton(
-                  icon: const Icon(Icons.check, color: Colors.green, size: 22),
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                  onPressed: () => print('Edit ${data['Column1']}'),
-                ),
-              ),
-              Flexible(
-                child: IconButton(
-                  icon: const Icon(Icons.close, color: Colors.red, size: 22),
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                  onPressed: () => print('Delete ${data['Column1']}'),
+                  tooltip: 'view'.tr,
                 ),
               ),
             ],
@@ -66,26 +52,26 @@ class ManagementSupermarketController extends GetxController {
     ];
   }
 
-  /// تعريف أعمدة الجدول مع دعم الترجمة
+  /// تعريف أعمدة الجدول مع دعم الفرز
   List<DataColumn> get tableColumns => [
     DataColumn(
-      label: Text('store_name'.tr),
+      label: Text('transaction_number'.tr),
       onSort: (columnIndex, ascending) => sortData(0, ascending),
     ),
     DataColumn(
-      label: Text('owner'.tr),
+      label: Text('order_number'.tr),
       onSort: (columnIndex, ascending) => sortData(1, ascending),
     ),
     DataColumn(
-      label: Text('email'.tr),
+      label: Text('customer'.tr),
       onSort: (columnIndex, ascending) => sortData(2, ascending),
     ),
     DataColumn(
-      label: Text('phone'.tr),
+      label: Text('amount'.tr),
       onSort: (columnIndex, ascending) => sortData(3, ascending),
     ),
     DataColumn(
-      label: Text('address'.tr),
+      label: Text('payment_method'.tr),
       onSort: (columnIndex, ascending) => sortData(4, ascending),
     ),
     DataColumn(
@@ -93,12 +79,16 @@ class ManagementSupermarketController extends GetxController {
       onSort: (columnIndex, ascending) => sortData(5, ascending),
     ),
     DataColumn(
-      label: Text('register_date'.tr),
+      label: Text('supermarket'.tr),
       onSort: (columnIndex, ascending) => sortData(6, ascending),
     ),
     DataColumn(
+      label: Text('date'.tr),
+      onSort: (columnIndex, ascending) => sortData(7, ascending),
+    ),
+    DataColumn(
       label: Text('actions'.tr),
-      onSort: (columnIndex, ascending) => sortData(6, ascending),
+      onSort: (columnIndex, ascending) => sortData(8, ascending),
     ),
   ];
 
@@ -135,38 +125,54 @@ class ManagementSupermarketController extends GetxController {
         List.generate(filteredDataList.length, (index) => false));
   }
 
-  /// تحميل بيانات تجريبية لادارة السوبرماركت
-  void fetchUsers() {
-    final statuses = ['pending'.tr, 'accepted'.tr, 'rejected'.tr];
-    final addresses = [
-      'sanaa_hisaba'.tr,
-      'taiz_tahrir'.tr,
-      'aden_khor_maksar'.tr,
-      'ib_center'.tr,
-      'hodieda_port'.tr,
-      'dhamar_street'.tr,
-      'mukalla_dis'.tr,
-      'saada_city'.tr,
-    ];
+  /// تحميل بيانات تجريبية للمستخدمين
+  void fetchPayments() {
+    final paymentMethods = ['Cash'.tr, 'E-Wallet'.tr, 'Bank Transfer'.tr, 'POS'.tr];
+    final statuses = ['Completed'.tr, 'Pending'.tr, 'Failed'.tr];
+    final supermarkets = ['Sham Supermarket'.tr, 'Yemen Supermarket'.tr, 'Future Supermarket'.tr];
 
     dataList.assignAll(
       List.generate(
         20,
             (index) => {
-          'Column1': '${'supermarket'.tr} ${index + 1}',
-          'Column2': '${'owner'.tr} ${index + 1}',
-          'Column3': 'market${index + 1}@gmail.com',
-          'Column4': '77${9000000 + index}',
-          'Column5': addresses[index % addresses.length],
+          'Column1': 'TX-${1000 + index}',
+          'Column2': '#${500 + index}',
+          'Column3': '${'Customer'.tr} ${index + 1}',
+          'Column4': '${(index + 1) * 1200} ريال',
+          'Column5': paymentMethods[index % paymentMethods.length],
           'Column6': statuses[index % statuses.length],
-          'Column7': '2025-0${(index % 9) + 1}-15',
+          'Column7': supermarkets[index % supermarkets.length],
+          'Column8': '2025-11-${(index % 28) + 1}',
         },
       ),
     );
 
     filteredDataList.assignAll(dataList);
     selectedRows.assignAll(
-        List.generate(filteredDataList.length, (index) => false));
+      List.generate(filteredDataList.length, (index) => false),
+    );
+  }
+
+  final selectedValue = 'all_statuses'.obs;
+  final options = ['all_statuses','completed', 'pending','failed','refunded'];
+
+  // عند التغيير
+  void changeValue(String newValue) {
+    selectedValue.value = newValue;
+  }
+
+  final selectedWay = 'all_methods'.obs;
+  final List<String> paymentWay = [
+    'all_methods',
+    'Cash',
+    'Credit Card',
+    'Digital Wallet',
+    'Bank Transfer',
+  ];
+
+  // عند التغيير
+  void changeWay(String newValue) {
+    selectedWay.value = newValue;
   }
 
 }

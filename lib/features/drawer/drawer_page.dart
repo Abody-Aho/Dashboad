@@ -27,7 +27,7 @@ class DrawerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final SidebarController ctrl = Get.find<SidebarController>();
+    final ctrl = Get.find<SidebarController>();
 
     return Drawer(
       backgroundColor: Colors.green[50],

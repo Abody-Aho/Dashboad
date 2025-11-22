@@ -1,44 +1,46 @@
 import 'package:dashbord2/core/constants/app_constants.dart';
+import 'package:dashbord2/features/admin/users/user_controller.dart';
 import 'package:dashbord2/features/widgets/custom_data_table.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../widgets/custom_card.dart';
-import '../widgets/custom_dropdown_button.dart';
-import '../widgets/custom_search_bar.dart';
-import 'orders_controller.dart';
+import '../../widgets/custom_bottom.dart';
+import '../../widgets/custom_card.dart';
+import '../../widgets/custom_dropdown_button.dart';
+import '../../widgets/custom_search_bar.dart';
 
-class OrdersPage extends StatelessWidget {
-  const OrdersPage({super.key});
+class UsersPage extends StatelessWidget {
+  const UsersPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final OrdersController controller = Get.put(OrdersController());
+    final controller = Get.find<UserController>();
 
-    // بطاقات الإحصائيات
+    // بطاقات الإحصائيات / Statistics Cards
     List<Widget> statCards = [
       StatCard(
-        title: 'total_orders'.tr,
-        value: '2,540',
-        percent: '7%',
+        title: 'total_users'.tr, // مترجم
+        value: '1,245',
+        percent: '8%',
         subtitle: 'compared_last_month'.tr,
       ),
       StatCard(
-        title: 'running_orders'.tr,
-        value: '320',
+        title: 'active_users'.tr,
+        value: '984',
         percent: '5%',
-        subtitle: 'increase_this_week'.tr,
+        subtitle: 'compared_last_month'.tr,
       ),
       StatCard(
-        title: 'completed_orders'.tr,
-        value: '1,950',
+        title: 'new_signups'.tr,
+        value: '124',
         percent: '12%',
         subtitle: 'compared_last_month'.tr,
       ),
       StatCard(
-        title: 'cancelled_orders'.tr,
-        value: '78',
-        percent: '-4%',
-        subtitle: 'decrease_this_week'.tr,
+        title: 'banned_users'.tr,
+        value: '15',
+        percent: '-3%',
+        subtitle: 'compared_last_month'.tr,
         percentColor: Colors.red,
         percentIcon: Icons.arrow_downward,
       ),
@@ -51,11 +53,11 @@ class OrdersPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // العنوان
+              // العنوان / Page Title
               Container(
                 alignment: Alignment.centerRight,
                 child: Text(
-                  "orders_management".tr,
+                  'user_management'.tr,
                   style: TextStyle(
                     color: Constants.primary,
                     fontSize: 18,
@@ -65,7 +67,7 @@ class OrdersPage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // بطاقات الإحصائيات
+              // بطاقات الإحصائيات / Statistics Cards Layout
               LayoutBuilder(
                 builder: (context, constraints) {
                   int crossAxisCount = 1;
@@ -88,41 +90,25 @@ class OrdersPage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // جدول المستخدمين مع الخلفية المستديرة
+              // جدول المستخدمين مع الخلفية المستديرة / Users Table with Rounded Background
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Container(
                   color: Colors.white,
                   padding: const EdgeInsets.all(15),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const SizedBox(height: 10),
-                      Container(
-                        margin: EdgeInsets.symmetric(horizontal: 20),
-                        child: Text(
-                          "orders_list".tr,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 20),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Container(
-                        margin: EdgeInsets.symmetric(horizontal: 20),
-                        child: Text(
-                          "orders_management_description".tr,
-                          style:
-                          TextStyle(color: Constants.grey, fontSize: 17),
-                        ),
-                      ),
 
-                      const SizedBox(height: 20),
-
+                      // الصف العلوي (زر + قائمة + بحث) / Top Row (Button + Dropdown + Search)
                       LayoutBuilder(
                         builder: (context, constraints) {
-                          bool isPhone = constraints.maxWidth < 600;
+                          bool isPhone =
+                              constraints.maxWidth < 600;
 
                           if (isPhone) {
+                            // عمودي / Vertical layout
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
@@ -139,17 +125,42 @@ class OrdersPage extends StatelessWidget {
                                     onChanged: controller.changeValue,
                                   ),
                                 ),
+                                const SizedBox(height: 20),
+                                Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 11),
+                                  child: CustomBottom(
+                                    controller: controller,
+                                    addButtonText: 'add_users'.tr,
+                                    onAddPressed: () {
+                                      print("Add user pressed");
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
                               ],
                             );
                           } else {
+                            // أفقي / Horizontal layout
                             return Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                CustomDropdownButton(
-                                  selectedValue: controller.selectedValue,
-                                  options: controller.options,
-                                  onChanged: controller.changeValue,
+                                CustomBottom(
+                                  controller: controller,
+                                  addButtonText: 'add_users'.tr,
+                                  onAddPressed: () {
+                                    print("Add user pressed");
+                                  },
                                 ),
+                                Container(
+                                  margin: EdgeInsets.only(left: 5.w),
+                                  child: CustomDropdownButton(
+                                    selectedValue: controller.selectedValue,
+                                    options: controller.options,
+                                    onChanged: controller.changeValue,
+
+                                  ),
+                                ),
+
                                 Expanded(
                                   child: CustomSearchBar(
                                     controller: controller,
@@ -164,6 +175,7 @@ class OrdersPage extends StatelessWidget {
 
                       const SizedBox(height: 15),
 
+                      // جدول المستخدمين / Users Table
                       SizedBox(
                         height: 500,
                         child: CustomDataTable(controller: controller),

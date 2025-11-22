@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../core/constants/app_constants.dart';
-import '../widgets/custom_card.dart';
-import '../widgets/custom_data_table.dart';
-import '../widgets/custom_search_bar.dart';
+import '../../../core/constants/app_constants.dart';
+import '../../widgets/custom_card.dart';
+import '../../widgets/custom_data_table.dart';
+import '../../widgets/custom_search_bar.dart';
 import 'mangmant_supermarket_controller.dart';
 
 class ManagementSupermarketPage extends StatelessWidget {

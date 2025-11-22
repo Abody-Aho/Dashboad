@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 
 /// وحدة تحكم المستخدمين - User Controller
 /// مسؤولة عن إدارة بيانات المستخدمين، البحث، الفرز، والاختيار.
-class PaymentController extends GetxController {
+class ProductsController extends GetxController {
   var dataList = <Map<String, String>>[].obs;        // جميع بيانات المستخدمين
   var filteredDataList = <Map<String, String>>[].obs; // البيانات بعد البحث أو التصفية
   RxList<bool> selectedRows = <bool>[].obs;          // حالة التحديد لكل صف
@@ -16,7 +16,7 @@ class PaymentController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    fetchPayments();
+    fetchProducts();
   }
 
   /// إنشاء خلايا البيانات الخاصة بكل صف في الجدول
@@ -38,11 +38,29 @@ class PaymentController extends GetxController {
             children: [
               Flexible(
                 child: IconButton(
-                  icon: const Icon(Icons.remove_red_eye_outlined, color: Colors.grey, size: 20),
+                  icon: const Icon(Icons.remove_red_eye_outlined, color: Colors.grey, size: 25),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                   onPressed: () => print('View ${data['Column1']}'),
                   tooltip: 'view'.tr,
+                ),
+              ),
+              Flexible(
+                child: IconButton(
+                  icon: const Icon(Icons.edit, color: Colors.blue, size: 25),
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  onPressed: () => print('Edit ${data['Column1']}'),
+                  tooltip: 'edit'.tr,
+                ),
+              ),
+              Flexible(
+                child: IconButton(
+                  icon: const Icon(Icons.delete, color: Colors.red, size: 25),
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  onPressed: () => print('Delete ${data['Column1']}'),
+                  tooltip: 'delete'.tr,
                 ),
               ),
             ],
@@ -55,35 +73,35 @@ class PaymentController extends GetxController {
   /// تعريف أعمدة الجدول مع دعم الفرز
   List<DataColumn> get tableColumns => [
     DataColumn(
-      label: Text('transaction_number'.tr),
+      label: Text('product_name'.tr),
       onSort: (columnIndex, ascending) => sortData(0, ascending),
     ),
     DataColumn(
-      label: Text('order_number'.tr),
+      label: Text('category'.tr),
       onSort: (columnIndex, ascending) => sortData(1, ascending),
     ),
     DataColumn(
-      label: Text('customer'.tr),
+      label: Text('price'.tr),
       onSort: (columnIndex, ascending) => sortData(2, ascending),
     ),
     DataColumn(
-      label: Text('amount'.tr),
+      label: Text('stock'.tr),
       onSort: (columnIndex, ascending) => sortData(3, ascending),
     ),
     DataColumn(
-      label: Text('payment_method'.tr),
+      label: Text('supermarket'.tr),
       onSort: (columnIndex, ascending) => sortData(4, ascending),
     ),
     DataColumn(
-      label: Text('status'.tr),
+      label: Text('availability'.tr),
       onSort: (columnIndex, ascending) => sortData(5, ascending),
     ),
     DataColumn(
-      label: Text('supermarket'.tr),
+      label: Text('sales'.tr),
       onSort: (columnIndex, ascending) => sortData(6, ascending),
     ),
     DataColumn(
-      label: Text('date'.tr),
+      label: Text('last_update'.tr),
       onSort: (columnIndex, ascending) => sortData(7, ascending),
     ),
     DataColumn(
@@ -126,23 +144,23 @@ class PaymentController extends GetxController {
   }
 
   /// تحميل بيانات تجريبية للمستخدمين
-  void fetchPayments() {
-    final paymentMethods = ['Cash'.tr, 'E-Wallet'.tr, 'Bank Transfer'.tr, 'POS'.tr];
-    final statuses = ['Completed'.tr, 'Pending'.tr, 'Failed'.tr];
-    final supermarkets = ['Sham Supermarket'.tr, 'Yemen Supermarket'.tr, 'Future Supermarket'.tr];
+  void fetchProducts() {
+    final categories = ['خضار', 'فاكهة', 'مشروبات', 'أدوات منزلية'];
+    final supermarkets = ['سوبرماركت الشام', 'سوبرماركت اليمن', 'سوبرماركت المستقبل'];
+    final availability = ['متوفر', 'غير متوفر'];
 
     dataList.assignAll(
       List.generate(
         20,
             (index) => {
-          'Column1': 'TX-${1000 + index}',
-          'Column2': '#${500 + index}',
-          'Column3': '${'Customer'.tr} ${index + 1}',
-          'Column4': '${(index + 1) * 1200} ريال',
-          'Column5': paymentMethods[index % paymentMethods.length],
-          'Column6': statuses[index % statuses.length],
-          'Column7': supermarkets[index % supermarkets.length],
-          'Column8': '2025-11-${(index % 28) + 1}',
+          'Column1': 'منتج ${index + 1}', // اسم المنتج
+          'Column2': categories[index % categories.length], // التصنيف
+          'Column3': '${(index + 1) * 5} ريال', // السعر
+          'Column4': '${(index + 1) * 10}', // المخزون
+          'Column5': supermarkets[index % supermarkets.length], // السوبرماركت
+          'Column6': availability[index % availability.length], // التوفر
+          'Column7': '${(index + 1) * 20}', // المبيعات
+          'Column8': '2025-11-${(index % 28) + 1}', // اخر تحديث
         },
       ),
     );
@@ -153,26 +171,29 @@ class PaymentController extends GetxController {
     );
   }
 
-  final selectedValue = 'all_statuses'.obs;
-  final options = ['all_statuses','completed', 'pending','failed','refunded'];
+  final selectedValue = 'all_status'.obs;
+  final options = ['all_status','available', 'not_available'];
 
   // عند التغيير
   void changeValue(String newValue) {
     selectedValue.value = newValue;
   }
 
-  final selectedWay = 'all_methods'.obs;
-  final List<String> paymentWay = [
-    'all_methods',
-    'Cash',
-    'Credit Card',
-    'Digital Wallet',
-    'Bank Transfer',
+  final selectedCategories = 'all_categories'.obs;
+  final List<String> supermarketCategories = [
+    'all_categories',
+    'bakery',
+    'dairy',
+    'grains',
+    'fruits',
+    'vegetables',
+    'meat',
+    'drinks',
+    'detergents',
   ];
 
   // عند التغيير
-  void changeWay(String newValue) {
-    selectedWay.value = newValue;
+  void changeCategories(String newValue) {
+    selectedCategories.value = newValue;
   }
-
 }

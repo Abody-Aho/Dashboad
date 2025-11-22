@@ -136,6 +136,7 @@ class AppTranslations extends Translations {
       "dhamar_street": "ذمار - شارع صنعاء",
       "mukalla_dis": "المكلا - الديس",
       "saada_city": "صعدة - المدينة",
+      "accept" : "قبول",
 
       // OrdersPage
       "total_orders": "إجمالي الطلبات",
@@ -373,6 +374,7 @@ class AppTranslations extends Translations {
       "dhamar_street": "Dhamar - Sana'a Street",
       "mukalla_dis": "Mukalla - Dis",
       "saada_city": "Saada - City",
+      "accept" : "Accept",
 
       // OrdersPage
       "total_orders": "Total Orders",

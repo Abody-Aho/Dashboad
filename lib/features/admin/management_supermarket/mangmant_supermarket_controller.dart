@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-/// User Controller
-/// Responsible for managing user data, search, sorting, and selection.
-class OrdersController extends GetxController {
-  var dataList = <Map<String, String>>[].obs;        // All user data
-  var filteredDataList = <Map<String, String>>[].obs; // Data after search/filter
-  RxList<bool> selectedRows = <bool>[].obs;          // Selection state for each row
+/// وحدة تحكم المستخدمين - User Controller
+/// مسؤولة عن إدارة بيانات المستخدمين، البحث، الفرز، والاختيار.
+class ManagementSupermarketController extends GetxController {
+  var dataList = <Map<String, String>>[].obs;        // جميع بيانات المستخدمين
+  var filteredDataList = <Map<String, String>>[].obs; // البيانات بعد البحث أو التصفية
+  RxList<bool> selectedRows = <bool>[].obs;          // حالة التحديد لكل صف
 
-  RxInt sortColumnIndex = 0.obs;                     // Active column index for sorting
-  RxBool sortAscending = true.obs;                   // Sorting direction (ascending/descending)
-  final searchTextController = TextEditingController(); // Search field controller
+  RxInt sortColumnIndex = 0.obs;                     // العمود المفعل للفرز
+  RxBool sortAscending = true.obs;                   // اتجاه الفرز
+  final searchTextController = TextEditingController(); // متحكم حقل البحث
 
-  /// Load data when controller is initialized
+  /// عند إنشاء الكنترولر يتم تحميل البيانات مباشرة
   @override
   void onInit() {
     super.onInit();
     fetchUsers();
   }
 
-  /// Create data cells for each row in the table
+  /// إنشاء خلايا البيانات الخاصة بكل صف في الجدول
   List<DataCell> getDataCells(Map<String, dynamic> data) {
     return [
       DataCell(Text(data['Column1'] ?? '', overflow: TextOverflow.ellipsis)),
@@ -31,35 +31,35 @@ class OrdersController extends GetxController {
       DataCell(Text(data['Column7'] ?? '', overflow: TextOverflow.ellipsis)),
       DataCell(
         SizedBox(
-          width: 100, // Fixed width for buttons
+          width: 100,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Flexible(
                 child: IconButton(
-                  icon: const Icon(Icons.person, color: Colors.grey, size: 20),
+                  icon: const Icon(Icons.remove_red_eye_outlined, color: Colors.grey, size: 25),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                   onPressed: () => print('View ${data['Column1']}'),
-                  tooltip: 'View'.tr,
+                  tooltip: "view".tr,
                 ),
               ),
               Flexible(
                 child: IconButton(
-                  icon: const Icon(Icons.edit, color: Colors.blue, size: 20),
+                  icon: const Icon(Icons.check, color: Colors.green, size: 25),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                   onPressed: () => print('Edit ${data['Column1']}'),
-                  tooltip: 'Edit'.tr,
+                  tooltip: "accept".tr,
                 ),
               ),
               Flexible(
                 child: IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.red, size: 20),
+                  icon: const Icon(Icons.close, color: Colors.red, size: 25),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                   onPressed: () => print('Delete ${data['Column1']}'),
-                  tooltip: 'Delete'.tr,
+                  tooltip: "delete".tr,
                 ),
               ),
             ],
@@ -69,34 +69,34 @@ class OrdersController extends GetxController {
     ];
   }
 
-  /// Define table columns with sorting support
+  /// تعريف أعمدة الجدول مع دعم الترجمة
   List<DataColumn> get tableColumns => [
     DataColumn(
-      label: Text('name'.tr),
+      label: Text('store_name'.tr),
       onSort: (columnIndex, ascending) => sortData(0, ascending),
     ),
     DataColumn(
-      label: Text('user_email'.tr),
+      label: Text('owner'.tr),
       onSort: (columnIndex, ascending) => sortData(1, ascending),
     ),
     DataColumn(
-      label: Text('phone'.tr),
+      label: Text('email'.tr),
       onSort: (columnIndex, ascending) => sortData(2, ascending),
     ),
     DataColumn(
-      label: Text('type'.tr),
+      label: Text('phone'.tr),
       onSort: (columnIndex, ascending) => sortData(3, ascending),
     ),
     DataColumn(
-      label: Text('status'.tr),
+      label: Text('address'.tr),
       onSort: (columnIndex, ascending) => sortData(4, ascending),
     ),
     DataColumn(
-      label: Text('registration_date'.tr),
+      label: Text('status'.tr),
       onSort: (columnIndex, ascending) => sortData(5, ascending),
     ),
     DataColumn(
-      label: Text('last_activity'.tr),
+      label: Text('register_date'.tr),
       onSort: (columnIndex, ascending) => sortData(6, ascending),
     ),
     DataColumn(
@@ -105,7 +105,7 @@ class OrdersController extends GetxController {
     ),
   ];
 
-  /// Sort data by selected column
+  /// تنفيذ عملية الفرز حسب العمود المختار
   void sortData(int columnIndex, bool ascending) {
     sortColumnIndex.value = columnIndex;
     sortAscending.value = ascending;
@@ -121,7 +121,7 @@ class OrdersController extends GetxController {
     filteredDataList.refresh();
   }
 
-  /// Execute search in table
+  /// تنفيذ البحث في الجدول
   void searchQuery(String query) {
     List<Map<String, String>> results;
     if (query.isEmpty) {
@@ -134,45 +134,42 @@ class OrdersController extends GetxController {
     }
 
     filteredDataList.assignAll(results);
-    selectedRows.assignAll(List.generate(filteredDataList.length, (index) => false));
+    selectedRows.assignAll(
+        List.generate(filteredDataList.length, (index) => false));
   }
 
-  /// Load sample user data
+  /// تحميل بيانات تجريبية لادارة السوبرماركت
   void fetchUsers() {
-    final userTypes = ['Client'.tr, 'Agent'.tr, 'Supermarket'.tr, 'Admin'.tr];
-    final statuses = ['Active'.tr, 'Inactive'.tr];
+    final statuses = ['pending'.tr, 'accepted'.tr, 'rejected'.tr];
+    final addresses = [
+      'sanaa_hisaba'.tr,
+      'taiz_tahrir'.tr,
+      'aden_khor_maksar'.tr,
+      'ib_center'.tr,
+      'hodieda_port'.tr,
+      'dhamar_street'.tr,
+      'mukalla_dis'.tr,
+      'saada_city'.tr,
+    ];
 
     dataList.assignAll(
       List.generate(
         20,
             (index) => {
-          'Column1': '${'User'.tr} ${index + 1}', // Name
-          'Column2': 'user${index + 1}@gmail.com', // Email
-          'Column3': '77${9000000 + index}', // Phone
-          'Column4': userTypes[index % userTypes.length], // Type
-          'Column5': statuses[index % statuses.length], // Status
-          'Column6': '2025-0${(index % 9) + 1}-15', // Registration Date
-          'Column7': '2025-11-${(index % 28) + 1}', // Last Activity
+          'Column1': '${'supermarket'.tr} ${index + 1}',
+          'Column2': '${'owner'.tr} ${index + 1}',
+          'Column3': 'market${index + 1}@gmail.com',
+          'Column4': '77${9000000 + index}',
+          'Column5': addresses[index % addresses.length],
+          'Column6': statuses[index % statuses.length],
+          'Column7': '2025-0${(index % 9) + 1}-15',
         },
       ),
     );
 
     filteredDataList.assignAll(dataList);
     selectedRows.assignAll(
-      List.generate(filteredDataList.length, (index) => false),
-    );
+        List.generate(filteredDataList.length, (index) => false));
   }
 
-  final selectedValue = 'all_types'.obs;
-
-  final options = [
-    'all_types',
-    'clients',
-    'agents',
-    'supermarkets',
-  ];
-
-  void changeValue(String newValue) {
-    selectedValue.value = newValue;
-  }
 }

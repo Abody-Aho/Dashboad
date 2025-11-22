@@ -5,8 +5,8 @@ import '../../drawer/sidebar_controller.dart';
 import '../../widgets/app_bar_widget.dart';
 import '../../widgets/responsive_layout.dart';
 
-class Dashboard extends StatelessWidget {
-  const Dashboard({super.key});
+class AdminDashboard extends StatelessWidget {
+  const AdminDashboard({super.key});
 
   @override
   Widget build(BuildContext context) {

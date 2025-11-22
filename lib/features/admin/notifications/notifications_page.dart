@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../widgets/custom_bottom.dart';
+import '../../widgets/custom_card.dart';
+import '../../widgets/custom_dropdown_button.dart';
+import '../../widgets/custom_search_bar.dart';
 import 'notifications_controller.dart';
 import 'package:dashbord2/core/constants/app_constants.dart';
 import 'package:dashbord2/features/widgets/custom_data_table.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../widgets/custom_bottom.dart';
-import '../widgets/custom_card.dart';
-import '../widgets/custom_dropdown_button.dart';
-import '../widgets/custom_search_bar.dart';
-
 class NotificationsPage extends StatelessWidget {
   const NotificationsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final NotificationsController controller = Get.put(NotificationsController());
+    final controller = Get.find<NotificationsController>();
 
     // بطاقات الإحصائيات
     List<Widget> statCards = [

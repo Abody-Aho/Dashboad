@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class Constants {
-  // 🧱 المسافات العامة
+  //  المسافات العامة
   static const double kPadding = 10.0;
 
-  // 🌿 الألوان الأساسية (الخضراء)
+  //  الألوان الأساسية (الخضراء)
   static const Color background = Color(0xFFF4FBF4); // أخضر باهت
   static const Color white = Colors.white;
   static const Color primary = Color(0xFF2E7D32); // أخضر غامق
@@ -13,23 +13,23 @@ class Constants {
   static const Color accent = Color(0xFF7BC47F); // أخضر فاتح
   static const Color text = Color(0xFF2B3A2B);
 
-  // 🌈 ألوان إضافية مفيدة
+  //  ألوان إضافية مفيدة
   static const Color success = Color(0xFF4CAF50); // نجاح
   static const Color warning = Color(0xFFFFC107); // تحذير
   static const Color error = Color(0xFFF44336);   // خطأ
   static const Color info = Color(0xFF2196F3);    // معلومات
 
-  // 🩶 ألوان ثانوية ومحايدة
+  //  ألوان ثانوية ومحايدة
   static const Color greyLight = Color(0xFFE0E0E0);
   static const Color grey = Color(0xFF9E9E9E);
   static const Color greyDark = Color(0xFF616161);
 
-  // 🧊 ألوان للخلفيات الثانوية أو التظليل
+  //  ألوان للخلفيات الثانوية أو التظليل
   static const Color backgroundLight = Color(0xFFF9FFF9); // أفتح من background
   static const Color backgroundDark = Color(0xFFE8F5E9);  // أخضر فاتح جدًا
   static const Color shadow = Color(0x33000000);          // ظل خفيف (20%)
 
-  // 🟩 تدرجات لونية (يمكن تستخدمها في الخلفيات)
+  //  تدرجات لونية (يمكن تستخدمها في الخلفيات)
   static const LinearGradient greenGradient = LinearGradient(
     colors: [Color(0xFF2E7D32), Color(0xFF7BC47F)],
     begin: Alignment.topLeft,

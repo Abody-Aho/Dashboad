@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-/// وحدة تحكم المستخدمين - User Controller
-/// مسؤولة عن إدارة بيانات المستخدمين، البحث، الفرز، والاختيار.
-class UserController extends GetxController {
-  var dataList = <Map<String, String>>[].obs;        // جميع بيانات المستخدمين
-  var filteredDataList = <Map<String, String>>[].obs; // البيانات بعد البحث أو التصفية
-  RxList<bool> selectedRows = <bool>[].obs;          // حالة التحديد لكل صف
+/// User Controller
+/// Responsible for managing user data, search, sorting, and selection.
+class OrdersController extends GetxController {
+  var dataList = <Map<String, String>>[].obs;        // All user data
+  var filteredDataList = <Map<String, String>>[].obs; // Data after search/filter
+  RxList<bool> selectedRows = <bool>[].obs;          // Selection state for each row
 
-  RxInt sortColumnIndex = 0.obs;                     // العمود المفعل للفرز
-  RxBool sortAscending = true.obs;                   // اتجاه الفرز (تصاعدي / تنازلي)
-  final searchTextController = TextEditingController(); // متحكم حقل البحث
+  RxInt sortColumnIndex = 0.obs;                     // Active column index for sorting
+  RxBool sortAscending = true.obs;                   // Sorting direction (ascending/descending)
+  final searchTextController = TextEditingController(); // Search field controller
 
-  /// عند إنشاء الكنترولر يتم تحميل البيانات مباشرة
+  /// Load data when controller is initialized
   @override
   void onInit() {
     super.onInit();
     fetchUsers();
   }
 
-  /// إنشاء خلايا البيانات الخاصة بكل صف في الجدول
+  /// Create data cells for each row in the table
   List<DataCell> getDataCells(Map<String, dynamic> data) {
     return [
       DataCell(Text(data['Column1'] ?? '', overflow: TextOverflow.ellipsis)),
@@ -31,13 +31,13 @@ class UserController extends GetxController {
       DataCell(Text(data['Column7'] ?? '', overflow: TextOverflow.ellipsis)),
       DataCell(
         SizedBox(
-          width: 100, // عرض ثابت للأزرار
+          width: 100, // Fixed width for buttons
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Flexible(
                 child: IconButton(
-                  icon: const Icon(Icons.person, color: Colors.grey, size: 20),
+                  icon: const Icon(Icons.person, color: Colors.grey, size: 25),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                   onPressed: () => print('View ${data['Column1']}'),
@@ -46,7 +46,7 @@ class UserController extends GetxController {
               ),
               Flexible(
                 child: IconButton(
-                  icon: const Icon(Icons.edit, color: Colors.blue, size: 20),
+                  icon: const Icon(Icons.edit, color: Colors.blue, size: 25),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                   onPressed: () => print('Edit ${data['Column1']}'),
@@ -55,7 +55,7 @@ class UserController extends GetxController {
               ),
               Flexible(
                 child: IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.red, size: 20),
+                  icon: const Icon(Icons.delete, color: Colors.red, size: 25),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                   onPressed: () => print('Delete ${data['Column1']}'),
@@ -69,7 +69,7 @@ class UserController extends GetxController {
     ];
   }
 
-  /// تعريف أعمدة الجدول مع دعم الفرز
+  /// Define table columns with sorting support
   List<DataColumn> get tableColumns => [
     DataColumn(
       label: Text('name'.tr),
@@ -105,7 +105,7 @@ class UserController extends GetxController {
     ),
   ];
 
-  /// تنفيذ عملية الفرز حسب العمود المختار
+  /// Sort data by selected column
   void sortData(int columnIndex, bool ascending) {
     sortColumnIndex.value = columnIndex;
     sortAscending.value = ascending;
@@ -121,7 +121,7 @@ class UserController extends GetxController {
     filteredDataList.refresh();
   }
 
-  /// تنفيذ البحث في الجدول
+  /// Execute search in table
   void searchQuery(String query) {
     List<Map<String, String>> results;
     if (query.isEmpty) {
@@ -137,7 +137,7 @@ class UserController extends GetxController {
     selectedRows.assignAll(List.generate(filteredDataList.length, (index) => false));
   }
 
-  /// تحميل بيانات تجريبية للمستخدمين
+  /// Load sample user data
   void fetchUsers() {
     final userTypes = ['Client'.tr, 'Agent'.tr, 'Supermarket'.tr, 'Admin'.tr];
     final statuses = ['Active'.tr, 'Inactive'.tr];
@@ -146,13 +146,13 @@ class UserController extends GetxController {
       List.generate(
         20,
             (index) => {
-          'Column1': '${'User'.tr} ${index + 1}', // الاسم
-          'Column2': 'user${index + 1}@gmail.com', // البريد الإلكتروني
-          'Column3': '77${9000000 + index}', // الهاتف
-          'Column4': userTypes[index % userTypes.length], // النوع
-          'Column5': statuses[index % statuses.length], // الحالة
-          'Column6': '2025-0${(index % 9) + 1}-15', // تاريخ التسجيل
-          'Column7': '2025-11-${(index % 28) + 1}', // آخر نشاط
+          'Column1': '${'User'.tr} ${index + 1}', // Name
+          'Column2': 'user${index + 1}@gmail.com', // Email
+          'Column3': '77${9000000 + index}', // Phone
+          'Column4': userTypes[index % userTypes.length], // Type
+          'Column5': statuses[index % statuses.length], // Status
+          'Column6': '2025-0${(index % 9) + 1}-15', // Registration Date
+          'Column7': '2025-11-${(index % 28) + 1}', // Last Activity
         },
       ),
     );
@@ -175,5 +175,4 @@ class UserController extends GetxController {
   void changeValue(String newValue) {
     selectedValue.value = newValue;
   }
-
 }

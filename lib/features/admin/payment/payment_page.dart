@@ -1,46 +1,45 @@
 import 'package:dashbord2/core/constants/app_constants.dart';
-import 'package:dashbord2/features/products/products_controller.dart';
+import 'package:dashbord2/features/admin/payment/payment_controller.dart';
 import 'package:dashbord2/features/widgets/custom_data_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../widgets/custom_bottom.dart';
-import '../widgets/custom_card.dart';
-import '../widgets/custom_dropdown_button.dart';
-import '../widgets/custom_search_bar.dart';
-
-class ProductsPage extends StatelessWidget {
-  const ProductsPage({super.key});
+import '../../widgets/custom_card.dart';
+import '../../widgets/custom_dropdown_button.dart';
+import '../../widgets/custom_search_bar.dart';
+class PaymentPage extends StatelessWidget {
+  const PaymentPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final ProductsController controller = Get.put(ProductsController());
+    final controller = Get.find<PaymentController>();
+
 
     // بطاقات الإحصائيات
     List<Widget> statCards = [
       StatCard(
-        title: 'total_products'.tr,
-        value: '1,245',
-        percent: '8%',
-        subtitle: 'compared_to_last_month'.tr,
-      ),
-      StatCard(
-        title: 'active_products'.tr,
-        value: '984',
-        percent: '5%',
-        subtitle: 'compared_to_last_month'.tr,
-      ),
-      StatCard(
-        title: 'new_products'.tr,
-        value: '124',
+        title: 'total_payments'.tr,
+        value: '4,560,000 ر.ي',
         percent: '12%',
-        subtitle: 'compared_to_last_month'.tr,
+        subtitle: 'compared_last_month'.tr,
       ),
       StatCard(
-        title: 'unavailable_products'.tr,
-        value: '15',
-        percent: '-3%',
-        subtitle: 'compared_to_last_month'.tr,
+        title: 'completed_payments'.tr,
+        value: '3,980',
+        percent: '7%',
+        subtitle: 'compared_last_month'.tr,
+      ),
+      StatCard(
+        title: 'pending_payments'.tr,
+        value: '215',
+        percent: '3%',
+        subtitle: 'awaiting_confirmation'.tr,
+      ),
+      StatCard(
+        title: 'failed_payments'.tr,
+        value: '45',
+        percent: '-4%',
+        subtitle: 'compared_last_month'.tr,
         percentColor: Colors.red,
         percentIcon: Icons.arrow_downward,
       ),
@@ -57,7 +56,7 @@ class ProductsPage extends StatelessWidget {
               Container(
                 alignment: Alignment.centerRight,
                 child: Text(
-                  "manage_products".tr,
+                  "payment_management".tr,
                   style: TextStyle(
                     color: Constants.primary,
                     fontSize: 18,
@@ -112,14 +111,14 @@ class ProductsPage extends StatelessWidget {
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                CustomSearchBar(controller: controller, hintText: 'search'.tr,),
+                                CustomSearchBar(controller: controller, hintText: 'search'.tr),
                                 const SizedBox(height: 20),
                                 Container(
                                   margin: EdgeInsets.symmetric(horizontal: 10),
                                   child: CustomDropdownButton(
-                                    selectedValue: controller.selectedCategories,
-                                    options: controller.supermarketCategories,
-                                    onChanged: controller.changeCategories,
+                                    selectedValue: controller.selectedWay,
+                                    options: controller.paymentWay,
+                                    onChanged: controller.changeWay,
                                   ),
                                 ),
                                 const SizedBox(height: 20),
@@ -132,18 +131,6 @@ class ProductsPage extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(height: 20),
-                                Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 12),
-                                  child: CustomBottom(
-                                    controller: controller,
-                                    addButtonText: 'add_product'.tr,
-                                    onAddPressed: () {
-                                      print("Add product pressed");
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(height: 20),
-
                               ],
                             );
                           } else {
@@ -151,37 +138,26 @@ class ProductsPage extends StatelessWidget {
                             return Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                CustomBottom(
-                                  controller: controller,
-                                  addButtonText: 'add_product'.tr,
-                                  onAddPressed: () {
-                                    print("Add product pressed");
-                                  },
-                                ),
                                 Container(
-                                  margin: EdgeInsets.only(
-                                    left: 5.w,
-                                  ),
+                                  margin: EdgeInsets.only(left: 5.w),
                                   child: CustomDropdownButton(
-                                    selectedValue: controller.selectedCategories,
-                                    options: controller.supermarketCategories,
-                                    onChanged: controller.changeCategories,
+                                    selectedValue: controller.selectedWay,
+                                    options: controller.paymentWay,
+                                    onChanged: controller.changeWay,
                                   ),
                                 ),
                                 Container(
-                                  margin: EdgeInsets.only(
-                                    left: 5.w,
-                                  ),
+                                  margin: EdgeInsets.only(left: 5.w),
                                   child: CustomDropdownButton(
                                     selectedValue: controller.selectedValue,
                                     options: controller.options,
                                     onChanged: controller.changeValue,
                                   ),
                                 ),
-
                                 Expanded(
                                   child: CustomSearchBar(
-                                    controller: controller, hintText: 'search'.tr,
+                                    controller: controller,
+                                    hintText: 'search'.tr,
                                   ),
                                 ),
                               ],
@@ -192,9 +168,8 @@ class ProductsPage extends StatelessWidget {
 
                       const SizedBox(height: 15),
 
-                      // جدول المستخدمين - مهم تحديد الارتفاع
                       SizedBox(
-                        height: 500, // 👈 هذا يحل خطأ RenderBox
+                        height: 500,
                         child: CustomDataTable(controller: controller),
                       ),
                     ],

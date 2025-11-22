@@ -6,14 +6,14 @@ import 'package:flutter/material.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../panel_lift/panel_lift_page.dart';
 
-class AdminDashboardView extends StatefulWidget {
-  const AdminDashboardView({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  State<AdminDashboardView> createState() => _AdminDashboardViewState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _AdminDashboardViewState extends State<AdminDashboardView> {
+class _HomePageState extends State<HomePage> {
 
   int currentIndex = 1;
   int currentIndex2 = 0;
