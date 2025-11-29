@@ -20,7 +20,6 @@ class SidebarController extends GetxController {
     ProductsPage(),
     PaymentPage(),
     NotificationsPage(),
-    LoginScreen(),
   ];
 
   Widget get currentPage => pages[selectedIndex.value];

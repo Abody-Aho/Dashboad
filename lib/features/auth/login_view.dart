@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import '../../core/services/lang_service.dart';
 import 'auth_controller.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -13,7 +12,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final AuthController dropdownController = Get.put(AuthController());
+   AuthController dropdownController = Get.find();
   final _formKey = GlobalKey<FormState>();
 
 

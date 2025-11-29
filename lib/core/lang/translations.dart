@@ -21,12 +21,26 @@ class AppTranslations extends Translations {
       'password_required': 'يرجى إدخال كلمة المرور',
       'password_short': 'كلمة المرور يجب أن تكون 6 أحرف على الأقل',
 
+      // SingInView
+      "signup_title": "إنشاء حساب",
+      "signup_subtitle": "قم بإنشاء حساب جديد للمتابعة",
+      "create_account": "إنشاء حساب",
+      "create_account_desc": "املأ الحقول بالأسفل لإنشاء حساب جديد",
+      "confirm_password": "تأكيد كلمة المرور",
+      "confirm_password_hint": "أعد إدخال كلمة المرور",
+      "confirm_password_required": "الرجاء تأكيد كلمة المرور",
+      "passwords_not_match": "كلمتا المرور غير متطابقتين",
+      "name": "الاسم",
+      "name_hint": "ادخل اسمك الكامل",
+      "name_required": "الاسم مطلوب",
+
       // AppBarWidget
       "overview": "نظرة عامة",
       "revenue": "الإيرادات",
       "sales": "المبيعات",
       "control": "التحكم",
       "admin_panel": "مدير النظام",
+      "choose_language":"أختر اللغة",
 
       // DrawerPage
       "admin_menu": "قائمة الأدمن",
@@ -89,7 +103,6 @@ class AppTranslations extends Translations {
       'search': 'بحث',
 
       // UserController
-      'name': 'الاسم',
       'user_email': 'البريد الإلكتروني',
       'phone': 'الهاتف',
       'type': 'النوع',
@@ -259,12 +272,26 @@ class AppTranslations extends Translations {
       'password_required': 'Please enter password',
       'password_short': 'Password must be at least 6 characters',
 
+      // SingInView
+      "signup_title": "Create Account",
+      "signup_subtitle": "Create a new account to continue",
+      "create_account": "Create Account",
+      "create_account_desc": "Fill in the fields below to create a new account",
+      "confirm_password": "Confirm Password",
+      "confirm_password_hint": "Re-enter your password",
+      "confirm_password_required": "Please confirm your password",
+      "passwords_not_match": "Passwords do not match",
+      "name": "Full Name",
+      "name_hint": "Enter your full name",
+      "name_required": "Name is required",
+
       // AppBarWidget
       "overview": "Overview",
       "revenue": "Revenue",
       "sales": "Sales",
       "control": "Control",
       "admin_panel": "Admin Panel",
+      "choose_language":"Choose language",
 
       // DrawerPage
       "admin_menu": "Admin Menu",
@@ -327,7 +354,6 @@ class AppTranslations extends Translations {
       'search': 'Search',
 
       // UserController
-      'name': 'Name',
       'user_email': 'Email',
       'phone': 'Phone',
       'type': 'Type',

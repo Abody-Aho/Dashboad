@@ -19,7 +19,6 @@ final List<ButtonsInfo> buttonsInfo = [
   ButtonsInfo(title: "products_management", icon: Icons.inventory_2),
   ButtonsInfo(title: "payment_management", icon: Icons.payment),
   ButtonsInfo(title: "notifications", icon: Icons.notifications),
-  ButtonsInfo(title: "logout", icon: Icons.logout),
 ];
 
 class DrawerPage extends StatelessWidget {
@@ -44,31 +43,31 @@ class DrawerPage extends StatelessWidget {
                 trailing: ResponsiveLayout.isComputer(context)
                     ? null
                     : IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: Icon(Icons.close, color: Constants.primary),
-                ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(Icons.close, color: Constants.primary),
+                      ),
               ),
 
               // القائمة الديناميكية
               Obx(
-                    () => Column(
+                () => Column(
                   children: List.generate(
                     buttonsInfo.length,
-                        (index) => Column(
+                    (index) => Column(
                       children: [
                         Container(
                           decoration: ctrl.selectedIndex.value == index
                               ? BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            gradient: LinearGradient(
-                              colors: [
-                                Colors.green.shade200,
-                                Colors.green.shade50,
-                              ],
-                            ),
-                          )
+                                  borderRadius: BorderRadius.circular(20),
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.green.shade200,
+                                      Colors.green.shade50,
+                                    ],
+                                  ),
+                                )
                               : null,
                           child: ListTile(
                             shape: RoundedRectangleBorder(
@@ -76,7 +75,10 @@ class DrawerPage extends StatelessWidget {
                             ),
                             title: Text(
                               buttonsInfo[index].title.tr,
-                              style: TextStyle(color: Constants.text,fontWeight: FontWeight.bold ),
+                              style: TextStyle(
+                                color: Constants.text,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                             leading: Icon(
                               buttonsInfo[index].icon,
@@ -90,14 +92,25 @@ class DrawerPage extends StatelessWidget {
                             },
                           ),
                         ),
-                        Divider(
-                          color: Constants.primary,
-                          thickness: 0.1,
-                        ),
+                        Divider(color: Constants.primary, thickness: 0.1),
                       ],
                     ),
                   ),
                 ),
+              ),
+              ListTile(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                title: Text(
+                  "logout".tr,
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                leading: Icon(Icons.logout, color: Colors.red),
+                onTap: () {},
               ),
             ],
           ),

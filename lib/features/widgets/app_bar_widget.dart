@@ -12,17 +12,37 @@ class AppBarWidget extends StatefulWidget {
 }
 
 class _AppBarWidgetState extends State<AppBarWidget> {
-  void changeLang() async {
-    if (Get.locale?.languageCode == "ar") {
-      // تغيير اللغة للإنجليزية
-      Get.updateLocale(const Locale("en"));
-      await LangService.saveLang("en"); // حفظ اللغة
-    } else {
-      // تغيير اللغة للعربية
-      Get.updateLocale(const Locale("ar"));
-      await LangService.saveLang("ar"); // حفظ اللغة
-    }
+  void changeLanguageDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text("choose_language".tr),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: Text("العربية"),
+              onTap: () async {
+                Get.updateLocale(const Locale("ar"));
+                await LangService.saveLang("ar");
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: Text("English"),
+              onTap: () async {
+                Get.updateLocale(const Locale("en"));
+                await LangService.saveLang("en");
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -89,8 +109,9 @@ class _AppBarWidgetState extends State<AppBarWidget> {
           ),
           IconButton(
             icon: Icon(Icons.language, color: Constants.primary, size: 28),
-            onPressed: () => changeLang(),
+            onPressed: () => changeLanguageDialog(context),
           ),
+
           Stack(
             children: [
               IconButton(
