@@ -123,7 +123,7 @@ class _SingInViewState extends State<SingInView> {
                             ),
                             const SizedBox(height: 10),
 
-                            /// ⬇️ Obx الصحيح — فقط للمتغير المختار
+                            // Obx
                             Obx(
                                   () => DropdownButtonFormField<String>(
                                 initialValue: controller.selectedRole.value,

@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.green[50],
         canvasColor: Constants.background,
       ),
-      initialRoute: AppRoutes.singIn,
+      initialRoute: AppRoutes.login,
       getPages: AppPages.routes,
       debugShowCheckedModeBanner: false,
     );
