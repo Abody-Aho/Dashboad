@@ -8,8 +8,6 @@ class ApiServices {
   // رابط الـ API الرئيسي
   static const String baseUrl = 'http://localhost/flymarket/auth/';
 
-  // 🔥 تسجيل حساب جديد (أدمن وسوبرماركت فقط)
-  // ✅ تم التعديل لاستخدام UserModel مباشرة
   static Future<Map<String, dynamic>> signUp({
     required UserModel user,
     String? location,               // خاص بالسوبرماركت
@@ -20,14 +18,13 @@ class ApiServices {
       final uri = Uri.parse('${baseUrl}signup.php');
       final request = http.MultipartRequest('POST', uri);
 
-      // الحقول الأساسية من المودل
       request.fields['firebase_uid'] = user.firebaseUid;
       request.fields['name'] = user.name;
       request.fields['email'] = user.email;
       request.fields['role'] = user.role;
       request.fields['phone'] = user.phone;
 
-      // الحقول الخاصة بالسوبرماركت
+
       if (location != null && location.isNotEmpty) request.fields['location'] = location;
       if (time_open != null && time_open.isNotEmpty) request.fields['time_open'] = time_open;
 
@@ -49,13 +46,13 @@ class ApiServices {
     }
   }
 
-  // ===========================
-  // 📦 جلب بيانات المستخدم
-  // ===========================
+
+  //  جلب بيانات المستخدم
+
   static Future<Map<String, dynamic>> getUserData(String uid) async {
     try {
       // ✅ تم تصحيح الخطأ: يجب استدعاء get_user.php
-      final uri = Uri.parse('${baseUrl}get_user.php?uid=$uid');
+      final uri = Uri.parse('${baseUrl}login.php?uid=$uid');
       final response = await http.get(uri);
       return Map<String, dynamic>.from(jsonDecode(response.body));
     } catch (e) {

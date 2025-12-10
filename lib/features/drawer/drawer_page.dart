@@ -105,7 +105,6 @@ class DrawerPage extends StatelessWidget {
                   "logout".tr,
                   style: TextStyle(
                     color: Colors.red,
-                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 leading: Icon(Icons.logout, color: Colors.red),
