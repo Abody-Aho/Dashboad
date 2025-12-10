@@ -1,6 +1,7 @@
 abstract class AppRoutes {
   static const login = '/login';
-  static const singIn = '/singin';
-  static const admin = '/admin';   
-  static const dashboard = '/dashboard';
+  static const signIn = '/signin';
+
+  static const dashboardAdmin = '/dashboardAdmin';
+  static const dashboardMarket = '/dashboardMarket';
 }

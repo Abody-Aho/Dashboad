@@ -1,21 +1,21 @@
+import 'package:dashbord2/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'auth_controller.dart';
 
-class SingInView extends StatefulWidget {
-  const SingInView({super.key});
+class SignInView extends StatefulWidget {
+  const SignInView({super.key});
 
   @override
-  State<SingInView> createState() => _SingInViewState();
+  State<SignInView> createState() => _SignInViewState();
 }
 
-class _SingInViewState extends State<SingInView> {
-  final AuthController controller = Get.put(AuthController());
-
+class _SignInViewState extends State<SignInView> {
+  // ✅ الحل: تم تغيير Get.put إلى Get.find لاتباع دورة حياة الصفحة بشكل صحيح
+  final AuthController controller = Get.find<AuthController>();
   final _formKey = GlobalKey<FormState>();
-  final confirmPassword = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +32,13 @@ class _SingInViewState extends State<SingInView> {
             children: [
               SizedBox(height: 30.h),
 
-              /// Icon
+              /// أيقونة التسجيل
               Container(
                 alignment: Alignment.center,
                 height: 80,
                 width: 78,
                 decoration: BoxDecoration(
-                  color: Colors.green[900]?.withValues(alpha: 0.7),
+                  color: Colors.green[900]?.withOpacity(0.7),
                   borderRadius: BorderRadius.circular(25),
                 ),
                 child: const FaIcon(FontAwesomeIcons.userPlus,
@@ -82,6 +82,7 @@ class _SingInViewState extends State<SingInView> {
                         key: _formKey,
                         child: Column(
                           children: [
+                            // عنوان إنشاء الحساب
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -98,7 +99,7 @@ class _SingInViewState extends State<SingInView> {
                                   height: 35,
                                   width: 35,
                                   decoration: BoxDecoration(
-                                    color: Colors.green[900]?.withValues(alpha: 0.7),
+                                    color: Colors.green[900]?.withOpacity(0.7),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: const Icon(Icons.person_add,
@@ -106,16 +107,17 @@ class _SingInViewState extends State<SingInView> {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 10,),
+                            const SizedBox(height: 10),
                             Text(
                               "create_account_desc".tr,
                               style: TextStyle(
-                                  color: Colors.green[700],
-                                  fontSize: 16,
-                                  ),
+                                color: Colors.green[700],
+                                fontSize: 16,
+                              ),
                             ),
                             const SizedBox(height: 20),
 
+                            // نوع المستخدم
                             Align(
                               alignment: Alignment.topRight,
                               child: Text("user_type".tr,
@@ -123,16 +125,18 @@ class _SingInViewState extends State<SingInView> {
                             ),
                             const SizedBox(height: 10),
 
-                            // Obx
                             Obx(
                                   () => DropdownButtonFormField<String>(
-                                initialValue: controller.selectedRole.value,
+                                value: controller.selectedRole.value,
                                 hint: Text("choose".tr,
                                     style: const TextStyle(color: Colors.green)),
                                 decoration: _inputDecoration(),
+                                // ✅ تم تعديل القائمة المنسدلة لإرسال القيمة الصحيحة
                                 items: controller.roles.map((role) {
                                   return DropdownMenuItem<String>(
-                                    value: role['label'] as String,
+                                    // القيمة التي سترسل هي القيمة الإنجليزية (admin/supermarket)
+                                    value: role['value'] as String,
+                                    // النص الذي سيظهر للمستخدم هو النص العربي
                                     child: Row(
                                       children: [
                                         Icon(role['icon'] as IconData,
@@ -143,37 +147,37 @@ class _SingInViewState extends State<SingInView> {
                                     ),
                                   );
                                 }).toList(),
-                                onChanged: (value) => controller.setRole(value!),
+                                onChanged: (value) =>
+                                    controller.setRole(value!),
+                                validator: (v) =>
+                                v == null ? "role_required".tr : null,
                               ),
                             ),
 
                             const SizedBox(height: 20),
 
-                            /// Name
+                            // الاسم
                             Align(
                               alignment: Alignment.topRight,
                               child: Text("name".tr, style: _titleStyle()),
                             ),
                             const SizedBox(height: 10),
-
                             TextFormField(
                               controller: controller.nameController,
                               decoration: _inputDecoration(
                                   hint: "name_hint".tr, icon: Icons.person),
-                              validator: (v) => v!.isEmpty
-                                  ? "name_required".tr
-                                  : null,
+                              validator: (v) =>
+                              v!.isEmpty ? "name_required".tr : null,
                             ),
 
                             const SizedBox(height: 20),
 
-                            /// Email
+                            // الإيميل
                             Align(
                               alignment: Alignment.topRight,
                               child: Text("email".tr, style: _titleStyle()),
                             ),
                             const SizedBox(height: 10),
-
                             TextFormField(
                               controller: controller.emailController,
                               decoration: _inputDecoration(
@@ -187,14 +191,13 @@ class _SingInViewState extends State<SingInView> {
 
                             const SizedBox(height: 20),
 
-                            /// Password
+                            // كلمة المرور
                             Align(
                               alignment: Alignment.topRight,
                               child:
                               Text("password".tr, style: _titleStyle()),
                             ),
                             const SizedBox(height: 10),
-
                             Obx(
                                   () => TextFormField(
                                 controller: controller.passwordController,
@@ -210,71 +213,107 @@ class _SingInViewState extends State<SingInView> {
                                           : Icons.visibility_off,
                                       color: Colors.green,
                                     ),
-                                    onPressed: () =>
-                                    controller.isPasswordVisible.value =
-                                    !controller
+                                    onPressed: () => controller
+                                        .isPasswordVisible.value = !controller
                                         .isPasswordVisible.value,
                                   ),
                                 ),
-                                validator: (v) =>
-                                v!.isEmpty ? "password_required".tr : null,
+                                validator: (v) => v!.isEmpty
+                                    ? "password_required".tr
+                                    : null,
                               ),
                             ),
 
                             const SizedBox(height: 20),
-
-                            /// Confirm Password
                             Align(
                               alignment: Alignment.topRight,
                               child: Text("confirm_password".tr,
                                   style: _titleStyle()),
                             ),
                             const SizedBox(height: 10),
-
-                            TextFormField(
-                              controller: confirmPassword,
-                              obscureText: true,
-                              decoration: _inputDecoration(
+                            // ✅ 2. تم تحويل الحقل إلى Obx لإضافة تفاعلية
+                            Obx(
+                                  () => TextFormField(
+                                controller: controller.confirmPasswordController,
+                                // الربط مع متغير الحالة في الـ Controller
+                                obscureText: !controller.isConfirmPasswordVisible.value,
+                                decoration: _inputDecoration(
                                   hint: "confirm_password_hint".tr,
-                                  icon: Icons.lock_outline),
-                              validator: (v) => v !=
-                                  controller.passwordController.text
-                                  ? "password_not_match".tr
-                                  : null,
+                                  icon: Icons.lock_outline,
+                                  // إضافة زر لإظهار/إخفاء النص
+                                  suffix: IconButton(
+                                    icon: Icon(
+                                      controller.isConfirmPasswordVisible.value
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                      color: Colors.green,
+                                    ),
+                                    onPressed: () {
+                                      controller.isConfirmPasswordVisible.value =
+                                      !controller.isConfirmPasswordVisible.value;
+                                    },
+                                  ),
+                                ),
+                                // ✅ 3. تحسين التحقق من الصحة
+                                validator: (v) {
+                                  if (v == null || v.isEmpty) {
+                                    return "confirm_required".tr;
+                                  }
+                                  if (v != controller.passwordController.text) {
+                                    return "password_not_match".tr;
+                                  }
+                                  return null;
+                                },
+                              ),
                             ),
-
                             const SizedBox(height: 30),
 
-                            /// Register Button
+                            // زر التسجيل
                             Obx(
                                   () => ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.green[900],
-                                  minimumSize:
-                                  const Size(double.infinity, 50),
+                                  minimumSize: const Size(double.infinity, 50),
                                   shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                      BorderRadius.circular(15)),
+                                      borderRadius: BorderRadius.circular(15)),
                                 ),
                                 onPressed: controller.isLoading.value
                                     ? null
                                     : () {
-                                  if (_formKey.currentState!
-                                      .validate()) {
+                                  if (_formKey.currentState!.validate()) {
                                     controller.register();
                                   }
                                 },
                                 child: controller.isLoading.value
                                     ? const CircularProgressIndicator(
                                     color: Colors.white)
-                                    : Text("create_account".tr,
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18)),
+                                    : Text(
+                                  "create_account".tr,
+                                  style: const TextStyle(
+                                      color: Colors.white, fontSize: 18),
+                                ),
                               ),
                             ),
 
                             const SizedBox(height: 10),
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text("have_account".tr, style: TextStyle(color: Colors.green[800]),),
+                                TextButton(
+                                  onPressed: () => Get.offNamed(AppRoutes.login),
+                                  child: Text(
+                                    "login".tr,
+                                    style: TextStyle(
+                                      color: Colors.green[900],
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ),
@@ -294,7 +333,8 @@ class _SingInViewState extends State<SingInView> {
       fontSize: 15,
       fontWeight: FontWeight.bold);
 
-  InputDecoration _inputDecoration({String? hint, IconData? icon, Widget? suffix}) {
+  InputDecoration _inputDecoration(
+      {String? hint, IconData? icon, Widget? suffix}) {
     return InputDecoration(
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(15),

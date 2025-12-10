@@ -77,7 +77,6 @@ class DrawerPage extends StatelessWidget {
                               buttonsInfo[index].title.tr,
                               style: TextStyle(
                                 color: Constants.text,
-                                fontWeight: FontWeight.bold,
                               ),
                             ),
                             leading: Icon(
@@ -110,7 +109,7 @@ class DrawerPage extends StatelessWidget {
                   ),
                 ),
                 leading: Icon(Icons.logout, color: Colors.red),
-                onTap: () {},
+                onTap: () => ctrl.logout(),
               ),
             ],
           ),

@@ -6,9 +6,24 @@ import 'package:get/get.dart';
 import 'core/lang/translations.dart';
 import 'core/services/lang_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:firebase_core/firebase_core.dart'; // <--- إضافة Firebase
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(
+      apiKey: "AIzaSyAoK7_-KbIPfV_U2J5qtIDXh8bN_SyEv14",
+      authDomain: "flymarket-34847.firebaseapp.com",
+      projectId: "flymarket-34847",
+      storageBucket: "flymarket-34847.firebasestorage.app",
+      messagingSenderId: "571768389468",
+      appId: "1:571768389468:web:2261fae6418bddbd6e0b99",
+    ),
+  );
+
+  // Load saved locale
   Locale locale = await LangService.getSavedLocale();
 
   runApp(
@@ -43,4 +58,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

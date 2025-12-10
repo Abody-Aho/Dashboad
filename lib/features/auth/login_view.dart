@@ -1,3 +1,4 @@
+import 'package:dashbord2/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -12,9 +13,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-   AuthController dropdownController = Get.find();
+  // ✅ استخدام Get.find() آمن هنا لأن AuthBinding تقوم بإنشاء الـ Controller
+  final AuthController authController = Get.find();
   final _formKey = GlobalKey<FormState>();
-
 
   @override
   Widget build(BuildContext context) {
@@ -105,9 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   height: 35,
                                   width: 35,
                                   decoration: BoxDecoration(
-                                    color: Colors.green[900]?.withValues(
-                                      alpha: 0.7,
-                                    ),
+                                    color: Colors.green[900]?.withValues(alpha: 0.7),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: const Icon(
@@ -128,225 +127,99 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             const SizedBox(height: 30),
 
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: Text(
-                                "user_type".tr,
-                                style: TextStyle(
-                                  color: Colors.green[700],
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            Obx(
-                              () => DropdownButtonFormField<String>(
-                                hint: Text(
-                                  "choose".tr,
-                                  style: TextStyle(color: Colors.green),
-                                ),
-                                decoration: InputDecoration(
-                                  labelStyle: TextStyle(
-                                    color: Colors.green[700],
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                      color: Colors.green,
-                                      width: 2,
-                                    ),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                      color: Colors.green,
-                                      width: 1.5,
-                                    ),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 8,
-                                  ),
-                                ),
-                                initialValue:
-                                    dropdownController.selectedRole.value,
-                                items: dropdownController.roles.map((role) {
-                                  return DropdownMenuItem<String>(
-                                    value: role['label'] as String,
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          role['icon'] as IconData,
-                                          color: role['color'] as Color,
-                                        ),
-                                        const SizedBox(width: 10),
-                                        Text(
-                                          role['label'] as String,
-                                          style: const TextStyle(fontSize: 16),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }).toList(),
-                                onChanged: (newValue) {
-                                  dropdownController.setRole(newValue!);
-                                },
-                              ),
-                            ),
-                            const SizedBox(height: 20),
+                            // ❌ تم حذف حقل اختيار الدور لأنه غير منطقي في شاشة تسجيل الدخول
 
+                            // الإيميل
                             Align(
                               alignment: Alignment.topRight,
-                              child: Text(
-                                "email".tr,
-                                style: TextStyle(
-                                  color: Colors.green[700],
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                              child: Text("email".tr, style: TextStyle(color: Colors.green[700], fontWeight: FontWeight.bold)),
                             ),
                             const SizedBox(height: 10),
                             TextFormField(
-                              controller: dropdownController.emailController,
+                              controller: authController.emailController,
                               keyboardType: TextInputType.emailAddress,
-                              decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                  borderSide: const BorderSide(
-                                    color: Colors.green,
-                                    width: 1.5,
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                  borderSide: const BorderSide(
-                                    color: Colors.green,
-                                    width: 2.5,
-                                  ),
-                                ),
-                                hintText: "email_hint".tr,
-                                hintStyle: TextStyle(color: Colors.green[700]),
-                                prefixIcon: const Icon(
-                                  Icons.email,
-                                  color: Colors.green,
-                                ),
-                              ),
+                              decoration: _inputDecoration(
+                                  hint: "email_hint".tr, icon: Icons.email),
                               validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "email_required".tr;
-                                } else if (!GetUtils.isEmail(value)) {
-                                  return "email_invalid".tr;
-                                }
+                                if (value == null || value.isEmpty) return "email_required".tr;
+                                if (!GetUtils.isEmail(value)) return "email_invalid".tr;
                                 return null;
                               },
                             ),
 
                             const SizedBox(height: 15),
+                            // كلمة المرور
                             Align(
                               alignment: Alignment.topRight,
-                              child: Text(
-                                "password".tr,
-                                style: TextStyle(
-                                  color: Colors.green[700],
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                              child: Text("password".tr, style: TextStyle(color: Colors.green[700], fontWeight: FontWeight.bold)),
                             ),
                             const SizedBox(height: 10),
                             Obx(
-                              () => TextFormField(
-                                controller:
-                                    dropdownController.passwordController,
-                                obscureText:
-                                    !dropdownController.isPasswordVisible.value,
-                                decoration: InputDecoration(
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: const BorderSide(
-                                      color: Colors.green,
-                                      width: 1.5,
-                                    ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: const BorderSide(
-                                      color: Colors.green,
-                                      width: 2.5,
-                                    ),
-                                  ),
-                                  hintText: "password_hint".tr,
-                                  hintStyle: TextStyle(
-                                    color: Colors.green[700],
-                                  ),
-                                  prefixIcon: const Icon(
-                                    Icons.lock,
-                                    color: Colors.green,
-                                  ),
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                      dropdownController.isPasswordVisible.value
-                                          ? Icons.visibility
-                                          : Icons.visibility_off,
-                                      color: Colors.green,
-                                    ),
+                                  () => TextFormField(
+                                controller: authController.passwordController,
+                                obscureText: !authController.isPasswordVisible.value,
+                                decoration: _inputDecoration(
+                                  hint: "password_hint".tr,
+                                  icon: Icons.lock,
+                                  suffix: IconButton(
+                                    icon: Icon(authController.isPasswordVisible.value
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                        color: Colors.green),
                                     onPressed: () {
-                                      dropdownController
-                                          .isPasswordVisible
-                                          .value = !dropdownController
-                                          .isPasswordVisible
-                                          .value;
+                                      authController.isPasswordVisible.value = !authController.isPasswordVisible.value;
                                     },
                                   ),
                                 ),
                                 validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "password_required".tr;
-                                  } else if (value.length < 6) {
-                                    return "password_short".tr;
-                                  }
+                                  if (value == null || value.isEmpty) return "password_required".tr;
                                   return null;
                                 },
                               ),
                             ),
                             const SizedBox(height: 30),
 
+                            // زر تسجيل الدخول
                             Obx(
-                              () => ElevatedButton(
+                                  () => ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.green[900],
                                   minimumSize: const Size(double.infinity, 50),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                                 ),
-                                onPressed: dropdownController.isLoading.value
-                                    ? null
-                                    : () {
-                                        if (_formKey.currentState!.validate()) {
-                                          dropdownController.login();
-                                          Get.toNamed("admin");
-                                        }
-                                      },
-                                child: dropdownController.isLoading.value
-                                    ? const CircularProgressIndicator(
-                                        color: Colors.white,
-                                      )
-                                    : Text(
-                                        "login".tr,
-                                        style: const TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.white,
-                                        ),
-                                      ),
+                                // ✅ تم تصحيح استدعاء الدالة إلى login()
+                                onPressed: authController.isLoading.value ? null : () {
+                                  if (_formKey.currentState!.validate()) {
+                                    authController.login();
+                                  }
+                                },
+                                child: authController.isLoading.value
+                                    ? const CircularProgressIndicator(color: Colors.white)
+                                    : Text("login".tr, style: const TextStyle(fontSize: 18, color: Colors.white)),
                               ),
                             ),
 
+                            const SizedBox(height: 20),
+
+                            // زر الانتقال لإنشاء حساب
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text("dont_have_account".tr, style: TextStyle(color: Colors.green[800]),),
+                                TextButton(
+                                  // ✅ استخدام المسارات المعرفة مسبقًا
+                                  onPressed: () => Get.toNamed(AppRoutes.signIn),
+                                  child: Text(
+                                    "create_account".tr,
+                                    style: TextStyle(
+                                      color: Colors.green[900],
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ),
@@ -359,6 +232,22 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  InputDecoration _inputDecoration({String? hint, IconData? icon, Widget? suffix}) {
+    return InputDecoration(
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(15),
+        borderSide: const BorderSide(color: Colors.green, width: 1.5),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(15),
+        borderSide: const BorderSide(color: Colors.green, width: 2.5),
+      ),
+      hintText: hint,
+      prefixIcon: icon != null ? Icon(icon, color: Colors.green) : null,
+      suffixIcon: suffix,
     );
   }
 }
