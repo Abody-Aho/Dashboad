@@ -51,8 +51,8 @@ class ApiServices {
 
   static Future<Map<String, dynamic>> getUserData(String uid) async {
     try {
-      // ✅ تم تصحيح الخطأ: يجب استدعاء get_user.php
-      final uri = Uri.parse('${baseUrl}login.php?uid=$uid');
+
+      final uri = Uri.parse('${baseUrl}login.php?firebase_uid=$uid');
       final response = await http.get(uri);
       return Map<String, dynamic>.from(jsonDecode(response.body));
     } catch (e) {

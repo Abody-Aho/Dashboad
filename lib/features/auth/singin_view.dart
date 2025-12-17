@@ -13,7 +13,6 @@ class SignInView extends StatefulWidget {
 }
 
 class _SignInViewState extends State<SignInView> {
-  // ✅ الحل: تم تغيير Get.put إلى Get.find لاتباع دورة حياة الصفحة بشكل صحيح
   final AuthController controller = Get.find<AuthController>();
   final _formKey = GlobalKey<FormState>();
 
@@ -38,7 +37,7 @@ class _SignInViewState extends State<SignInView> {
                 height: 80,
                 width: 78,
                 decoration: BoxDecoration(
-                  color: Colors.green[900]?.withOpacity(0.7),
+                  color: Colors.green[900]?.withValues(alpha: 0.7),
                   borderRadius: BorderRadius.circular(25),
                 ),
                 child: const FaIcon(FontAwesomeIcons.userPlus,
@@ -99,7 +98,7 @@ class _SignInViewState extends State<SignInView> {
                                   height: 35,
                                   width: 35,
                                   decoration: BoxDecoration(
-                                    color: Colors.green[900]?.withOpacity(0.7),
+                                    color: Colors.green[900]?.withValues(alpha: 0.7),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: const Icon(Icons.person_add,
@@ -127,16 +126,13 @@ class _SignInViewState extends State<SignInView> {
 
                             Obx(
                                   () => DropdownButtonFormField<String>(
-                                value: controller.selectedRole.value,
+                                initialValue: controller.selectedRole.value,
                                 hint: Text("choose".tr,
                                     style: const TextStyle(color: Colors.green)),
                                 decoration: _inputDecoration(),
-                                // ✅ تم تعديل القائمة المنسدلة لإرسال القيمة الصحيحة
                                 items: controller.roles.map((role) {
                                   return DropdownMenuItem<String>(
-                                    // القيمة التي سترسل هي القيمة الإنجليزية (admin/supermarket)
                                     value: role['value'] as String,
-                                    // النص الذي سيظهر للمستخدم هو النص العربي
                                     child: Row(
                                       children: [
                                         Icon(role['icon'] as IconData,
@@ -191,6 +187,30 @@ class _SignInViewState extends State<SignInView> {
 
                             const SizedBox(height: 20),
 
+                            // الرقم
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: Text("phone_number".tr, style: _titleStyle()),
+                            ),
+                            const SizedBox(height: 10),
+                            TextFormField(
+                              controller: controller.phoneController,
+                              decoration: _inputDecoration(
+                                  hint: "phone_hint".tr, icon: Icons.phone),
+                              keyboardType: TextInputType.phone,
+                              validator: (v) {
+                                if (v == null || v.isEmpty) {
+                                  return "phone_required".tr;
+                                }
+                                if (!GetUtils.isPhoneNumber(v)) {
+                                  return "phone_invalid".tr;
+                                }
+                                return null;
+                              },
+                            ),
+
+                            const SizedBox(height: 20),
+
                             // كلمة المرور
                             Align(
                               alignment: Alignment.topRight,
@@ -231,16 +251,13 @@ class _SignInViewState extends State<SignInView> {
                                   style: _titleStyle()),
                             ),
                             const SizedBox(height: 10),
-                            // ✅ 2. تم تحويل الحقل إلى Obx لإضافة تفاعلية
                             Obx(
                                   () => TextFormField(
                                 controller: controller.confirmPasswordController,
-                                // الربط مع متغير الحالة في الـ Controller
                                 obscureText: !controller.isConfirmPasswordVisible.value,
                                 decoration: _inputDecoration(
                                   hint: "confirm_password_hint".tr,
                                   icon: Icons.lock_outline,
-                                  // إضافة زر لإظهار/إخفاء النص
                                   suffix: IconButton(
                                     icon: Icon(
                                       controller.isConfirmPasswordVisible.value
@@ -254,7 +271,6 @@ class _SignInViewState extends State<SignInView> {
                                     },
                                   ),
                                 ),
-                                // ✅ 3. تحسين التحقق من الصحة
                                 validator: (v) {
                                   if (v == null || v.isEmpty) {
                                     return "confirm_required".tr;

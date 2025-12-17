@@ -20,6 +20,7 @@ class AppTranslations extends Translations {
       'password_hint': '••••••••',
       'password_required': 'يرجى إدخال كلمة المرور',
       'password_short': 'كلمة المرور يجب أن تكون 6 أحرف على الأقل',
+      "dont_have_account" : "لا تملك حساب",
 
       // SingInView
       "signup_title": "إنشاء حساب",
@@ -33,6 +34,12 @@ class AppTranslations extends Translations {
       "name": "الاسم",
       "name_hint": "ادخل اسمك الكامل",
       "name_required": "الاسم مطلوب",
+      "have_account": "تملك حساب",
+      "phone_number": "رقم الهاتف",
+      "phone_hint": "ادخل الرقم",
+      "phone_required": "الرقم مطلوب",
+      "phone_invalid": "الرقم غير صالح",
+      "role_required": "نوع المستخدم مطلوب",
 
       // AppBarWidget
       "overview": "نظرة عامة",
@@ -271,6 +278,7 @@ class AppTranslations extends Translations {
       'password_hint': '••••••••',
       'password_required': 'Please enter password',
       'password_short': 'Password must be at least 6 characters',
+      "dont_have_account" : "Don't have account",
 
       // SingInView
       "signup_title": "Create Account",
@@ -284,6 +292,13 @@ class AppTranslations extends Translations {
       "name": "Full Name",
       "name_hint": "Enter your full name",
       "name_required": "Name is required",
+      "have_account": "Have an account",
+      "phone_number": "Phone Number",
+      "phone_hint": "Enter your phone number",
+      "phone_required": "Phone number is required",
+      "phone_invalid": "Invalid phone number",
+      "role_required": "Role is required",
+
 
       // AppBarWidget
       "overview": "Overview",

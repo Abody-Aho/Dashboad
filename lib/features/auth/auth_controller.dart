@@ -8,9 +8,9 @@ import '../../core/services/api_service.dart';
 class AuthController extends GetxController {
   final _auth = FirebaseAuth.instance;
 
-  // ===========================
-  // 👥 أدوار المستخدمين
-  // ===========================
+
+  //  أدوار المستخدمين
+
   final roles = [
     {'label': 'مدير النظام', 'value': 'admin', 'icon': Icons.admin_panel_settings, 'color': Colors.red},
     {'label': 'مالك سوبرماركت', 'value': 'supermarket', 'icon': Icons.store_mall_directory, 'color': Colors.green},
@@ -19,9 +19,9 @@ class AuthController extends GetxController {
   var selectedRole = RxnString();
   void setRole(String role) => selectedRole.value = role;
 
-  // ===========================
-  // 📝 الحقول
-  // ===========================
+
+  //  الحقول
+
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -32,16 +32,16 @@ class AuthController extends GetxController {
   final locationController = TextEditingController();
   final timeOpenController = TextEditingController();
 
-  // ===========================
-  // 🔄 حالات الواجهة
-  // ===========================
+
+  //  حالات الواجهة
+
   var isLoading = false.obs;
   var isPasswordVisible = false.obs;
   var isConfirmPasswordVisible = false.obs;
 
-  // ===========================
-  // 🔥 تسجيل الدخول
-  // ===========================
+
+  //  تسجيل الدخول
+
   Future<void> login() async {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
@@ -89,7 +89,7 @@ class AuthController extends GetxController {
   }
 
 
-  // 🔥 إنشاء الحساب
+  //  إنشاء الحساب
 
   Future<void> register() async {
     if (selectedRole.value == null) {
@@ -107,17 +107,16 @@ class AuthController extends GetxController {
           password: passwordController.text.trim());
       final uid = credential.user!.uid;
 
-      // ✅ إنشاء كائن UserModel
+
       final newUser = UserModel(
         firebaseUid: uid,
         name: nameController.text.trim(),
         email: emailController.text.trim(),
         phone: phoneController.text.trim(),
         role: selectedRole.value!,
-        status: 1, // حالة نشط مبدئية
+        status: 1,
       );
 
-      // ✅ إرسال الكائن مباشرة إلى الـ API
       final response = await ApiServices.signUp(
         user: newUser,
         location: locationController.text.trim(),
@@ -151,15 +150,4 @@ class AuthController extends GetxController {
     }
   }
 
-  @override
-  void onClose() {
-    nameController.dispose();
-    emailController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
-    phoneController.dispose();
-    locationController.dispose();
-    timeOpenController.dispose();
-    super.onClose();
-  }
 }

@@ -13,7 +13,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // ✅ استخدام Get.find() آمن هنا لأن AuthBinding تقوم بإنشاء الـ Controller
   final AuthController authController = Get.find();
   final _formKey = GlobalKey<FormState>();
 
@@ -207,7 +206,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               children: [
                                 Text("dont_have_account".tr, style: TextStyle(color: Colors.green[800]),),
                                 TextButton(
-                                  // ✅ استخدام المسارات المعرفة مسبقًا
                                   onPressed: () => Get.toNamed(AppRoutes.signIn),
                                   child: Text(
                                     "create_account".tr,
