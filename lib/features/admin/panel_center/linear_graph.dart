@@ -1,6 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import '../../core/constants/app_constants.dart';
+import '../../../core/constants/app_constants.dart';
 
 class BarChartSample2 extends StatefulWidget {
     const BarChartSample2({super.key});

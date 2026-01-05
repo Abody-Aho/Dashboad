@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../core/constants/app_constants.dart';
+import '../../../core/constants/app_constants.dart';
 import 'linear_graph.dart';
 
 class Person {

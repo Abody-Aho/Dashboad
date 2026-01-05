@@ -40,6 +40,7 @@ class AppTranslations extends Translations {
       "phone_required": "الرقم مطلوب",
       "phone_invalid": "الرقم غير صالح",
       "role_required": "نوع المستخدم مطلوب",
+      "must_be_9_number": "يجب ان تكون 9 ارقام ",
 
       // AppBarWidget
       "overview": "نظرة عامة",
@@ -298,6 +299,7 @@ class AppTranslations extends Translations {
       "phone_required": "Phone number is required",
       "phone_invalid": "Invalid phone number",
       "role_required": "Role is required",
+      "must_be_9_number": "Must be 9 numbers",
 
 
       // AppBarWidget

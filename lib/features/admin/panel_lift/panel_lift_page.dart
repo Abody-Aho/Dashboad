@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../core/constants/app_constants.dart';
-import '../widgets/responsive_layout.dart';
+import '../../../core/constants/app_constants.dart';
+import '../../widgets/responsive_layout.dart';
 import 'circle_graph.dart';
 import 'curved_chart.dart';
 

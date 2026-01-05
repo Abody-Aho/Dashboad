@@ -21,6 +21,17 @@ class CustomDataTable extends StatelessWidget {
     return
     // ====== الجدول ======
     Obx(() {
+      if (controller.isLoading.value) {
+        return SizedBox(
+          height: 400,
+          child: Center(
+            child: CircularProgressIndicator(
+              strokeWidth: 3,
+              color: Colors.green,
+            ),
+          ),
+        );
+      }
       // لجعل الجدول يتحدث عند تغير البيانات
       Visibility(
         visible: false,
@@ -84,7 +95,7 @@ class GenericDataSource extends DataTableSource {
         selectedRows[index] = value ?? false;
         notifyListeners();
       },
-      cells: controller.getDataCells(data), // ✅ الكنترولر جاهز هنا
+      cells: controller.getDataCells(data),
     );
   }
 

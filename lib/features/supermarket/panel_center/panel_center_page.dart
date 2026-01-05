@@ -1,34 +1,30 @@
-import 'package:dashbord2/features/panel_right/wiggte_graph.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../core/constants/app_constants.dart';
+import '../../../core/constants/app_constants.dart';
+import 'linear_graph.dart';
 
-class Product {
+class Person {
   String name;
-  bool enable;
+  Color color;
 
-  Product({required this.name, this.enable = true});
+  Person({required this.name, required this.color});
 }
 
-class PanelRightPage extends StatefulWidget {
-  const PanelRightPage({super.key});
+class PanelCenterPage extends StatefulWidget {
+  const PanelCenterPage({super.key});
 
   @override
-  State<PanelRightPage> createState() => _PanelRightPageState();
+  State<PanelCenterPage> createState() => _PanelCenterPageState();
 }
 
-class _PanelRightPageState extends State<PanelRightPage> {
-  final List<Product> _products = [
-    Product(name: "led_lights".tr, enable: true),
-    Product(name: "wireless_headphones".tr, enable: true),
-    Product(name: "smart_watch".tr, enable: false),
-    Product(name: "speaker".tr, enable: true),
-    Product(name: "charger".tr, enable: true),
-    Product(name: "power_bank".tr, enable: false),
-    Product(name: "mouse".tr, enable: true),
-    Product(name: "keyboard".tr, enable: true),
-    Product(name: "hdmi".tr, enable: false),
-    Product(name: "smart_plug".tr, enable: true),
+class _PanelCenterPageState extends State<PanelCenterPage> {
+  final List<Person> _persons = [
+    Person(name: "person1".tr, color: Colors.red),
+    Person(name: "person2".tr, color: Colors.pink),
+    Person(name: "person3".tr, color: Colors.blue),
+    Person(name: "person4".tr, color: Colors.yellow),
+    Person(name: "person5".tr, color: Colors.orange),
+    Person(name: "person6".tr, color: Colors.purple),
   ];
 
   @override
@@ -38,7 +34,7 @@ class _PanelRightPageState extends State<PanelRightPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // --- بطاقة الإيرادات ---
+            // --- بطاقة المنتجات ---
             Padding(
               padding: const EdgeInsets.all(Constants.kPadding),
               child: Container(
@@ -59,7 +55,7 @@ class _PanelRightPageState extends State<PanelRightPage> {
                     vertical: 15,
                   ),
                   title: Text(
-                    "net_revenue".tr,
+                    "products_available".tr,
                     style: const TextStyle(
                       color: Constants.white,
                       fontWeight: FontWeight.bold,
@@ -67,7 +63,7 @@ class _PanelRightPageState extends State<PanelRightPage> {
                     ),
                   ),
                   subtitle: Text(
-                    "sales_avg".tr,
+                    "products_available_percent".tr,
                     style: const TextStyle(
                       color: Colors.white70,
                       fontSize: 13,
@@ -76,7 +72,7 @@ class _PanelRightPageState extends State<PanelRightPage> {
                   trailing: Chip(
                     backgroundColor: Colors.white24,
                     label: Text(
-                      r"$46,450",
+                      "20500_value".tr,
                       style: const TextStyle(
                         color: Constants.accent,
                         fontWeight: FontWeight.bold,
@@ -87,14 +83,15 @@ class _PanelRightPageState extends State<PanelRightPage> {
               ),
             ),
 
-            LineChartSample1(),
+            // --- الرسم البياني ---
+            BarChartSample2(),
 
-            // قائمة المنتجات
+            // --- قائمة الأشخاص ---
             Padding(
               padding: const EdgeInsets.only(
                 left: Constants.kPadding / 2,
                 right: Constants.kPadding / 2,
-                top: Constants.kPadding,
+                top: Constants.kPadding / 2,
                 bottom: Constants.kPadding,
               ),
               child: Container(
@@ -111,24 +108,27 @@ class _PanelRightPageState extends State<PanelRightPage> {
                 ),
                 child: Column(
                   children: List.generate(
-                    _products.length,
-                        (index) => SwitchListTile.adaptive(
-                      activeThumbColor: Constants.success,
-                      activeTrackColor: Constants.success.withValues(alpha: 0.5),
-                      inactiveTrackColor: Colors.white24,
+                    _persons.length,
+                        (index) => ListTile(
+                      leading: CircleAvatar(
+                        radius: 18,
+                        backgroundColor: _persons[index].color,
+                        child: Text(
+                          _persons[index].name.substring(0, 1),
+                          style: const TextStyle(color: Constants.white),
+                        ),
+                      ),
                       title: Text(
-                        _products[index].name,
-                        style: const TextStyle(
-                          color: Constants.primary,
+                        _persons[index].name,
+                        style: TextStyle(
+                          color: Constants.text,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      value: _products[index].enable,
-                      onChanged: (newValue) {
-                        setState(() {
-                          _products[index].enable = newValue;
-                        });
-                      },
+                      trailing: IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.message, color: Constants.accent),
+                      ),
                     ),
                   ),
                 ),

@@ -40,8 +40,11 @@ class _SignInViewState extends State<SignInView> {
                   color: Colors.green[900]?.withValues(alpha: 0.7),
                   borderRadius: BorderRadius.circular(25),
                 ),
-                child: const FaIcon(FontAwesomeIcons.userPlus,
-                    size: 33, color: Colors.white),
+                child: const FaIcon(
+                  FontAwesomeIcons.userPlus,
+                  size: 33,
+                  color: Colors.white,
+                ),
               ),
 
               SizedBox(height: 30.h),
@@ -50,9 +53,10 @@ class _SignInViewState extends State<SignInView> {
                 "signup_title".tr,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Colors.green[700],
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold),
+                  color: Colors.green[700],
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
 
               SizedBox(height: 5.h),
@@ -69,7 +73,8 @@ class _SignInViewState extends State<SignInView> {
                 child: Container(
                   width: screenWidth > 600 ? 500 : double.infinity,
                   margin: EdgeInsets.symmetric(
-                      horizontal: screenWidth > 600 ? 130 : 10),
+                    horizontal: screenWidth > 600 ? 130 : 10,
+                  ),
                   child: Card(
                     elevation: 6,
                     shape: RoundedRectangleBorder(
@@ -88,9 +93,10 @@ class _SignInViewState extends State<SignInView> {
                                 Text(
                                   "create_account".tr,
                                   style: TextStyle(
-                                      color: Colors.green[700],
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
+                                    color: Colors.green[700],
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                                 const SizedBox(width: 10),
                                 Container(
@@ -98,11 +104,15 @@ class _SignInViewState extends State<SignInView> {
                                   height: 35,
                                   width: 35,
                                   decoration: BoxDecoration(
-                                    color: Colors.green[900]?.withValues(alpha: 0.7),
+                                    color: Colors.green[900]?.withValues(
+                                      alpha: 0.7,
+                                    ),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
-                                  child: const Icon(Icons.person_add,
-                                      color: Colors.white),
+                                  child: const Icon(
+                                    Icons.person_add,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ],
                             ),
@@ -119,24 +129,27 @@ class _SignInViewState extends State<SignInView> {
                             // نوع المستخدم
                             Align(
                               alignment: Alignment.topRight,
-                              child: Text("user_type".tr,
-                                  style: _titleStyle()),
+                              child: Text("user_type".tr, style: _titleStyle()),
                             ),
                             const SizedBox(height: 10),
 
                             Obx(
-                                  () => DropdownButtonFormField<String>(
+                              () => DropdownButtonFormField<String>(
                                 initialValue: controller.selectedRole.value,
-                                hint: Text("choose".tr,
-                                    style: const TextStyle(color: Colors.green)),
+                                hint: Text(
+                                  "choose".tr,
+                                  style: const TextStyle(color: Colors.green),
+                                ),
                                 decoration: _inputDecoration(),
                                 items: controller.roles.map((role) {
                                   return DropdownMenuItem<String>(
                                     value: role['value'] as String,
                                     child: Row(
                                       children: [
-                                        Icon(role['icon'] as IconData,
-                                            color: role['color'] as Color),
+                                        Icon(
+                                          role['icon'] as IconData,
+                                          color: role['color'] as Color,
+                                        ),
                                         const SizedBox(width: 10),
                                         Text(role['label'] as String),
                                       ],
@@ -146,7 +159,7 @@ class _SignInViewState extends State<SignInView> {
                                 onChanged: (value) =>
                                     controller.setRole(value!),
                                 validator: (v) =>
-                                v == null ? "role_required".tr : null,
+                                    v == null ? "role_required".tr : null,
                               ),
                             ),
 
@@ -161,9 +174,11 @@ class _SignInViewState extends State<SignInView> {
                             TextFormField(
                               controller: controller.nameController,
                               decoration: _inputDecoration(
-                                  hint: "name_hint".tr, icon: Icons.person),
+                                hint: "name_hint".tr,
+                                icon: Icons.person,
+                              ),
                               validator: (v) =>
-                              v!.isEmpty ? "name_required".tr : null,
+                                  v!.isEmpty ? "name_required".tr : null,
                             ),
 
                             const SizedBox(height: 20),
@@ -177,7 +192,9 @@ class _SignInViewState extends State<SignInView> {
                             TextFormField(
                               controller: controller.emailController,
                               decoration: _inputDecoration(
-                                  hint: "email_hint".tr, icon: Icons.email),
+                                hint: "email_hint".tr,
+                                icon: Icons.email,
+                              ),
                               validator: (v) => v!.isEmpty
                                   ? "email_required".tr
                                   : !GetUtils.isEmail(v)
@@ -190,17 +207,26 @@ class _SignInViewState extends State<SignInView> {
                             // الرقم
                             Align(
                               alignment: Alignment.topRight,
-                              child: Text("phone_number".tr, style: _titleStyle()),
+                              child: Text(
+                                "phone_number".tr,
+                                style: _titleStyle(),
+                              ),
                             ),
                             const SizedBox(height: 10),
                             TextFormField(
                               controller: controller.phoneController,
                               decoration: _inputDecoration(
-                                  hint: "phone_hint".tr, icon: Icons.phone),
+                                hint: "phone_hint".tr,
+                                icon: Icons.phone,
+                              ),
                               keyboardType: TextInputType.phone,
+
                               validator: (v) {
                                 if (v == null || v.isEmpty) {
                                   return "phone_required".tr;
+                                }
+                                if(v.length < 9){
+                                  return "must_be_9_number".tr;
                                 }
                                 if (!GetUtils.isPhoneNumber(v)) {
                                   return "phone_invalid".tr;
@@ -214,15 +240,14 @@ class _SignInViewState extends State<SignInView> {
                             // كلمة المرور
                             Align(
                               alignment: Alignment.topRight,
-                              child:
-                              Text("password".tr, style: _titleStyle()),
+                              child: Text("password".tr, style: _titleStyle()),
                             ),
                             const SizedBox(height: 10),
                             Obx(
-                                  () => TextFormField(
+                              () => TextFormField(
                                 controller: controller.passwordController,
                                 obscureText:
-                                !controller.isPasswordVisible.value,
+                                    !controller.isPasswordVisible.value,
                                 decoration: _inputDecoration(
                                   hint: "password_hint".tr,
                                   icon: Icons.lock,
@@ -233,28 +258,31 @@ class _SignInViewState extends State<SignInView> {
                                           : Icons.visibility_off,
                                       color: Colors.green,
                                     ),
-                                    onPressed: () => controller
-                                        .isPasswordVisible.value = !controller
-                                        .isPasswordVisible.value,
+                                    onPressed: () =>
+                                        controller.isPasswordVisible.value =
+                                            !controller.isPasswordVisible.value,
                                   ),
                                 ),
-                                validator: (v) => v!.isEmpty
-                                    ? "password_required".tr
-                                    : null,
+                                validator: (v) =>
+                                    v!.isEmpty ? "password_required".tr : null,
                               ),
                             ),
 
                             const SizedBox(height: 20),
                             Align(
                               alignment: Alignment.topRight,
-                              child: Text("confirm_password".tr,
-                                  style: _titleStyle()),
+                              child: Text(
+                                "confirm_password".tr,
+                                style: _titleStyle(),
+                              ),
                             ),
                             const SizedBox(height: 10),
                             Obx(
-                                  () => TextFormField(
-                                controller: controller.confirmPasswordController,
-                                obscureText: !controller.isConfirmPasswordVisible.value,
+                              () => TextFormField(
+                                controller:
+                                    controller.confirmPasswordController,
+                                obscureText:
+                                    !controller.isConfirmPasswordVisible.value,
                                 decoration: _inputDecoration(
                                   hint: "confirm_password_hint".tr,
                                   icon: Icons.lock_outline,
@@ -266,8 +294,11 @@ class _SignInViewState extends State<SignInView> {
                                       color: Colors.green,
                                     ),
                                     onPressed: () {
-                                      controller.isConfirmPasswordVisible.value =
-                                      !controller.isConfirmPasswordVisible.value;
+                                      controller
+                                          .isConfirmPasswordVisible
+                                          .value = !controller
+                                          .isConfirmPasswordVisible
+                                          .value;
                                     },
                                   ),
                                 ),
@@ -286,28 +317,32 @@ class _SignInViewState extends State<SignInView> {
 
                             // زر التسجيل
                             Obx(
-                                  () => ElevatedButton(
+                              () => ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.green[900],
                                   minimumSize: const Size(double.infinity, 50),
                                   shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(15)),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
                                 ),
                                 onPressed: controller.isLoading.value
                                     ? null
                                     : () {
-                                  if (_formKey.currentState!.validate()) {
-                                    controller.register();
-                                  }
-                                },
+                                        if (_formKey.currentState!.validate()) {
+                                          controller.register();
+                                        }
+                                      },
                                 child: controller.isLoading.value
                                     ? const CircularProgressIndicator(
-                                    color: Colors.white)
+                                        color: Colors.white,
+                                      )
                                     : Text(
-                                  "create_account".tr,
-                                  style: const TextStyle(
-                                      color: Colors.white, fontSize: 18),
-                                ),
+                                        "create_account".tr,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                        ),
+                                      ),
                               ),
                             ),
 
@@ -316,9 +351,13 @@ class _SignInViewState extends State<SignInView> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text("have_account".tr, style: TextStyle(color: Colors.green[800]),),
+                                Text(
+                                  "have_account".tr,
+                                  style: TextStyle(color: Colors.green[800]),
+                                ),
                                 TextButton(
-                                  onPressed: () => Get.offNamed(AppRoutes.login),
+                                  onPressed: () =>
+                                      Get.offNamed(AppRoutes.login),
                                   child: Text(
                                     "login".tr,
                                     style: TextStyle(
@@ -336,7 +375,7 @@ class _SignInViewState extends State<SignInView> {
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -345,12 +384,16 @@ class _SignInViewState extends State<SignInView> {
   }
 
   TextStyle _titleStyle() => TextStyle(
-      color: Colors.green[700],
-      fontSize: 15,
-      fontWeight: FontWeight.bold);
+    color: Colors.green[700],
+    fontSize: 15,
+    fontWeight: FontWeight.bold,
+  );
 
-  InputDecoration _inputDecoration(
-      {String? hint, IconData? icon, Widget? suffix}) {
+  InputDecoration _inputDecoration({
+    String? hint,
+    IconData? icon,
+    Widget? suffix,
+  }) {
     return InputDecoration(
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(15),

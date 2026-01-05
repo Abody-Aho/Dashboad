@@ -122,9 +122,7 @@ class UsersPage extends StatelessWidget {
                                   child: CustomDropdownButton(
                                     selectedValue: controller.selectedValue,
                                     options: controller.options,
-                                    onChanged: (value) {
-                                      controller.filterByType(value);
-                                    },
+                                    onChanged: controller.changeValue,
                                   ),
                                 ),
                                 const SizedBox(height: 20),
@@ -158,9 +156,7 @@ class UsersPage extends StatelessWidget {
                                   child: CustomDropdownButton(
                                     selectedValue: controller.selectedValue,
                                     options: controller.options,
-                                    onChanged: (value) {
-                                      controller.filterByType(value);
-                                    },
+                                    onChanged: controller.changeValue,
 
                                   ),
                                 ),

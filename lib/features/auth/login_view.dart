@@ -126,7 +126,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             const SizedBox(height: 30),
 
-                            // ❌ تم حذف حقل اختيار الدور لأنه غير منطقي في شاشة تسجيل الدخول
 
                             // الإيميل
                             Align(
@@ -186,7 +185,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                   minimumSize: const Size(double.infinity, 50),
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                                 ),
-                                // ✅ تم تصحيح استدعاء الدالة إلى login()
                                 onPressed: authController.isLoading.value ? null : () {
                                   if (_formKey.currentState!.validate()) {
                                     authController.login();

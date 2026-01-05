@@ -1,46 +1,45 @@
-import 'package:dashbord2/core/constants/app_constants.dart';
-import 'package:dashbord2/features/admin/users/user_controller.dart';
-import 'package:dashbord2/features/widgets/custom_data_table.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../widgets/custom_bottom.dart';
 import '../../widgets/custom_card.dart';
 import '../../widgets/custom_dropdown_button.dart';
 import '../../widgets/custom_search_bar.dart';
-
-class UsersPage extends StatelessWidget {
-  const UsersPage({super.key});
+import 'notifications_controller.dart';
+import 'package:dashbord2/core/constants/app_constants.dart';
+import 'package:dashbord2/features/widgets/custom_data_table.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+class NotificationsPage extends StatelessWidget {
+  const NotificationsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<UserController>();
+    final controller = Get.find<NotificationsController>();
 
-    // بطاقات الإحصائيات / Statistics Cards
+    // بطاقات الإحصائيات
     List<Widget> statCards = [
       StatCard(
-        title: 'total_users'.tr, // مترجم
-        value: '1,245',
-        percent: '8%',
-        subtitle: 'compared_last_month'.tr,
+        title: 'total_notifications'.tr,
+        value: '12,450',
+        percent: '15%',
+        subtitle: 'increase_last_week'.tr,
       ),
       StatCard(
-        title: 'active_users'.tr,
-        value: '984',
+        title: 'read_notifications'.tr,
+        value: '9,320',
+        percent: '10%',
+        subtitle: 'improvement_engagement'.tr,
+      ),
+      StatCard(
+        title: 'unread_notifications'.tr,
+        value: '3,130',
         percent: '5%',
-        subtitle: 'compared_last_month'.tr,
+        subtitle: 'awaiting_review'.tr,
       ),
       StatCard(
-        title: 'new_signups'.tr,
-        value: '124',
-        percent: '12%',
-        subtitle: 'compared_last_month'.tr,
-      ),
-      StatCard(
-        title: 'banned_users'.tr,
-        value: '15',
-        percent: '-3%',
-        subtitle: 'compared_last_month'.tr,
+        title: 'deleted_notifications'.tr,
+        value: '720',
+        percent: '-6%',
+        subtitle: 'decrease_deletion'.tr,
         percentColor: Colors.red,
         percentIcon: Icons.arrow_downward,
       ),
@@ -53,11 +52,11 @@ class UsersPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // العنوان / Page Title
+              // العنوان
               Container(
                 alignment: Alignment.centerRight,
                 child: Text(
-                  'user_management'.tr,
+                  "notifications_management".tr,
                   style: TextStyle(
                     color: Constants.primary,
                     fontSize: 18,
@@ -67,7 +66,7 @@ class UsersPage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // بطاقات الإحصائيات / Statistics Cards Layout
+              // بطاقات الإحصائيات
               LayoutBuilder(
                 builder: (context, constraints) {
                   int crossAxisCount = 1;
@@ -90,7 +89,7 @@ class UsersPage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // جدول المستخدمين مع الخلفية المستديرة / Users Table with Rounded Background
+              // جدول المستخدمين مع الخلفية المستديرة
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Container(
@@ -101,20 +100,26 @@ class UsersPage extends StatelessWidget {
                     children: [
                       const SizedBox(height: 10),
 
-                      // الصف العلوي (زر + قائمة + بحث) / Top Row (Button + Dropdown + Search)
+                      // الصف العلوي (زر + قائمة + بحث)
                       LayoutBuilder(
                         builder: (context, constraints) {
                           bool isPhone =
-                              constraints.maxWidth < 600;
+                              constraints.maxWidth < 600; // يمكن تعديل القيمة حسب الحاجة
 
                           if (isPhone) {
-                            // عمودي / Vertical layout
+                            // عمودي - فوق بعض
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                CustomSearchBar(
-                                  controller: controller,
-                                  hintText: 'search'.tr,
+                                CustomSearchBar(controller: controller, hintText: 'search'.tr),
+                                const SizedBox(height: 20),
+                                Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 10),
+                                  child: CustomDropdownButton(
+                                    selectedValue: controller.selectedWay,
+                                    options: controller.paymentWay,
+                                    onChanged: controller.changeWay,
+                                  ),
                                 ),
                                 const SizedBox(height: 20),
                                 Container(
@@ -122,9 +127,7 @@ class UsersPage extends StatelessWidget {
                                   child: CustomDropdownButton(
                                     selectedValue: controller.selectedValue,
                                     options: controller.options,
-                                    onChanged: (value) {
-                                      controller.filterByType(value);
-                                    },
+                                    onChanged: controller.changeValue,
                                   ),
                                 ),
                                 const SizedBox(height: 20),
@@ -132,7 +135,7 @@ class UsersPage extends StatelessWidget {
                                   margin: EdgeInsets.symmetric(horizontal: 11),
                                   child: CustomBottom(
                                     controller: controller,
-                                    addButtonText: 'add_users'.tr,
+                                    addButtonText: 'create_notification'.tr,
                                     onAddPressed: () {
                                       print("Add user pressed");
                                     },
@@ -142,13 +145,13 @@ class UsersPage extends StatelessWidget {
                               ],
                             );
                           } else {
-                            // أفقي / Horizontal layout
+                            // أفقي - بجانب بعض
                             return Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 CustomBottom(
                                   controller: controller,
-                                  addButtonText: 'add_users'.tr,
+                                  addButtonText: 'create_notification'.tr,
                                   onAddPressed: () {
                                     print("Add user pressed");
                                   },
@@ -156,19 +159,22 @@ class UsersPage extends StatelessWidget {
                                 Container(
                                   margin: EdgeInsets.only(left: 5.w),
                                   child: CustomDropdownButton(
-                                    selectedValue: controller.selectedValue,
-                                    options: controller.options,
-                                    onChanged: (value) {
-                                      controller.filterByType(value);
-                                    },
-
+                                    selectedValue: controller.selectedWay,
+                                    options: controller.paymentWay,
+                                    onChanged: controller.changeWay,
                                   ),
                                 ),
-
+                                Container(
+                                  margin: EdgeInsets.only(left: 5.w),
+                                  child: CustomDropdownButton(
+                                    selectedValue: controller.selectedValue,
+                                    options: controller.options,
+                                    onChanged: controller.changeValue,
+                                  ),
+                                ),
                                 Expanded(
                                   child: CustomSearchBar(
-                                    controller: controller,
-                                    hintText: 'search'.tr,
+                                    controller: controller, hintText: 'search'.tr,
                                   ),
                                 ),
                               ],
@@ -176,10 +182,8 @@ class UsersPage extends StatelessWidget {
                           }
                         },
                       ),
-
                       const SizedBox(height: 15),
 
-                      // جدول المستخدمين / Users Table
                       SizedBox(
                         height: 500,
                         child: CustomDataTable(controller: controller),

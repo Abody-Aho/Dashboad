@@ -1,8 +1,8 @@
-import 'package:dashbord2/features/drawer/sidebar_controller.dart';
+import 'package:dashbord2/features/admin/drawer/sidebar_controller.dart';
 import 'package:dashbord2/features/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../core/constants/app_constants.dart';
+import '../../../core/constants/app_constants.dart';
 
 class ButtonsInfo {
   String title;

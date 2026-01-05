@@ -1,179 +1,269 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 
 /// وحدة تحكم المستخدمين - User Controller
-/// مسؤولة عن إدارة بيانات المستخدمين، البحث، الفرز، والاختيار.
 class UserController extends GetxController {
-  var dataList = <Map<String, String>>[].obs;        // جميع بيانات المستخدمين
-  var filteredDataList = <Map<String, String>>[].obs; // البيانات بعد البحث أو التصفية
-  RxList<bool> selectedRows = <bool>[].obs;          // حالة التحديد لكل صف
+  var dataList = <Map<String, String>>[].obs;
+  var filteredDataList = <Map<String, String>>[].obs;
+  RxList<bool> selectedRows = <bool>[].obs;
+  RxBool isLoading = true.obs;
 
-  RxInt sortColumnIndex = 0.obs;                     // العمود المفعل للفرز
-  RxBool sortAscending = true.obs;                   // اتجاه الفرز (تصاعدي / تنازلي)
-  final searchTextController = TextEditingController(); // متحكم حقل البحث
+  RxInt sortColumnIndex = 0.obs;
+  RxBool sortAscending = true.obs;
+  final searchTextController = TextEditingController();
 
-  /// عند إنشاء الكنترولر يتم تحميل البيانات مباشرة
   @override
   void onInit() {
     super.onInit();
     fetchUsers();
   }
 
-  /// إنشاء خلايا البيانات الخاصة بكل صف في الجدول
+  // ======================= DATA CELLS =======================
   List<DataCell> getDataCells(Map<String, dynamic> data) {
     return [
-      DataCell(Text(data['Column1'] ?? '', overflow: TextOverflow.ellipsis)),
-      DataCell(Text(data['Column2'] ?? '', overflow: TextOverflow.ellipsis)),
-      DataCell(Text(data['Column3'] ?? '', overflow: TextOverflow.ellipsis)),
-      DataCell(Text(data['Column4'] ?? '', overflow: TextOverflow.ellipsis)),
-      DataCell(Text(data['Column5'] ?? '', overflow: TextOverflow.ellipsis)),
-      DataCell(Text(data['Column6'] ?? '', overflow: TextOverflow.ellipsis)),
-      DataCell(Text(data['Column7'] ?? '', overflow: TextOverflow.ellipsis)),
-      DataCell(
-        SizedBox(
-          width: 100, // عرض ثابت للأزرار
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Flexible(
-                child: IconButton(
-                  icon: const Icon(Icons.person, color: Colors.grey, size: 25),
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                  onPressed: () => print('View ${data['Column1']}'),
-                  tooltip: 'View'.tr,
-                ),
-              ),
-              Flexible(
-                child: IconButton(
-                  icon: const Icon(Icons.edit, color: Colors.blue, size: 25),
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                  onPressed: () => print('Edit ${data['Column1']}'),
-                  tooltip: 'Edit'.tr,
-                ),
-              ),
-              Flexible(
-                child: IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.red, size: 25),
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                  onPressed: () => print('Delete ${data['Column1']}'),
-                  tooltip: 'Delete'.tr,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      _textCell(data['Column1'], 180), // الاسم
+      _textCell(data['Column2'], 220), // الإيميل
+      _textCell(data['Column3'], 140), // الهاتف
+      _textCell(data['Column4'], 140), // الدور
+      _statusCell(data['Column5']),    // الحالة
+      _textCell(data['Column6'], 150), // تاريخ الإنشاء (بدون ساعة)
+      _actionCell(data),               // العمليات
     ];
   }
 
-  /// تعريف أعمدة الجدول مع دعم الفرز
+  // ======================= HELPERS =======================
+  DataCell _textCell(String? text, double width) {
+    return DataCell(
+      Tooltip(
+        message: text ?? '-',
+        child: SizedBox(
+          width: width,
+          child: Text(
+            text ?? '-',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ),
+    );
+  }
+
+  DataCell _statusCell(String? status) {
+    final bool isActive = status == 'Active';
+    return DataCell(
+      Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        decoration: BoxDecoration(
+          color: isActive ? Colors.green.shade100 : Colors.red.shade100,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text(
+          status ?? '',
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            color: isActive ? Colors.green.shade800 : Colors.red.shade800,
+          ),
+        ),
+      ),
+    );
+  }
+
+  DataCell _actionCell(Map<String, dynamic> data) {
+    return DataCell(
+      SizedBox(
+        width: 100, // عرض ثابت للأزرار
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Flexible(
+              child: IconButton(
+                icon: const Icon(Icons.person, color: Colors.grey, size: 25),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                onPressed: () => print('View ${data['Column1']}'),
+                tooltip: 'View'.tr,
+              ),
+            ),
+            Flexible(
+              child: IconButton(
+                icon: const Icon(Icons.edit, color: Colors.blue, size: 25),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                onPressed: () => print('Edit ${data['Column1']}'),
+                tooltip: 'Edit'.tr,
+              ),
+            ),
+            Flexible(
+              child: IconButton(
+                icon: const Icon(Icons.delete, color: Colors.red, size: 25),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                onPressed: () => print('Delete ${data['Column1']}'),
+                tooltip: 'Delete'.tr,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ======================= TABLE COLUMNS =======================
   List<DataColumn> get tableColumns => [
     DataColumn(
       label: Text('name'.tr),
-      onSort: (columnIndex, ascending) => sortData(0, ascending),
+      onSort: (i, a) => sortData(0, a),
     ),
     DataColumn(
       label: Text('user_email'.tr),
-      onSort: (columnIndex, ascending) => sortData(1, ascending),
+      onSort: (i, a) => sortData(1, a),
     ),
     DataColumn(
       label: Text('phone'.tr),
-      onSort: (columnIndex, ascending) => sortData(2, ascending),
+      onSort: (i, a) => sortData(2, a),
     ),
     DataColumn(
       label: Text('type'.tr),
-      onSort: (columnIndex, ascending) => sortData(3, ascending),
+      onSort: (i, a) => sortData(3, a),
     ),
     DataColumn(
       label: Text('status'.tr),
-      onSort: (columnIndex, ascending) => sortData(4, ascending),
+      onSort: (i, a) => sortData(4, a),
     ),
     DataColumn(
       label: Text('registration_date'.tr),
-      onSort: (columnIndex, ascending) => sortData(5, ascending),
+      onSort: (i, a) => sortData(5, a),
     ),
-    DataColumn(
-      label: Text('last_activity'.tr),
-      onSort: (columnIndex, ascending) => sortData(6, ascending),
-    ),
-    DataColumn(
-      label: Text('actions'.tr),
-      onSort: (columnIndex, ascending) => sortData(6, ascending),
-    ),
+    const DataColumn(label: Text('actions')),
   ];
 
-  /// تنفيذ عملية الفرز حسب العمود المختار
+  // ======================= SORT =======================
   void sortData(int columnIndex, bool ascending) {
     sortColumnIndex.value = columnIndex;
     sortAscending.value = ascending;
 
-    String columnKey = 'Column${columnIndex + 1}';
+    final key = 'Column${columnIndex + 1}';
 
     filteredDataList.sort((a, b) {
-      final valueA = a[columnKey]!.toLowerCase();
-      final valueB = b[columnKey]!.toLowerCase();
-      return ascending ? valueA.compareTo(valueB) : valueB.compareTo(valueA);
+      final aVal = a[key]!.toLowerCase();
+      final bVal = b[key]!.toLowerCase();
+      return ascending ? aVal.compareTo(bVal) : bVal.compareTo(aVal);
     });
 
     filteredDataList.refresh();
   }
 
-  /// تنفيذ البحث في الجدول
+  // ======================= SEARCH =======================
   void searchQuery(String query) {
-    List<Map<String, String>> results;
-    if (query.isEmpty) {
-      results = dataList;
+    List<Map<String, String>> baseList;
+
+    if (selectedValue.value == 'all_types') {
+      baseList = dataList;
     } else {
-      results = dataList
-          .where((item) => item.values
-          .any((value) => value.toLowerCase().contains(query.toLowerCase())))
-          .toList();
+      baseList = dataList.where((item) {
+        return item['Column4']?.toLowerCase() ==
+            selectedValue.value;
+      }).toList();
     }
 
-    filteredDataList.assignAll(results);
-    selectedRows.assignAll(List.generate(filteredDataList.length, (index) => false));
-  }
+    if (query.isEmpty) {
+      filteredDataList.assignAll(baseList);
+    } else {
+      filteredDataList.assignAll(
+        baseList.where(
+              (item) => item.values.any(
+                (v) => v.toLowerCase().contains(query.toLowerCase()),
+          ),
+        ),
+      );
+    }
 
-  /// تحميل بيانات تجريبية للمستخدمين
-  void fetchUsers() {
-    final userTypes = ['Client'.tr, 'Agent'.tr, 'Supermarket'.tr, 'Admin'.tr];
-    final statuses = ['Active'.tr, 'Inactive'.tr];
-
-    dataList.assignAll(
-      List.generate(
-        20,
-            (index) => {
-          'Column1': '${'User'.tr} ${index + 1}', // الاسم
-          'Column2': 'user${index + 1}@gmail.com', // البريد الإلكتروني
-          'Column3': '77${9000000 + index}', // الهاتف
-          'Column4': userTypes[index % userTypes.length], // النوع
-          'Column5': statuses[index % statuses.length], // الحالة
-          'Column6': '2025-0${(index % 9) + 1}-15', // تاريخ التسجيل
-          'Column7': '2025-11-${(index % 28) + 1}', // آخر نشاط
-        },
-      ),
-    );
-
-    filteredDataList.assignAll(dataList);
     selectedRows.assignAll(
-      List.generate(filteredDataList.length, (index) => false),
+      List.generate(filteredDataList.length, (_) => false),
     );
   }
 
-  final selectedValue = 'all_types'.obs;
 
-  final options = [
-    'all_types',
-    'clients',
-    'agents',
-    'supermarkets',
-  ];
+  // ======================= API =======================
+  Future<void> fetchUsers() async {
+    try {
+      isLoading.value = true;
+
+      final response = await http.get(
+        Uri.parse('http://localhost/flymarket/user_management/view.php'),
+        headers: {'Accept': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+
+        if (body['status'] == 'success') {
+          final List users = body['data'];
+
+          dataList.assignAll(
+            users.map<Map<String, String>>((user) {
+              return {
+                'Column1': user['name']?.toString() ?? '',
+                'Column2': user['email']?.toString() ?? '-',
+                'Column3': user['phone']?.toString() ?? '-',
+                'Column4': user['role']?.toString() ?? '',
+                'Column5':
+                user['status'].toString() == '1' ? 'Active' : 'Inactive',
+                'Column6': _formatDate(user['created_at']?.toString()),
+              };
+            }).toList(),
+          );
+
+          filteredDataList.assignAll(dataList);
+          selectedRows.assignAll(
+            List.generate(filteredDataList.length, (_) => false),
+          );
+        }
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'No internet connection');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+
+  // ======================= DATE FORMAT =======================
+  String _formatDate(String? dateTime) {
+    if (dateTime == null || dateTime.isEmpty) return '-';
+    return dateTime.split(' ').first; // YYYY-MM-DD
+  }
+
+  // ======================= FILTER =======================
+  final selectedValue = 'all_types'.obs;
+  final options = ['all_types', 'admin', 'customer', 'driver', 'supermarket'];
+
+
+  void filterByType(String value) {
+    selectedValue.value = value;
+
+    if (value == 'all_types') {
+      filteredDataList.assignAll(dataList);
+    } else {
+      filteredDataList.assignAll(
+        dataList.where((item) {
+          final role = item['Column4']?.toLowerCase();
+          return role == value;
+        }).toList(),
+      );
+    }
+
+    selectedRows.assignAll(
+      List.generate(filteredDataList.length, (_) => false),
+    );
+  }
+
+
+
 
   void changeValue(String newValue) {
     selectedValue.value = newValue;
   }
-
 }

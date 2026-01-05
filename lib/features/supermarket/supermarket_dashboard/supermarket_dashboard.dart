@@ -5,8 +5,8 @@ import '../../widgets/responsive_layout.dart';
 import '../drawer/drawer_page.dart';
 import '../drawer/sidebar_controller.dart';
 
-class AdminDashboard extends StatelessWidget {
-  const AdminDashboard({super.key});
+class SupermarketDashboard extends StatelessWidget {
+  const SupermarketDashboard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,11 +14,11 @@ class AdminDashboard extends StatelessWidget {
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size(double.infinity, 100),
+        preferredSize: const Size(double.infinity, 100),
         child: ResponsiveLayout.isTinyLimit(context) ||
             ResponsiveLayout.isTinyHeightLimit(context)
             ? Container()
-            : AppBarWidget(),
+            : const AppBarWidget(),
       ),
       body: Obx(
             () => ResponsiveLayout(
@@ -36,7 +36,7 @@ class AdminDashboard extends StatelessWidget {
           ),
           computer: Row(
             children: [
-              SizedBox(
+              const SizedBox(
                 width: 350,
                 child: DrawerPage(),
               ),
@@ -47,7 +47,7 @@ class AdminDashboard extends StatelessWidget {
           ),
         ),
       ),
-      drawer: ResponsiveLayout.isComputer(context) ? null : DrawerPage(),
+      drawer: ResponsiveLayout.isComputer(context) ? null : const DrawerPage(),
     );
   }
 }

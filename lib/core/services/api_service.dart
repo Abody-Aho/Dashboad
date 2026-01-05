@@ -15,8 +15,8 @@ class ApiServices {
     File? imageFile,                // صورة اختيارية
   }) async {
     try {
-      final uri = Uri.parse('${baseUrl}signup.php');
-      final request = http.MultipartRequest('POST', uri);
+      final authUri = Uri.parse('${baseUrl}signup.php');
+      final request = http.MultipartRequest('POST', authUri);
 
       request.fields['firebase_uid'] = user.firebaseUid;
       request.fields['name'] = user.name;
@@ -60,4 +60,6 @@ class ApiServices {
       return {'status': 'error', 'message': e.toString()};
     }
   }
+
+
 }
