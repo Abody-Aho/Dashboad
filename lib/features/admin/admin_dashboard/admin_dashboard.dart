@@ -15,34 +15,22 @@ class AdminDashboard extends StatelessWidget {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size(double.infinity, 100),
-        child: ResponsiveLayout.isTinyLimit(context) ||
-            ResponsiveLayout.isTinyHeightLimit(context)
+        child:
+            ResponsiveLayout.isTinyLimit(context) ||
+                ResponsiveLayout.isTinyHeightLimit(context)
             ? Container()
             : AppBarWidget(),
       ),
       body: Obx(
-            () => ResponsiveLayout(
+        () => ResponsiveLayout(
           tiny: Container(),
           phone: ctrl.currentPage,
-          tablet: Row(
-            children: [
-              Expanded(child: ctrl.currentPage),
-            ],
-          ),
-          largeTablet: Row(
-            children: [
-              Expanded(child: ctrl.currentPage),
-            ],
-          ),
+          tablet: Row(children: [Expanded(child: ctrl.currentPage)]),
+          largeTablet: Row(children: [Expanded(child: ctrl.currentPage)]),
           computer: Row(
             children: [
-              SizedBox(
-                width: 350,
-                child: DrawerPage(),
-              ),
-              Expanded(
-                child: ctrl.currentPage,
-              ),
+              SizedBox(width: 350, child: DrawerPage()),
+              Expanded(child: ctrl.currentPage),
             ],
           ),
         ),

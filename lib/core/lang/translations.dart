@@ -41,6 +41,8 @@ class AppTranslations extends Translations {
       "phone_invalid": "الرقم غير صالح",
       "role_required": "نوع المستخدم مطلوب",
       "must_be_9_number": "يجب ان تكون 9 ارقام ",
+      "confirm_required": "تأكيد كلمة المرور مطلوب",
+      "password_not_match": "كلمة السر لا تتطابق",
 
       // AppBarWidget
       "overview": "نظرة عامة",
@@ -109,6 +111,7 @@ class AppTranslations extends Translations {
       'compared_last_month': 'مقارنة بالشهر الماضي',
       'add_users': 'أضافة مستخدمين',
       'search': 'بحث',
+      'cancel': 'الغاء',
 
       // UserController
       'user_email': 'البريد الإلكتروني',
@@ -128,8 +131,11 @@ class AppTranslations extends Translations {
       'Admin': 'أدمن',
       'all_types': 'جميع الانواع',
       'clients': 'العملاء',
-      'agents': 'المناديب',
+      'driver': 'المناديب',
       'supermarkets': 'السوبرماركت',
+      'admin':'الأدمن',
+      'active': 'نشط',
+      'inactive': 'غير نشط',
 
       // ManagementSupermarketPage
       "total_supermarkets": "إجمالي المتاجر",

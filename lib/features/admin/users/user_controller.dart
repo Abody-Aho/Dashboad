@@ -1,11 +1,16 @@
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import '../../../core/services/api_service.dart';
+import '../../../data/models/user_model.dart';
+
 
 /// وحدة تحكم المستخدمين - User Controller
 class UserController extends GetxController {
   var dataList = <Map<String, String>>[].obs;
+  final _auth = FirebaseAuth.instance;
   var filteredDataList = <Map<String, String>>[].obs;
   RxList<bool> selectedRows = <bool>[].obs;
   RxBool isLoading = true.obs;
@@ -14,10 +19,128 @@ class UserController extends GetxController {
   RxBool sortAscending = true.obs;
   final searchTextController = TextEditingController();
 
+  //  الحقول
+
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+
+  // حقول خاصة بكل دور
+  final phoneController = TextEditingController();
+  final locationController = TextEditingController();
+  final timeOpenController = TextEditingController();
+
+
+  //  حالات الواجهة
+
+  var isPasswordVisible = false.obs;
+  var isConfirmPasswordVisible = false.obs;
+
+
+
   @override
   void onInit() {
     super.onInit();
     fetchUsers();
+  }
+
+
+  Future<void> addAccount() async {
+    if (selectedRole.value == null) {
+      Get.snackbar("خطأ", "يرجى اختيار نوع المستخدم", backgroundColor: Colors.redAccent, colorText: Colors.white);
+      return;
+    }
+
+    UserCredential? credential;
+
+    try {
+      isLoading.value = true;
+
+      credential = await _auth.createUserWithEmailAndPassword(
+          email: emailController.text.trim(),
+          password: passwordController.text.trim());
+      final uid = credential.user!.uid;
+
+
+      final newUser = UserModel(
+        firebaseUid: uid,
+        name: nameController.text.trim(),
+        email: emailController.text.trim(),
+        phone: phoneController.text.trim(),
+        role: selectedRole.value!,
+        status: 1,
+      );
+
+      final response = await ApiServices.signUp(
+        user: newUser,
+        location: locationController.text.trim(),
+        time_open: timeOpenController.text.trim(),
+      );
+
+      if (response['status'] == 'success') {
+        await fetchUsers(); // تحديث البيانات من السيرفر
+        Get.dialog(
+          AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            title: Row(
+              children: [
+                Icon(Icons.check_circle, color: Colors.green, size: 30),
+                const SizedBox(width: 10),
+                Text(
+                  "تم بنجاح",
+                  style: TextStyle(
+                    color: Colors.green[700],
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            content: const Text("تم إضافة الحساب بنجاح"),
+            actions: [
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green[700],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onPressed: () => Get.back(),
+                child: const Text("حسناً", style: TextStyle(color: Colors.white)),
+              ),
+            ],
+          ),
+        );
+        nameController.clear();
+        emailController.clear();
+        passwordController.clear();
+        confirmPasswordController.clear();
+        phoneController.clear();
+        selectedRole.value = null;
+      } else {
+        await credential.user?.delete();
+        Get.snackbar("خطأ في الخادم", response['message'] ?? "فشل حفظ البيانات.", backgroundColor: Colors.redAccent, colorText: Colors.white);
+      }
+    } on FirebaseAuthException catch (e) {
+      String message = "حدث خطأ أثناء إضافة الحساب.";
+      if (e.code == 'weak-password') {
+        message = 'كلمة المرور ضعيفة جدًا (6 أحرف على الأقل).';
+      } else if (e.code == 'email-already-in-use') {
+        message = 'هذا البريد الإلكتروني مُسجل بالفعل.';
+      } else if (e.code == 'invalid-email') {
+        message = 'صيغة البريد الإلكتروني غير صحيحة.';
+      }
+      Get.snackbar("خطأ في المصادقة", message, backgroundColor: Colors.redAccent, colorText: Colors.white);
+    } catch (e) {
+      if (credential != null) {
+        await credential.user?.delete();
+      }
+      Get.snackbar("خطأ فادح", "حدث خطأ غير متوقع: ${e.toString()}", backgroundColor: Colors.red, colorText: Colors.white);
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   // ======================= DATA CELLS =======================
@@ -51,7 +174,7 @@ class UserController extends GetxController {
   }
 
   DataCell _statusCell(String? status) {
-    final bool isActive = status == 'Active';
+    final bool isActive = status == 'active'.tr;
     return DataCell(
       Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -136,7 +259,7 @@ class UserController extends GetxController {
       label: Text('registration_date'.tr),
       onSort: (i, a) => sortData(5, a),
     ),
-    const DataColumn(label: Text('actions')),
+    DataColumn(label: Text('actions'.tr)),
   ];
 
   // ======================= SORT =======================
@@ -192,7 +315,7 @@ class UserController extends GetxController {
       isLoading.value = true;
 
       final response = await http.get(
-        Uri.parse('http://localhost/flymarket/user_management/view.php'),
+        Uri.parse('http://localhost/flymarket_php_api/dashboard/admin/user_management/view.php'),
         headers: {'Accept': 'application/json'},
       );
 
@@ -210,7 +333,7 @@ class UserController extends GetxController {
                 'Column3': user['phone']?.toString() ?? '-',
                 'Column4': user['role']?.toString() ?? '',
                 'Column5':
-                user['status'].toString() == '1' ? 'Active' : 'Inactive',
+                user['status'].toString() == '1' ? 'active'.tr : 'inactive'.tr,
                 'Column6': _formatDate(user['created_at']?.toString()),
               };
             }).toList(),
@@ -233,12 +356,43 @@ class UserController extends GetxController {
   // ======================= DATE FORMAT =======================
   String _formatDate(String? dateTime) {
     if (dateTime == null || dateTime.isEmpty) return '-';
-    return dateTime.split(' ').first; // YYYY-MM-DD
+    return dateTime.split(' ').first;
   }
 
   // ======================= FILTER =======================
   final selectedValue = 'all_types'.obs;
   final options = ['all_types', 'admin', 'customer', 'driver', 'supermarket'];
+
+  final roles = [
+    {
+      'label': 'مدير النظام',
+      'value': 'admin',
+      'icon': Icons.admin_panel_settings,
+      'color': Colors.red,
+    },
+    {
+      'label': 'مالك سوبرماركت',
+      'value': 'supermarket',
+      'icon': Icons.store_mall_directory,
+      'color': Colors.green,
+    },
+    {
+      'label': 'مندوب',
+      'value': 'driver',
+      'icon': Icons.delivery_dining,
+      'color': Colors.orange,
+    },
+    {
+      'label': 'عميل',
+      'value': 'customer',
+      'icon': Icons.person,
+      'color': Colors.blue,
+    },
+  ];
+
+
+  var selectedRole = RxnString();
+  void setRole(String role) => selectedRole.value = role;
 
 
   void filterByType(String value) {
