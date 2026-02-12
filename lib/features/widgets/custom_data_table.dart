@@ -65,7 +65,6 @@ class CustomDataTable extends StatelessWidget {
             sortAscending: controller.sortAscending.value,
             sortColumnIndex: controller.sortColumnIndex.value,
             columns: controller.tableColumns,
-            // ✅ هنا التصحيح: الـ DataSource الآن يُنشأ بشكل صحيح
             source: GenericDataSource(
               controller.filteredDataList,
               controller.selectedRows,
@@ -82,7 +81,7 @@ class CustomDataTable extends StatelessWidget {
 class GenericDataSource extends DataTableSource {
   final List<Map<String, dynamic>> dataList; // استخدم dynamic لدعم bool
   final RxList<bool> selectedRows;
-  final dynamic controller; // ✅ أضفنا الكنترولر هنا
+  final dynamic controller;
 
   GenericDataSource(this.dataList, this.selectedRows, this.controller);
 

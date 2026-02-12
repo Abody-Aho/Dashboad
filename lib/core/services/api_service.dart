@@ -6,7 +6,7 @@ import 'package:path/path.dart';
 
 class ApiServices {
   // رابط الـ API الرئيسي
-  static const String baseUrl = 'http://localhost/flymarket_php_api/dashboard/auth/';
+  static const String baseUrl = 'http://46.101.225.45/flymarket/dashboard/auth/';
 
   static Future<Map<String, dynamic>> signUp({
     required UserModel user,

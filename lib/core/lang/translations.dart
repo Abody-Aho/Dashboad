@@ -221,7 +221,7 @@ class AppTranslations extends Translations {
       // PaymentController
       "transaction_number": "رقم المعاملة",
       "order_number": "رقم الطلب",
-      "customer": "العميل",
+      "user": "العميل",
       "amount": "المبلغ",
       "payment_method": "طريقة الدفع",
       "date": "التاريخ",
@@ -481,7 +481,7 @@ class AppTranslations extends Translations {
       // PaymentController
       "transaction_number": "Transaction Number",
       "order_number": "Order Number",
-      "customer": "Customer",
+      "user": "User",
       "amount": "Amount",
       "payment_method": "Payment Method",
       "date": "Date",

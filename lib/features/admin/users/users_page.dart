@@ -8,6 +8,7 @@ import '../../widgets/custom_bottom.dart';
 import '../../widgets/custom_card.dart';
 import '../../widgets/custom_dropdown_button.dart';
 import '../../widgets/custom_search_bar.dart';
+import '../../widgets/user_account_form.dart';
 
 class UsersPage extends StatelessWidget {
   const UsersPage({super.key});
@@ -134,7 +135,11 @@ class UsersPage extends StatelessWidget {
                                     controller: controller,
                                     addButtonText: 'add_users'.tr,
                                     onAddPressed: () {
-                                      print("Add user pressed");
+                                      showCreateAccountDialog(
+                                        context: context,
+                                        formKey: formKey,
+                                        controller: controller,
+                                      );
                                     },
                                   ),
                                 ),
@@ -150,281 +155,10 @@ class UsersPage extends StatelessWidget {
                                   controller: controller,
                                   addButtonText: 'add_users'.tr,
                                   onAddPressed: () {
-                                    showDialog(
+                                    showCreateAccountDialog(
                                       context: context,
-                                      barrierDismissible: false,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          title:  Text(
-                                            "create_account".tr,
-                                            style: TextStyle(
-                                              color: Colors.green[700],
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          content: SizedBox(
-                                            width: 600,
-                                            height: 600,
-                                            child: SingleChildScrollView(
-                                              child: Form(
-                                                key: formKey,
-                                                child: Obx(
-                                                  () => Column(
-                                                    children: [
-                                                      // نوع المستخدم
-                                                      Align(
-                                                        alignment: Alignment.topRight,
-                                                        child: Text("user_type".tr, style: _titleStyle()),
-                                                      ),
-                                                      const SizedBox(height: 10),
-
-                                                      DropdownButtonFormField<String>(
-                                                        initialValue: controller.selectedRole.value,
-                                                        hint: Text(
-                                                          "choose".tr,
-                                                          style: const TextStyle(color: Colors.green),
-                                                        ),
-                                                        decoration: _inputDecoration(),
-                                                        items: controller.roles.map((role) {
-                                                          return DropdownMenuItem<String>(
-                                                            value: role['value'] as String,
-                                                            child: Row(
-                                                              children: [
-                                                                Icon(
-                                                                  role['icon'] as IconData,
-                                                                  color: role['color'] as Color,
-                                                                ),
-                                                                const SizedBox(width: 10),
-                                                                Text(role['label'] as String),
-                                                              ],
-                                                            ),
-                                                          );
-                                                        }).toList(),
-                                                        onChanged: (value) => controller.setRole(value!),
-                                                        validator: (v) => v == null ? "role_required".tr : null,
-                                                      ),
-
-                                                      const SizedBox(height: 20),
-
-                                                      // الاسم
-                                                      Align(
-                                                        alignment: Alignment.topRight,
-                                                        child: Text("name".tr, style: _titleStyle()),
-                                                      ),
-                                                      const SizedBox(height: 10),
-                                                      TextFormField(
-                                                        controller: controller.nameController,
-                                                        decoration: _inputDecoration(
-                                                          hint: "name_hint".tr,
-                                                          icon: Icons.person,
-                                                        ),
-                                                        validator: (v) => v!.isEmpty ? "name_required".tr : null,
-                                                      ),
-
-                                                      const SizedBox(height: 20),
-
-                                                      // الشرط الخاص بالإيميل أو الهاتف
-                                                      if (controller.selectedRole.value == 'supermarket' || controller.selectedRole.value == 'admin') ...[
-                                                        Align(
-                                                          alignment: Alignment.topRight,
-                                                          child: Text("email".tr, style: _titleStyle()),
-                                                        ),
-                                                        const SizedBox(height: 10),
-                                                        TextFormField(
-                                                          controller: controller.emailController,
-                                                          decoration: _inputDecoration(
-                                                            hint: "email_hint".tr,
-                                                            icon: Icons.email,
-                                                          ),
-                                                          validator: (v) => v == null || v.isEmpty
-                                                              ? "email_required".tr
-                                                              : !GetUtils.isEmail(v)
-                                                                  ? "email_invalid".tr
-                                                                  : null,
-                                                        ),
-                                                        const SizedBox(height: 20),
-                                                        Align(
-                                                          alignment: Alignment.topRight,
-                                                          child: Text(
-                                                            "phone_number".tr,
-                                                            style: _titleStyle(),
-                                                          ),
-                                                        ),
-                                                        const SizedBox(height: 10),
-                                                        TextFormField(
-                                                          controller: controller.phoneController,
-                                                          decoration: _inputDecoration(
-                                                            hint: "phone_hint".tr,
-                                                            icon: Icons.phone,
-                                                          ),
-                                                          keyboardType: TextInputType.phone,
-                                                          validator: (v) {
-                                                            if (v == null || v.isEmpty) {
-                                                              return "phone_required".tr;
-                                                            }
-                                                            if (v.length < 9) {
-                                                              return "must_be_9_number".tr;
-                                                            }
-                                                            if (!GetUtils.isPhoneNumber(v)) {
-                                                              return "phone_invalid".tr;
-                                                            }
-                                                            return null;
-                                                          },
-                                                        ),
-                                                      ] else ...[
-                                                        Align(
-                                                          alignment: Alignment.topRight,
-                                                          child: Text(
-                                                            "phone_number".tr,
-                                                            style: _titleStyle(),
-                                                          ),
-                                                        ),
-                                                        const SizedBox(height: 10),
-                                                        TextFormField(
-                                                          controller: controller.phoneController,
-                                                          decoration: _inputDecoration(
-                                                            hint: "phone_hint".tr,
-                                                            icon: Icons.phone,
-                                                          ),
-                                                          keyboardType: TextInputType.phone,
-                                                          validator: (v) {
-                                                            if (v == null || v.isEmpty) {
-                                                              return "phone_required".tr;
-                                                            }
-                                                            if (v.length < 9) {
-                                                              return "must_be_9_number".tr;
-                                                            }
-                                                            if (!GetUtils.isPhoneNumber(v)) {
-                                                              return "phone_invalid".tr;
-                                                            }
-                                                            return null;
-                                                          },
-                                                        ),
-                                                      ],
-
-                                                      const SizedBox(height: 20),
-
-                                                      // كلمة المرور
-                                                      Align(
-                                                        alignment: Alignment.topRight,
-                                                        child: Text("password".tr, style: _titleStyle()),
-                                                      ),
-                                                      const SizedBox(height: 10),
-                                                      TextFormField(
-                                                        controller: controller.passwordController,
-                                                        obscureText: !controller.isPasswordVisible.value,
-                                                        decoration: _inputDecoration(
-                                                          hint: "password_hint".tr,
-                                                          icon: Icons.lock,
-                                                          suffix: IconButton(
-                                                            icon: Icon(
-                                                              controller.isPasswordVisible.value
-                                                                  ? Icons.visibility
-                                                                  : Icons.visibility_off,
-                                                              color: Colors.green,
-                                                            ),
-                                                            onPressed: () => controller.isPasswordVisible.value = !controller.isPasswordVisible.value,
-                                                          ),
-                                                        ),
-                                                        validator: (v) => v!.isEmpty ? "password_required".tr : null,
-                                                      ),
-
-                                                      const SizedBox(height: 20),
-                                                      Align(
-                                                        alignment: Alignment.topRight,
-                                                        child: Text(
-                                                          "confirm_password".tr,
-                                                          style: _titleStyle(),
-                                                        ),
-                                                      ),
-                                                      const SizedBox(height: 10),
-                                                      TextFormField(
-                                                        controller: controller.confirmPasswordController,
-                                                        obscureText: !controller.isConfirmPasswordVisible.value,
-                                                        decoration: _inputDecoration(
-                                                          hint: "confirm_password_hint".tr,
-                                                          icon: Icons.lock_outline,
-                                                          suffix: IconButton(
-                                                            icon: Icon(
-                                                              controller.isConfirmPasswordVisible.value
-                                                                  ? Icons.visibility
-                                                                  : Icons.visibility_off,
-                                                              color: Colors.green,
-                                                            ),
-                                                            onPressed: () {
-                                                              controller.isConfirmPasswordVisible.value = !controller.isConfirmPasswordVisible.value;
-                                                            },
-                                                          ),
-                                                        ),
-                                                        validator: (v) {
-                                                          if (v == null || v.isEmpty) {
-                                                            return "confirm_required".tr;
-                                                          }
-                                                          if (v != controller.passwordController.text) {
-                                                            return "password_not_match".tr;
-                                                          }
-                                                          return null;
-                                                        },
-                                                      ),
-                                                      const SizedBox(height: 30),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          actions: [
-                                            ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.red[900],
-                                                minimumSize: const Size(50, 50),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(15),
-                                                ),
-                                              ),
-                                              onPressed: () => Navigator.pop(context),
-                                              child: Text(
-                                                "cancel".tr,
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 18,
-                                                ),
-                                              ),
-                                            ),
-                                            Obx(
-                                                  () => ElevatedButton(
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor: Colors.green[900],
-                                                  minimumSize: const Size(50, 50),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(15),
-                                                  ),
-                                                ),
-                                                onPressed: controller.isLoading.value
-                                                    ? null
-                                                    : () {
-                                                  if (formKey.currentState!.validate()) {
-                                                    Navigator.pop(context);
-                                                    controller.addAccount();
-                                                  }
-                                                },
-                                                child: controller.isLoading.value
-                                                    ? const CircularProgressIndicator(
-                                                  color: Colors.white,
-                                                )
-                                                    : Text(
-                                                  "create_account".tr,
-                                                  style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 18,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        );
-                                      },
+                                      formKey: formKey,
+                                      controller: controller,
                                     );
                                   },
                                 ),
@@ -468,11 +202,100 @@ class UsersPage extends StatelessWidget {
       ),
     );
   }
+
+  void showCreateAccountDialog({
+    required BuildContext context,
+    required GlobalKey<FormState> formKey,
+    required dynamic controller,
+  }) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(
+            "create_account".tr,
+            style: TextStyle(
+              color: Colors.green[700],
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: SizedBox(
+            width: 600,
+            height: 600,
+            child: SingleChildScrollView(
+              child: Form(
+                key: formKey,
+                child: UserAccountForm(controller: controller),
+              ),
+            ),
+          ),
+          actions: [
+            /// زر إلغاء
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red[900],
+                minimumSize: const Size(50, 50),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                "cancel".tr,
+                style: const TextStyle(color: Colors.white, fontSize: 18),
+              ),
+            ),
+
+            /// زر إنشاء الحساب
+            Obx(
+              () => ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green[900],
+                  minimumSize: const Size(50, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                ),
+                onPressed: controller.isLoading.value
+                    ? null
+                    : () async {
+                        if (formKey.currentState!.validate()) {
+                          Navigator.pop(context);
+                          await controller.addAccount();
+                        }
+                      },
+                child: controller.isLoading.value
+                    ? const SizedBox(
+                        width: 22,
+                        height: 22,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
+                      )
+                    : Text(
+                        "create_account".tr,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
+                      ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   TextStyle _titleStyle() => TextStyle(
     color: Colors.green[700],
     fontSize: 15,
     fontWeight: FontWeight.bold,
   );
+
   InputDecoration _inputDecoration({
     String? hint,
     IconData? icon,

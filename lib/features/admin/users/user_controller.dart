@@ -315,7 +315,7 @@ class UserController extends GetxController {
       isLoading.value = true;
 
       final response = await http.get(
-        Uri.parse('http://localhost/flymarket_php_api/dashboard/admin/user_management/view.php'),
+        Uri.parse('http://46.101.225.45/flymarket/dashboard/admin/user_management/view.php'),
         headers: {'Accept': 'application/json'},
       );
 
@@ -361,7 +361,7 @@ class UserController extends GetxController {
 
   // ======================= FILTER =======================
   final selectedValue = 'all_types'.obs;
-  final options = ['all_types', 'admin', 'customer', 'driver', 'supermarket'];
+  final options = ['all_types', 'admin', 'user', 'driver', 'supermarket'];
 
   final roles = [
     {
@@ -384,7 +384,7 @@ class UserController extends GetxController {
     },
     {
       'label': 'عميل',
-      'value': 'customer',
+      'value': 'user',
       'icon': Icons.person,
       'color': Colors.blue,
     },
