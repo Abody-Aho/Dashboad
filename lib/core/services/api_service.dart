@@ -6,13 +6,14 @@ import 'package:path/path.dart';
 
 class ApiServices {
   // رابط الـ API الرئيسي
-  static const String baseUrl = 'http://46.101.225.45/flymarket/dashboard/auth/';
+  static const String baseUrl =
+      'http://46.101.225.45/flymarket/dashboard/auth/';
 
   static Future<Map<String, dynamic>> signUp({
     required UserModel user,
-    String? location,               // خاص بالسوبرماركت
-    String? time_open,              // خاص بالسوبرماركت
-    File? imageFile,                // صورة اختيارية
+    String? location, // خاص بالسوبرماركت
+    String? time_open, // خاص بالسوبرماركت
+    File? imageFile, // صورة اختيارية
   }) async {
     try {
       final authUri = Uri.parse('${baseUrl}signup.php');
@@ -24,17 +25,20 @@ class ApiServices {
       request.fields['role'] = user.role;
       request.fields['phone'] = user.phone;
 
-
-      if (location != null && location.isNotEmpty) request.fields['location'] = location;
-      if (time_open != null && time_open.isNotEmpty) request.fields['time_open'] = time_open;
+      if (location != null && location.isNotEmpty)
+        request.fields['location'] = location;
+      if (time_open != null && time_open.isNotEmpty)
+        request.fields['time_open'] = time_open;
 
       // رفع الصورة إذا وجدت
       if (imageFile != null) {
-        request.files.add(await http.MultipartFile.fromPath(
-          'image',
-          imageFile.path,
-          filename: basename(imageFile.path),
-        ));
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'image',
+            imageFile.path,
+            filename: basename(imageFile.path),
+          ),
+        );
       }
 
       final response = await request.send();
@@ -46,12 +50,10 @@ class ApiServices {
     }
   }
 
-
   //  جلب بيانات المستخدم
 
   static Future<Map<String, dynamic>> getUserData(String uid) async {
     try {
-
       final uri = Uri.parse('${baseUrl}login.php?firebase_uid=$uid');
       final response = await http.get(uri);
       return Map<String, dynamic>.from(jsonDecode(response.body));
@@ -61,5 +63,48 @@ class ApiServices {
     }
   }
 
+  static Future<Map<String, dynamic>> adminAddUser({
+    required String role,
+    required String name,
+    String? email,
+    required String phone,
+    String? firebaseUid,
+    String? location,
+    String? timeOpen,
+    String? vehicleNumber,
+    required String name_ar,
+  }) async {
+    try {
+      // الرابط الذي يؤدي إلى ملف الـ PHP الخاص بك
+      var url = Uri.parse(
+        "http://46.101.225.45/flymarket/dashboard/admin/user_management/create_account.php",
+      );
 
+      var response = await http.post(
+        url,
+        body: {
+          "role": role,
+          "name": name,
+          "name_ar": name_ar,
+          "email": email ?? "",
+          "phone": phone,
+          "firebase_uid": firebaseUid ?? "",
+          "location": location ?? "",
+          "time_open": timeOpen ?? "",
+          "vehicle_number": vehicleNumber ?? "", // أضفناه للمندوب
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        return {
+          "status": "error",
+          "message": "Server Error: ${response.statusCode}",
+        };
+      }
+    } catch (e) {
+      return {"status": "error", "message": e.toString()};
+    }
+  }
 }

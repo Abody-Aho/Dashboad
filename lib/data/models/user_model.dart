@@ -35,3 +35,30 @@ class UserModel {
     'status': status,
   };
 }
+
+class SearchUserModel {
+  final int id;
+  final String name;
+  final String? email;
+  final String? phone;
+  final String type;
+
+  SearchUserModel({
+    required this.id,
+    required this.name,
+    this.email,
+    this.phone,
+    required this.type,
+  });
+
+  factory SearchUserModel.fromJson(Map<String, dynamic> json) {
+    return SearchUserModel(
+      id: int.parse(json['id'].toString()),
+      name: json['name'] ?? '',
+      email: json['email'],
+      phone: json['phone'],
+      type: json['type'] ?? '',
+    );
+  }
+}
+

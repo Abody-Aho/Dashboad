@@ -85,7 +85,7 @@ class UsersPage extends StatelessWidget {
                     crossAxisCount: crossAxisCount,
                     crossAxisSpacing: 20,
                     mainAxisSpacing: 20,
-                    childAspectRatio: 2.0,
+                    childAspectRatio: 1.8,
                     children: statCards,
                   );
                 },
@@ -232,7 +232,7 @@ class UsersPage extends StatelessWidget {
             ),
           ),
           actions: [
-            /// زر إلغاء
+            // زر إلغاء
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red[900],
@@ -248,7 +248,7 @@ class UsersPage extends StatelessWidget {
               ),
             ),
 
-            /// زر إنشاء الحساب
+            // زر إنشاء الحساب
             Obx(
               () => ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -287,32 +287,6 @@ class UsersPage extends StatelessWidget {
           ],
         );
       },
-    );
-  }
-
-  TextStyle _titleStyle() => TextStyle(
-    color: Colors.green[700],
-    fontSize: 15,
-    fontWeight: FontWeight.bold,
-  );
-
-  InputDecoration _inputDecoration({
-    String? hint,
-    IconData? icon,
-    Widget? suffix,
-  }) {
-    return InputDecoration(
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(15),
-        borderSide: const BorderSide(color: Colors.green, width: 1.5),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(15),
-        borderSide: const BorderSide(color: Colors.green, width: 2.5),
-      ),
-      hintText: hint,
-      prefixIcon: icon != null ? Icon(icon, color: Colors.green) : null,
-      suffixIcon: suffix,
     );
   }
 }
