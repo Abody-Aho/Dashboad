@@ -78,9 +78,8 @@ class UserController extends GetxController {
         phone: phoneController.text.trim(),
         email: emailController.text.trim(),
         firebaseUid: uid,
-        location: locationController.text.trim(),
-        timeOpen: timeOpenController.text.trim(),
-       // vehicleNumber: "12345", // يمكنك إضافة controller خاص برقم المركبة للمندوب
+        location: "غير محدد",
+        timeOpen: "6am to 6pm",
       );
 
       if (response['status'] == 'success') {
@@ -96,7 +95,9 @@ class UserController extends GetxController {
       }
 
     } catch (e) {
-      Get.snackbar("خطأ", e.toString(), backgroundColor: Colors.red, colorText: Colors.white);
+      Get.snackbar("خطأ", e.toString(),backgroundColor: Colors.red, colorText: Colors.white);
+      print(e.toString());
+
     } finally {
       isLoading.value = false;
     }
@@ -193,7 +194,22 @@ class UserController extends GetxController {
                 icon: const Icon(Icons.delete, color: Colors.red, size: 25),
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
-                onPressed: () => print('Delete ${data['Column1']}'),
+                onPressed: () {
+                  Get.defaultDialog(
+                    title: "تأكيد الحذف",
+                    middleText: "هل أنت متأكد من حذف هذا المستخدم؟",
+                    textConfirm: "نعم",
+                    textCancel: "إلغاء",
+                    confirmTextColor: Colors.white,
+                    onConfirm: () {
+                      Get.back();
+                      deleteUserFromServer(
+                        id: data['id'],
+                        role: data['role_raw'],
+                      );
+                    },
+                  );
+                },
                 tooltip: 'Delete'.tr,
               ),
             ),
@@ -237,6 +253,54 @@ class UserController extends GetxController {
       Get.snackbar("خطأ", "مشكلة في الاتصال");
     }
   }
+
+  Future<void> deleteUserFromServer({
+    required String id,
+    required String role,
+  }) async {
+    try {
+      isLoading.value = true;
+
+      final response = await http.post(
+        Uri.parse(
+            "http://46.101.225.45/flymarket/dashboard/admin/user_management/delete_account.php"),
+        body: {
+          "id": id,
+          "role": role,
+        },
+      );
+
+      final body = jsonDecode(response.body);
+
+      if (body["status"] == "success") {
+        Get.snackbar(
+          "تم",
+          "تم حذف المستخدم بنجاح",
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
+
+        await fetchUsers(); // تحديث الجدول
+      } else {
+        Get.snackbar(
+          "خطأ",
+          body["message"] ?? "فشل الحذف",
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        "خطأ",
+        "مشكلة في الاتصال",
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
 
 
 
@@ -303,6 +367,87 @@ class UserController extends GetxController {
 
     filteredDataList.refresh();
   }
+
+
+
+  // ======================= حذف و تنشيط جماعي =======================
+  List<Map<String, dynamic>> getSelectedUsers() {
+    List<Map<String, dynamic>> selectedUsers = [];
+
+    for (int i = 0; i < selectedRows.length; i++) {
+      if (selectedRows[i]) {
+        selectedUsers.add(filteredDataList[i]);
+      }
+    }
+
+    return selectedUsers;
+  }
+
+  Future<void> deleteSelectedUsers() async {
+    final selectedUsers = getSelectedUsers();
+
+    if (selectedUsers.isEmpty) {
+      Get.snackbar("تنبيه", "لم يتم تحديد أي مستخدم");
+      return;
+    }
+
+    try {
+      isLoading.value = true;
+
+      for (var user in selectedUsers) {
+        await deleteUserFromServer(
+          id: user['id'],
+          role: user['role_raw'],
+        );
+      }
+
+      selectedRows.assignAll(
+        List.generate(filteredDataList.length, (_) => false),
+      );
+
+      await fetchUsers();
+
+      Get.snackbar("تم", "تم حذف المستخدمين المحددين");
+    } catch (e) {
+      Get.snackbar("خطأ", "فشل الحذف الجماعي");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> changeStatusForSelected(String status) async {
+    final selectedUsers = getSelectedUsers();
+
+    if (selectedUsers.isEmpty) {
+      Get.snackbar("تنبيه", "لم يتم تحديد أي مستخدم");
+      return;
+    }
+
+    try {
+      isLoading.value = true;
+
+      for (var user in selectedUsers) {
+        await http.post(
+          Uri.parse("http://46.101.225.45/flymarket/dashboard/admin/user_management/toggle_status.php"),
+          body: {
+            "id": user['id'],
+            "status": status,
+            "role": user['role_raw'],
+          },
+        );
+      }
+
+      await fetchUsers();
+
+      Get.snackbar("تم", "تم تحديث حالة المستخدمين");
+    } catch (e) {
+      Get.snackbar("خطأ", "فشل التحديث الجماعي");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+
 
 
   // ======================= SEARCH =======================
@@ -408,7 +553,7 @@ class UserController extends GetxController {
 
   // ======================= FILTER =======================
   final selectedValue = 'all_types'.obs;
-  final options = ['all_types', 'admin', 'user', 'driver', 'supermarket'];
+  final options = ['all_types', 'admin', 'users', 'driver', 'supermarket'];
 
   final roles = [
     {

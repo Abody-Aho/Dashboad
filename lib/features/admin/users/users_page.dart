@@ -187,6 +187,53 @@ class UsersPage extends StatelessWidget {
 
                       const SizedBox(height: 15),
 
+                      Obx(() {
+                        int selectedCount =
+                            controller.selectedRows.where((e) => e).length;
+
+                        if (selectedCount == 0) return SizedBox();
+
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 15),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: [
+                                Text("تم تحديد $selectedCount مستخدم"),
+                                const SizedBox(width: 20),
+
+                                ElevatedButton.icon(
+                                  icon: Icon(Icons.check_circle,color: Colors.green,),
+                                  label: Text("تفعيل",style: TextStyle(color: Colors.green),),
+                                  onPressed: () =>
+                                      controller.changeStatusForSelected("1"),
+                                ),
+
+                                const SizedBox(width: 10),
+
+                                ElevatedButton.icon(
+                                  icon: Icon(Icons.cancel,color: Colors.red,),
+                                  label: Text("إلغاء التفعيل",style: TextStyle(color: Colors.red),),
+                                  onPressed: () =>
+                                      controller.changeStatusForSelected("0"),
+                                ),
+
+                                const SizedBox(width: 10),
+
+                                ElevatedButton.icon(
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.red),
+                                  icon: Icon(Icons.delete,color: Colors.white,),
+                                  label: Text("حذف",style: TextStyle(color: Colors.white),),
+                                  onPressed: () =>
+                                      controller.deleteSelectedUsers(),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }),
+
                       // جدول المستخدمين / Users Table
                       SizedBox(
                         height: 500,
