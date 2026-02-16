@@ -1,9 +1,14 @@
 import 'dart:convert';
+import 'package:dashbord2/core/constants/app_link.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import '../../../core/services/api_service.dart';
+import '../../../data/models/user_model.dart';
+import 'package:file_picker/file_picker.dart';
+import 'dart:typed_data';
+
 
 
 // وحدة تحكم المستخدمين - User Controller
@@ -31,12 +36,15 @@ class UserController extends GetxController {
   final phoneController = TextEditingController();
   final locationController = TextEditingController();
   final timeOpenController = TextEditingController();
+  final vehicleController = TextEditingController();
 
 
   //  حالات الواجهة
 
   var isPasswordVisible = false.obs;
   var isConfirmPasswordVisible = false.obs;
+  Uint8List? imageBytes;
+  String? imageName;
 
 
 
@@ -88,7 +96,6 @@ class UserController extends GetxController {
         Get.snackbar("تم", "تمت إضافة $role بنجاح", backgroundColor: Colors.green, colorText: Colors.white);
         _clearInputs(); // دالة لتنظيف الحقول
       } else {
-        // تراجع عن Firebase في حال فشل قاعدة البيانات
         if (uid != null) await _auth.currentUser?.delete();
         Get.snackbar("خطأ", response['message']);
         print(response['message']);
@@ -163,6 +170,137 @@ class UserController extends GetxController {
     );
   }
 
+  void showEditDialog(UserModel user) {
+    fillControllers(user);
+
+    Get.dialog(
+      Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 700),
+          child: Material(
+            borderRadius: BorderRadius.circular(16),
+            child: Padding(
+              padding: const EdgeInsets.all(30),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+
+
+                    const Text(
+                      "تعديل المستخدم",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+
+                    const SizedBox(height: 25),
+
+                    /// صورة
+                    GestureDetector(
+                      onTap: pickImage,
+                      child: CircleAvatar(
+                        radius: 60,
+                        backgroundImage: imageBytes != null
+                            ? MemoryImage(imageBytes!)
+                            : user.image != null
+                            ? NetworkImage(
+                          "http://46.101.225.45/flymarket/dashboard/admin/upload/${user.image}",
+                        )
+                            : null,
+                        child: imageBytes == null && user.image == null
+                            ? const Icon(Icons.camera_alt)
+                            : null,
+                      ),
+                    ),
+
+                    const SizedBox(height: 25),
+
+                    /// ====== حقول خاصة بالسوبرماركت ======
+                    if (user.role == "supermarket") ...[
+                      TextField(
+                        controller: nameArController,
+                        decoration: const InputDecoration(
+                          labelText: "الاسم بالعربي",
+                        ),
+                      ),
+                      const SizedBox(height: 15),
+
+                      TextField(
+                        controller: locationController,
+                        decoration: const InputDecoration(
+                          labelText: "الموقع",
+                        ),
+                      ),
+                      const SizedBox(height: 15),
+
+                      TextField(
+                        controller: timeOpenController,
+                        decoration: const InputDecoration(
+                          labelText: "وقت العمل",
+                        ),
+                      ),
+                      const SizedBox(height: 25),
+                    ],
+
+                    /// ====== الحقول الأساسية ======
+                    TextField(
+                      controller: nameController,
+                      decoration: const InputDecoration(labelText: "الاسم"),
+                    ),
+                    const SizedBox(height: 15),
+
+                    if (user.role == "admin" || user.role == "supermarket")
+                      TextField(
+                        controller: emailController,
+                        decoration: const InputDecoration(labelText: "البريد"),
+                      ),
+
+                    if (user.role == "admin" || user.role == "supermarket")
+                      const SizedBox(height: 15),
+
+                    TextField(
+                      controller: phoneController,
+                      decoration: const InputDecoration(labelText: "الهاتف"),
+                    ),
+
+                    const SizedBox(height: 15),
+
+                    /// ====== حقل خاص بالمندوب ======
+                    if (user.role == "driver") ...[
+                      TextField(
+                        controller: vehicleController,
+                        decoration: const InputDecoration(
+                          labelText: "رقم المركبة",
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(double.infinity, 50),
+                        backgroundColor: Colors.blue,
+                      ),
+                      onPressed: () => updateUser(user),
+                      child: const Text(
+                        "حفظ التعديلات",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                )
+
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   DataCell _actionCell(Map<String, dynamic> data,String? status) {
     final bool isActive = status == 'active'.tr;
     return DataCell(
@@ -185,7 +323,19 @@ class UserController extends GetxController {
                 icon: const Icon(Icons.edit, color: Colors.blue, size: 25),
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
-                onPressed: () => print('Edit ${data['Column1']}'),
+                onPressed: () {
+                  final user = UserModel(
+                    id: int.tryParse(data['id'] ?? ''),
+                    firebaseUid: '', // غير مستخدم في التعديل
+                    name: data['Column1'] ?? '',
+                    email: data['Column2'] ?? '',
+                    phone: data['Column3'] ?? '',
+                    role: data['role_raw'] ?? '',
+                    status: data['Column5'] == 'active'.tr ? 1 : 0,
+                  );
+
+                  showEditDialog(user);
+                },
                 tooltip: 'Edit'.tr,
               ),
             ),
@@ -195,20 +345,105 @@ class UserController extends GetxController {
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
                 onPressed: () {
-                  Get.defaultDialog(
-                    title: "تأكيد الحذف",
-                    middleText: "هل أنت متأكد من حذف هذا المستخدم؟",
-                    textConfirm: "نعم",
-                    textCancel: "إلغاء",
-                    confirmTextColor: Colors.white,
-                    onConfirm: () {
-                      Get.back();
-                      deleteUserFromServer(
-                        id: data['id'],
-                        role: data['role_raw'],
-                      );
-                    },
+                  Get.dialog(
+                    Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          maxWidth: 500,   // أقصى عرض ثابت
+                          minWidth: 300,   // أقل عرض
+                        ),
+                        child: Material(
+                          borderRadius: BorderRadius.circular(16),
+                          child: Padding(
+                            padding: const EdgeInsets.all(24),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+
+                                // أيقونة
+                                Container(
+                                  padding: const EdgeInsets.all(14),
+                                  decoration: BoxDecoration(
+                                    color: Colors.red.withValues(alpha: 0.1),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(
+                                    Icons.warning_amber_rounded,
+                                    color: Colors.red,
+                                    size: 42,
+                                  ),
+                                ),
+
+                                const SizedBox(height: 20),
+
+                                const Text(
+                                  "تأكيد الحذف",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+
+                                const SizedBox(height: 10),
+
+                                const Text(
+                                  "هل أنت متأكد من حذف هذا المستخدم؟\nلا يمكن التراجع عن هذه العملية.",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+
+                                const SizedBox(height: 25),
+
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: OutlinedButton(
+                                        onPressed: () => Get.back(),
+                                        style: OutlinedButton.styleFrom(
+                                          padding: const EdgeInsets.symmetric(vertical: 14),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                        ),
+                                        child: const Text("إلغاء"),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          Get.back();
+                                          deleteUserFromServer(
+                                            id: data['id'],
+                                            role: data['role_raw'],
+                                          );
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.red,
+                                          padding: const EdgeInsets.symmetric(vertical: 14),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                        ),
+                                        child: const Text(
+                                          "حذف",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    barrierDismissible: false,
                   );
+
                 },
                 tooltip: 'Delete'.tr,
               ),
@@ -221,7 +456,7 @@ class UserController extends GetxController {
 
   Future<void> toggleUserStatus(Map<String, dynamic> user) async {
     final id = user["id"];
-    final role = user["role_raw"]; // تأكد أنك تستخدم role_raw
+    final role = user["role_raw"];
     final isActive = user["Column5"] == "active".tr;
 
     final newStatus = isActive ? "0" : "1";
@@ -229,7 +464,7 @@ class UserController extends GetxController {
     try {
       final response = await http.post(
         Uri.parse(
-            "http://46.101.225.45/flymarket/dashboard/admin/user_management/toggle_status.php"),
+            AppLink.status),
         body: {
           "id": id,
           "status": newStatus,
@@ -263,7 +498,7 @@ class UserController extends GetxController {
 
       final response = await http.post(
         Uri.parse(
-            "http://46.101.225.45/flymarket/dashboard/admin/user_management/delete_account.php"),
+            AppLink.delete),
         body: {
           "id": id,
           "role": role,
@@ -428,11 +663,11 @@ class UserController extends GetxController {
 
       for (var user in selectedUsers) {
         await http.post(
-          Uri.parse("http://46.101.225.45/flymarket/dashboard/admin/user_management/toggle_status.php"),
+          Uri.parse(AppLink.status),
           body: {
             "id": user['id'],
             "status": status,
-            "role": user['role_raw'],
+            "role": user['role'],
           },
         );
       }
@@ -460,7 +695,7 @@ class UserController extends GetxController {
     try {
       final response = await http.get(
         Uri.parse(
-          "http://46.101.225.45/flymarket/dashboard/admin/user_management/search_users.php?query=${Uri.encodeComponent(query)}",
+          "${AppLink.searchUsers}?query=${Uri.encodeComponent(query)}",
         ),
       );
 
@@ -505,7 +740,7 @@ class UserController extends GetxController {
       isLoading.value = true;
 
       final response = await http.get(
-        Uri.parse('http://46.101.225.45/flymarket/dashboard/admin/user_management/view.php'),
+        Uri.parse(AppLink.viewUsers),
         headers: {'Accept': 'application/json'},
       );
 
@@ -542,6 +777,76 @@ class UserController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+
+  // ======================= Update =======================
+  void fillControllers(UserModel user) {
+    nameController.text = user.name;
+    nameArController.text = user.nameAr ?? '';
+    emailController.text = user.email;
+    phoneController.text = user.phone;
+    locationController.text = user.location ?? '';
+    timeOpenController.text = user.timeOpen ?? '';
+    vehicleController.text = user.vehicleNumber ?? '';
+  }
+
+  Future<void> pickImage() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      withData: true,
+    );
+
+    if (result != null) {
+      imageBytes = result.files.first.bytes;
+      imageName = result.files.first.name;
+    }
+  }
+
+  Future<void> updateUser(UserModel user) async {
+    var request = http.MultipartRequest(
+      "POST",
+      Uri.parse(
+        "http://46.101.225.45/flymarket/dashboard/admin/user_management/update_account.php",
+      ),
+    );
+
+    final updatedUser = UserModel(
+      id: user.id,
+      firebaseUid: user.firebaseUid,
+      name: nameController.text,
+      email: emailController.text,
+      phone: phoneController.text,
+      role: user.role,
+      status: user.status,
+      nameAr: nameArController.text,
+      location: locationController.text,
+      timeOpen: timeOpenController.text,
+      vehicleNumber: vehicleController.text,
+    );
+
+    request.fields.addAll(updatedUser.toFields());
+
+    if (imageBytes != null) {
+      request.files.add(
+        http.MultipartFile.fromBytes(
+          'image',
+          imageBytes!,
+          filename: imageName,
+        ),
+      );
+    }
+
+
+
+
+    var response = await request.send();
+    var body = await response.stream.bytesToString();
+
+    print(body);
+
+    Get.back(); // إغلاق الدايلوق
+    await fetchUsers(); // تحديث الجدول
   }
 
 

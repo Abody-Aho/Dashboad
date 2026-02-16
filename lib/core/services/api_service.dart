@@ -4,10 +4,10 @@ import 'package:dashbord2/data/models/user_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 
+import '../constants/app_link.dart';
+
 class ApiServices {
   // رابط الـ API الرئيسي
-  static const String baseUrl =
-      'http://46.101.225.45/flymarket/dashboard/auth/';
 
   static Future<Map<String, dynamic>> signUp({
     required UserModel user,
@@ -16,7 +16,7 @@ class ApiServices {
     File? imageFile, // صورة اختيارية
   }) async {
     try {
-      final authUri = Uri.parse('${baseUrl}signup.php');
+      final authUri = Uri.parse(AppLink.signup);
       final request = http.MultipartRequest('POST', authUri);
 
       request.fields['firebase_uid'] = user.firebaseUid;
@@ -54,7 +54,7 @@ class ApiServices {
 
   static Future<Map<String, dynamic>> getUserData(String uid) async {
     try {
-      final uri = Uri.parse('${baseUrl}login.php?firebase_uid=$uid');
+      final uri = Uri.parse('${AppLink.login}?firebase_uid=$uid');
       final response = await http.get(uri);
       return Map<String, dynamic>.from(jsonDecode(response.body));
     } catch (e) {
@@ -75,9 +75,8 @@ class ApiServices {
     required String name_ar,
   }) async {
     try {
-      // الرابط الذي يؤدي إلى ملف الـ PHP الخاص بك
       var url = Uri.parse(
-        "http://46.101.225.45/flymarket/dashboard/admin/user_management/create_account.php",
+        AppLink.createAccount,
       );
 
       var response = await http.post(
