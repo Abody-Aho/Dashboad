@@ -9,8 +9,6 @@ import '../../../data/models/user_model.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:typed_data';
 
-
-
 // وحدة تحكم المستخدمين - User Controller
 class UserController extends GetxController {
   var dataList = <Map<String, String>>[].obs;
@@ -38,7 +36,6 @@ class UserController extends GetxController {
   final timeOpenController = TextEditingController();
   final vehicleController = TextEditingController();
 
-
   //  حالات الواجهة
 
   var isPasswordVisible = false.obs;
@@ -46,14 +43,11 @@ class UserController extends GetxController {
   Uint8List? imageBytes;
   String? imageName;
 
-
-
   @override
   void onInit() {
     super.onInit();
     fetchUsers();
   }
-
 
   Future<void> addAccount() async {
     if (selectedRole.value == null) {
@@ -73,8 +67,9 @@ class UserController extends GetxController {
           throw "البريد وكلمة المرور مطلوبان لهذا النوع";
         }
         UserCredential credential = await _auth.createUserWithEmailAndPassword(
-            email: emailController.text.trim(),
-            password: passwordController.text.trim());
+          email: emailController.text.trim(),
+          password: passwordController.text.trim(),
+        );
         uid = credential.user!.uid;
       }
 
@@ -93,18 +88,26 @@ class UserController extends GetxController {
       if (response['status'] == 'success') {
         Get.back(); // إغلاق النافذة
         await fetchUsers(); // تحديث الجدول
-        Get.snackbar("تم", "تمت إضافة $role بنجاح", backgroundColor: Colors.green, colorText: Colors.white);
+        Get.snackbar(
+          "تم",
+          "تمت إضافة $role بنجاح",
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
         _clearInputs(); // دالة لتنظيف الحقول
       } else {
         if (uid != null) await _auth.currentUser?.delete();
         Get.snackbar("خطأ", response['message']);
         print(response['message']);
       }
-
     } catch (e) {
-      Get.snackbar("خطأ", e.toString(),backgroundColor: Colors.red, colorText: Colors.white);
+      Get.snackbar(
+        "خطأ",
+        e.toString(),
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
       print(e.toString());
-
     } finally {
       isLoading.value = false;
     }
@@ -127,9 +130,9 @@ class UserController extends GetxController {
       _textCell(data['Column2'], 220), // الإيميل
       _textCell(data['Column3'], 140), // الهاتف
       _textCell(data['Column4'], 140), // الدور
-      _statusCell(data['Column5']),    // الحالة
+      _statusCell(data['Column5']), // الحالة
       _textCell(data['Column6'], 150), // تاريخ الإنشاء (بدون ساعة)
-      _actionCell(data,data['Column5']),               // العمليات
+      _actionCell(data, data['Column5']), // العمليات
     ];
   }
 
@@ -173,126 +176,202 @@ class UserController extends GetxController {
   void showEditDialog(UserModel user) {
     fillControllers(user);
 
+    // ====== تصميم الحقول الأخضر ======
+    InputDecoration greenInput(String label) {
+      return InputDecoration(
+        labelText: label,
+        filled: true,
+        fillColor: Colors.white,
+        labelStyle: const TextStyle(
+          color: Color(0xFF2E7D32),
+          fontWeight: FontWeight.w500,
+        ),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: BorderSide(color: Colors.green.shade200),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: Color(0xFF2E7D32), width: 2),
+        ),
+      );
+    }
+
     Get.dialog(
       Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 700),
           child: Material(
-            borderRadius: BorderRadius.circular(16),
-            child: Padding(
-              padding: const EdgeInsets.all(30),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-
-
-                    const Text(
-                      "تعديل المستخدم",
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
+            color: Colors.white,
+            elevation: 12,
+            borderRadius: BorderRadius.circular(20),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFF1F8F4), Colors.white],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(30),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      /// ====== العنوان ======
+                      Row(
+                        children: const [
+                          Icon(Icons.edit, color: Color(0xFF2E7D32)),
+                          SizedBox(width: 10),
+                          Text(
+                            "تعديل المستخدم",
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF1B5E20),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
 
-                    const SizedBox(height: 25),
+                      const SizedBox(height: 30),
 
-                    /// صورة
-                    GestureDetector(
-                      onTap: pickImage,
-                      child: CircleAvatar(
-                        radius: 60,
-                        backgroundImage: imageBytes != null
-                            ? MemoryImage(imageBytes!)
-                            : user.image != null
-                            ? NetworkImage(
-                          "http://46.101.225.45/flymarket/dashboard/admin/upload/${user.image}",
-                        )
-                            : null,
-                        child: imageBytes == null && user.image == null
-                            ? const Icon(Icons.camera_alt)
-                            : null,
+                      /// ====== الصورة ======
+                      GetBuilder<UserController>(
+                        builder: (controller) {
+                          return GestureDetector(
+                            onTap: () async {
+                              await controller.pickImage();
+                            },
+                            child: Center(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: const Color(0xFF4CAF50),
+                                    width: 3,
+                                  ),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Colors.black12,
+                                      blurRadius: 10,
+                                      offset: Offset(0, 5),
+                                    ),
+                                  ],
+                                ),
+                                child: CircleAvatar(
+                                  radius: 60,
+                                  backgroundColor: Colors.grey.shade100,
+                                  backgroundImage: controller.imageBytes != null
+                                      ? MemoryImage(controller.imageBytes!)
+                                      : (user.image != null &&
+                                      user.image!.isNotEmpty &&
+                                      user.image != "empty")
+                                      ? NetworkImage(
+                                    "http://46.101.225.45/flymarket/app/customer/upload/supermarket/${user.image}?v=${DateTime.now().millisecondsSinceEpoch}",
+                                  )
+                                      : null,
+                                  child: controller.imageBytes == null &&
+                                      (user.image == null ||
+                                          user.image!.isEmpty ||
+                                          user.image == "empty")
+                                      ? const Icon(
+                                    Icons.camera_alt,
+                                    size: 30,
+                                    color: Color(0xFF4CAF50),
+                                  )
+                                      : null,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                    ),
 
-                    const SizedBox(height: 25),
 
-                    /// ====== حقول خاصة بالسوبرماركت ======
-                    if (user.role == "supermarket") ...[
-                      TextField(
-                        controller: nameArController,
-                        decoration: const InputDecoration(
-                          labelText: "الاسم بالعربي",
+                      const SizedBox(height: 30),
+
+                      // ====== حقول السوبرماركت ======
+                      if (user.role == "supermarket") ...[
+                        TextField(
+                          controller: nameArController,
+                          decoration: greenInput("الاسم بالعربي"),
                         ),
+                        const SizedBox(height: 15),
+                        TextField(
+                          controller: locationController,
+                          decoration: greenInput("الموقع"),
+                        ),
+                        const SizedBox(height: 15),
+                        TextField(
+                          controller: timeOpenController,
+                          decoration: greenInput("وقت العمل"),
+                        ),
+                        const SizedBox(height: 25),
+                      ],
+
+                      // ====== الحقول الأساسية ======
+                      TextField(
+                        controller: nameController,
+                        decoration: greenInput("الاسم"),
                       ),
                       const SizedBox(height: 15),
 
-                      TextField(
-                        controller: locationController,
-                        decoration: const InputDecoration(
-                          labelText: "الموقع",
+                      if (user.role == "admin" ||
+                          user.role == "supermarket") ...[
+                        TextField(
+                          controller: emailController,
+                          decoration: greenInput("البريد"),
                         ),
-                      ),
-                      const SizedBox(height: 15),
+                        const SizedBox(height: 15),
+                      ],
 
                       TextField(
-                        controller: timeOpenController,
-                        decoration: const InputDecoration(
-                          labelText: "وقت العمل",
+                        controller: phoneController,
+                        decoration: greenInput("الهاتف"),
+                      ),
+
+                      const SizedBox(height: 15),
+
+                      /// ====== حقل المندوب ======
+                      if (user.role == "driver") ...[
+                        TextField(
+                          controller: vehicleController,
+                          decoration: greenInput("رقم المركبة"),
+                        ),
+                        const SizedBox(height: 25),
+                      ],
+
+                      /// ====== زر الحفظ ======
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(double.infinity, 55),
+                          backgroundColor: const Color(0xFF2E7D32),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          elevation: 6,
+                        ),
+                        onPressed: () => updateUser(user),
+                        child: const Text(
+                          "حفظ التعديلات",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 25),
                     ],
-
-                    /// ====== الحقول الأساسية ======
-                    TextField(
-                      controller: nameController,
-                      decoration: const InputDecoration(labelText: "الاسم"),
-                    ),
-                    const SizedBox(height: 15),
-
-                    if (user.role == "admin" || user.role == "supermarket")
-                      TextField(
-                        controller: emailController,
-                        decoration: const InputDecoration(labelText: "البريد"),
-                      ),
-
-                    if (user.role == "admin" || user.role == "supermarket")
-                      const SizedBox(height: 15),
-
-                    TextField(
-                      controller: phoneController,
-                      decoration: const InputDecoration(labelText: "الهاتف"),
-                    ),
-
-                    const SizedBox(height: 15),
-
-                    /// ====== حقل خاص بالمندوب ======
-                    if (user.role == "driver") ...[
-                      TextField(
-                        controller: vehicleController,
-                        decoration: const InputDecoration(
-                          labelText: "رقم المركبة",
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                    ],
-
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(double.infinity, 50),
-                        backgroundColor: Colors.blue,
-                      ),
-                      onPressed: () => updateUser(user),
-                      child: const Text(
-                        "حفظ التعديلات",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ],
-                )
-
+                  ),
+                ),
               ),
             ),
           ),
@@ -301,7 +380,7 @@ class UserController extends GetxController {
     );
   }
 
-  DataCell _actionCell(Map<String, dynamic> data,String? status) {
+  DataCell _actionCell(Map<String, dynamic> data, String? status) {
     final bool isActive = status == 'active'.tr;
     return DataCell(
       SizedBox(
@@ -311,7 +390,11 @@ class UserController extends GetxController {
           children: [
             Flexible(
               child: IconButton(
-                icon: Icon(isActive ? Icons.person : Icons.person_off, color: Colors.grey, size: 25),
+                icon: Icon(
+                  isActive ? Icons.person : Icons.person_off,
+                  color: Colors.grey,
+                  size: 25,
+                ),
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
                 onPressed: () => toggleUserStatus(data),
@@ -326,12 +409,18 @@ class UserController extends GetxController {
                 onPressed: () {
                   final user = UserModel(
                     id: int.tryParse(data['id'] ?? ''),
-                    firebaseUid: '', // غير مستخدم في التعديل
-                    name: data['Column1'] ?? '',
+                    firebaseUid: '',
+                    name: data['name'] ?? '',
                     email: data['Column2'] ?? '',
                     phone: data['Column3'] ?? '',
                     role: data['role_raw'] ?? '',
                     status: data['Column5'] == 'active'.tr ? 1 : 0,
+
+                    image: data['image'],
+                    nameAr: data['name_ar'],
+                    vehicleNumber: data['vehicle_number'],
+                    location: data['supermarket_location'],
+                    timeOpen: data['supermarket_time_open'],
                   );
 
                   showEditDialog(user);
@@ -349,8 +438,8 @@ class UserController extends GetxController {
                     Center(
                       child: ConstrainedBox(
                         constraints: const BoxConstraints(
-                          maxWidth: 500,   // أقصى عرض ثابت
-                          minWidth: 300,   // أقل عرض
+                          maxWidth: 500, // أقصى عرض ثابت
+                          minWidth: 300, // أقل عرض
                         ),
                         child: Material(
                           borderRadius: BorderRadius.circular(16),
@@ -359,7 +448,6 @@ class UserController extends GetxController {
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-
                                 // أيقونة
                                 Container(
                                   padding: const EdgeInsets.all(14),
@@ -389,9 +477,7 @@ class UserController extends GetxController {
                                 const Text(
                                   "هل أنت متأكد من حذف هذا المستخدم؟\nلا يمكن التراجع عن هذه العملية.",
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                  ),
+                                  style: TextStyle(color: Colors.grey),
                                 ),
 
                                 const SizedBox(height: 25),
@@ -402,9 +488,13 @@ class UserController extends GetxController {
                                       child: OutlinedButton(
                                         onPressed: () => Get.back(),
                                         style: OutlinedButton.styleFrom(
-                                          padding: const EdgeInsets.symmetric(vertical: 14),
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 14,
+                                          ),
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
                                           ),
                                         ),
                                         child: const Text("إلغاء"),
@@ -422,9 +512,13 @@ class UserController extends GetxController {
                                         },
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: Colors.red,
-                                          padding: const EdgeInsets.symmetric(vertical: 14),
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 14,
+                                          ),
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
                                           ),
                                         ),
                                         child: const Text(
@@ -434,7 +528,7 @@ class UserController extends GetxController {
                                       ),
                                     ),
                                   ],
-                                )
+                                ),
                               ],
                             ),
                           ),
@@ -443,7 +537,6 @@ class UserController extends GetxController {
                     ),
                     barrierDismissible: false,
                   );
-
                 },
                 tooltip: 'Delete'.tr,
               ),
@@ -463,13 +556,8 @@ class UserController extends GetxController {
 
     try {
       final response = await http.post(
-        Uri.parse(
-            AppLink.status),
-        body: {
-          "id": id,
-          "status": newStatus,
-          "role": role,
-        },
+        Uri.parse(AppLink.status),
+        body: {"id": id, "status": newStatus, "role": role},
       );
 
       print("RESPONSE => ${response.body}");
@@ -477,8 +565,7 @@ class UserController extends GetxController {
       final body = jsonDecode(response.body);
 
       if (body["status"] == "success") {
-        user["Column5"] =
-        newStatus == "1" ? "active".tr : "inactive".tr;
+        user["Column5"] = newStatus == "1" ? "active".tr : "inactive".tr;
 
         filteredDataList.refresh();
       } else {
@@ -497,12 +584,8 @@ class UserController extends GetxController {
       isLoading.value = true;
 
       final response = await http.post(
-        Uri.parse(
-            AppLink.delete),
-        body: {
-          "id": id,
-          "role": role,
-        },
+        Uri.parse(AppLink.delete),
+        body: {"id": id, "role": role},
       );
 
       final body = jsonDecode(response.body);
@@ -536,31 +619,13 @@ class UserController extends GetxController {
     }
   }
 
-
-
-
   // ======================= TABLE COLUMNS =======================
   List<DataColumn> get tableColumns => [
-    DataColumn(
-      label: Text('name'.tr),
-      onSort: (i, a) => sortData(0, a),
-    ),
-    DataColumn(
-      label: Text('user_email'.tr),
-      onSort: (i, a) => sortData(1, a),
-    ),
-    DataColumn(
-      label: Text('phone'.tr),
-      onSort: (i, a) => sortData(2, a),
-    ),
-    DataColumn(
-      label: Text('type'.tr),
-      onSort: (i, a) => sortData(3, a),
-    ),
-    DataColumn(
-      label: Text('status'.tr),
-      onSort: (i, a) => sortData(4, a),
-    ),
+    DataColumn(label: Text('name'.tr), onSort: (i, a) => sortData(0, a)),
+    DataColumn(label: Text('user_email'.tr), onSort: (i, a) => sortData(1, a)),
+    DataColumn(label: Text('phone'.tr), onSort: (i, a) => sortData(2, a)),
+    DataColumn(label: Text('type'.tr), onSort: (i, a) => sortData(3, a)),
+    DataColumn(label: Text('status'.tr), onSort: (i, a) => sortData(4, a)),
     DataColumn(
       label: Text('registration_date'.tr),
       onSort: (i, a) => sortData(5, a),
@@ -585,15 +650,11 @@ class UserController extends GetxController {
         final aNum = int.tryParse(aVal) ?? 0;
         final bNum = int.tryParse(bVal) ?? 0;
         result = aNum.compareTo(bNum);
-      }
-
-      else if (columnIndex == 5) {
+      } else if (columnIndex == 5) {
         final aDate = DateTime.tryParse(aVal) ?? DateTime(2000);
         final bDate = DateTime.tryParse(bVal) ?? DateTime(2000);
         result = aDate.compareTo(bDate);
-      }
-
-      else {
+      } else {
         result = aVal.toLowerCase().compareTo(bVal.toLowerCase());
       }
 
@@ -602,8 +663,6 @@ class UserController extends GetxController {
 
     filteredDataList.refresh();
   }
-
-
 
   // ======================= حذف و تنشيط جماعي =======================
   List<Map<String, dynamic>> getSelectedUsers() {
@@ -630,10 +689,7 @@ class UserController extends GetxController {
       isLoading.value = true;
 
       for (var user in selectedUsers) {
-        await deleteUserFromServer(
-          id: user['id'],
-          role: user['role_raw'],
-        );
+        await deleteUserFromServer(id: user['id'], role: user['role_raw']);
       }
 
       selectedRows.assignAll(
@@ -664,11 +720,7 @@ class UserController extends GetxController {
       for (var user in selectedUsers) {
         await http.post(
           Uri.parse(AppLink.status),
-          body: {
-            "id": user['id'],
-            "status": status,
-            "role": user['role'],
-          },
+          body: {"id": user['id'], "status": status, "role": user['role_raw']},
         );
       }
 
@@ -682,9 +734,6 @@ class UserController extends GetxController {
     }
   }
 
-
-
-
   // ======================= SEARCH =======================
   Future<void> searchQuery(String query) async {
     if (query.isEmpty) {
@@ -694,9 +743,7 @@ class UserController extends GetxController {
 
     try {
       final response = await http.get(
-        Uri.parse(
-          "${AppLink.searchUsers}?query=${Uri.encodeComponent(query)}",
-        ),
+        Uri.parse("${AppLink.searchUsers}?query=${Uri.encodeComponent(query)}"),
       );
 
       if (response.statusCode == 200) {
@@ -730,10 +777,6 @@ class UserController extends GetxController {
     }
   }
 
-
-
-
-
   // ======================= API =======================
   Future<void> fetchUsers() async {
     try {
@@ -755,12 +798,25 @@ class UserController extends GetxController {
               return {
                 'id': user['id']?.toString() ?? '',
                 'role_raw': user['role']?.toString() ?? '',
-                'Column1': user['name']?.toString() ?? '',
+                'image': user['image']?.toString() ?? '',
+                'name_ar': user['name_ar']?.toString() ?? '',
+                'name': user['name']?.toString() ?? '',
+                'vehicle_number': user['vehicle_number']?.toString() ?? '',
+                'supermarket_location':
+                    user['supermarket_location']?.toString() ?? '',
+                'supermarket_time_open':
+                    user['supermarket_time_open']?.toString() ?? '',
+
+                'Column1': user['role'] == 'supermarket'
+                    ? user['name_ar']?.toString() ?? ''
+                    : user['name']?.toString() ?? '',
+
                 'Column2': user['email']?.toString() ?? '-',
                 'Column3': user['phone']?.toString() ?? '-',
                 'Column4': user['role']?.toString() ?? '',
-                'Column5':
-                user['status'].toString() == '1' ? 'active'.tr : 'inactive'.tr,
+                'Column5': user['status'].toString() == '1'
+                    ? 'active'.tr
+                    : 'inactive'.tr,
                 'Column6': _formatDate(user['created_at']?.toString()),
               };
             }).toList(),
@@ -779,7 +835,6 @@ class UserController extends GetxController {
     }
   }
 
-
   // ======================= Update =======================
   void fillControllers(UserModel user) {
     nameController.text = user.name;
@@ -789,6 +844,8 @@ class UserController extends GetxController {
     locationController.text = user.location ?? '';
     timeOpenController.text = user.timeOpen ?? '';
     vehicleController.text = user.vehicleNumber ?? '';
+
+    imageBytes = null; // مهم جداً
   }
 
   Future<void> pickImage() async {
@@ -800,55 +857,91 @@ class UserController extends GetxController {
     if (result != null) {
       imageBytes = result.files.first.bytes;
       imageName = result.files.first.name;
+      update(); // ← هذا هو السر
     }
   }
 
   Future<void> updateUser(UserModel user) async {
-    var request = http.MultipartRequest(
-      "POST",
-      Uri.parse(
-        "http://46.101.225.45/flymarket/dashboard/admin/user_management/update_account.php",
-      ),
-    );
+    try {
+      isLoading.value = true;
 
-    final updatedUser = UserModel(
-      id: user.id,
-      firebaseUid: user.firebaseUid,
-      name: nameController.text,
-      email: emailController.text,
-      phone: phoneController.text,
-      role: user.role,
-      status: user.status,
-      nameAr: nameArController.text,
-      location: locationController.text,
-      timeOpen: timeOpenController.text,
-      vehicleNumber: vehicleController.text,
-    );
-
-    request.fields.addAll(updatedUser.toFields());
-
-    if (imageBytes != null) {
-      request.files.add(
-        http.MultipartFile.fromBytes(
-          'image',
-          imageBytes!,
-          filename: imageName,
+      var request = http.MultipartRequest(
+        "POST",
+        Uri.parse(
+          "http://46.101.225.45/flymarket/dashboard/admin/user_management/update_account.php",
         ),
       );
+
+      request.fields['id'] = user.id.toString();
+      request.fields['role'] = user.role;
+
+      request.fields['name'] = nameController.text.trim();
+      request.fields['email'] = emailController.text.trim();
+      request.fields['phone'] = phoneController.text.trim();
+      request.fields['name_ar'] = nameArController.text.trim();
+      request.fields['supermarket_location'] = locationController.text.trim();
+      request.fields['supermarket_time_open'] = timeOpenController.text.trim();
+      request.fields['vehicle_number'] = vehicleController.text.trim();
+
+      if (imageBytes != null) {
+        request.files.add(
+          http.MultipartFile.fromBytes(
+            'image',
+            imageBytes!,
+            filename: imageName ?? "image.jpg",
+          ),
+        );
+      }
+
+      var response = await request.send();
+
+      // إذا السيرفر رجع خطأ HTTP
+      if (response.statusCode != 200) {
+        throw Exception("Server Error");
+      }
+
+      var responseBody = await response.stream.bytesToString();
+
+      print("UPDATE RESPONSE => $responseBody");
+
+      final body = jsonDecode(responseBody);
+
+      if (body["status"] == "success") {
+        await fetchUsers();
+        Get.back(); // إغلاق الدايلوق
+        Get.snackbar(
+          "تم التعديل",
+          "تم تحديث البيانات بنجاح",
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.TOP,
+          margin: const EdgeInsets.all(10),
+        );
+      } else {
+        Get.snackbar(
+          "خطأ",
+          "فشل في تحديث البيانات",
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.TOP,
+          margin: const EdgeInsets.all(10),
+        );
+      }
+    } catch (e) {
+      print("UPDATE ERROR => $e");
+
+      Get.snackbar(
+        "خطأ",
+        "مشكلة في الاتصال بالخادم",
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.TOP,
+        margin: const EdgeInsets.all(10),
+      );
+    } finally {
+      isLoading.value = false;
     }
-
-
-
-
-    var response = await request.send();
-    var body = await response.stream.bytesToString();
-
-    print(body);
-
-    Get.back(); // إغلاق الدايلوق
-    await fetchUsers(); // تحديث الجدول
   }
-
 
   // ======================= DATE FORMAT =======================
   String _formatDate(String? dateTime) {
@@ -887,10 +980,9 @@ class UserController extends GetxController {
     },
   ];
 
-
   var selectedRole = RxnString();
-  void setRole(String role) => selectedRole.value = role;
 
+  void setRole(String role) => selectedRole.value = role;
 
   void filterByType(String value) {
     selectedValue.value = value;
@@ -910,7 +1002,6 @@ class UserController extends GetxController {
       List.generate(filteredDataList.length, (_) => false),
     );
   }
-
 
   void changeValue(String newValue) {
     selectedValue.value = newValue;

@@ -38,28 +38,13 @@ class UserModel {
       status: int.tryParse(json['status'].toString()) ?? 0,
       id: json['id'] != null ? int.tryParse(json['id'].toString()) : null,
       nameAr: json['name_ar'],
-      location: json['location'],
-      timeOpen: json['time_open'],
+      location: json['supermarket_location'],
+      timeOpen: json['supermarket_time_open'],
       vehicleNumber: json['vehicle_number'],
       image: json['image'],
     );
   }
 
-  Map<String, dynamic> toJson() => {
-    'firebase_uid': firebaseUid,
-    'name': name,
-    'email': email,
-    'phone': phone,
-    'role': role,
-    'status': status,
-
-    'id': id,
-    'name_ar': nameAr,
-    'location': location,
-    'time_open': timeOpen,
-    'vehicle_number': vehicleNumber,
-    'image': image,
-  };
   Map<String, String> toFields() {
     return {
       if (id != null) 'id': id.toString(),
@@ -67,13 +52,16 @@ class UserModel {
       'name': name,
       'email': email,
       'phone': phone,
-      if (nameAr != null) 'name_ar': nameAr!,
-      if (location != null) 'location': location!,
-      if (timeOpen != null) 'time_open': timeOpen!,
-      if (vehicleNumber != null) 'vehicle': vehicleNumber!,
+
+      'name_ar': nameAr ?? '',
+      'supermarket_location': location ?? '',
+      'supermarket_time_open': timeOpen ?? '',
+      'vehicle_number': vehicleNumber ?? '',
     };
   }
+
 }
+
 
 
 class SearchUserModel {
