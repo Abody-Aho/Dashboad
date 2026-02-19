@@ -1,168 +1,224 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 
-/// User Controller
-/// Responsible for managing user data, search, sorting, and selection.
+import '../../../core/constants/app_link.dart';
+
 class OrdersController extends GetxController {
-  var dataList = <Map<String, String>>[].obs;        // All user data
-  var filteredDataList = <Map<String, String>>[].obs; // Data after search/filter
-  RxList<bool> selectedRows = <bool>[].obs;          // Selection state for each row
 
-  RxInt sortColumnIndex = 0.obs;                     // Active column index for sorting
-  RxBool sortAscending = true.obs;                   // Sorting direction (ascending/descending)
-  final searchTextController = TextEditingController(); // Search field controller
+  var dataList = <Map<String, String>>[].obs;
+  var filteredDataList = <Map<String, String>>[].obs;
 
-  /// Load data when controller is initialized
+  RxList<bool> selectedRows = <bool>[].obs;
+  RxBool isLoading = true.obs;
+
+  RxInt sortColumnIndex = 0.obs;
+  RxBool sortAscending = true.obs;
+
+  final searchTextController = TextEditingController();
+
   @override
   void onInit() {
     super.onInit();
-    fetchUsers();
+    fetchOrders();
   }
 
-  /// Create data cells for each row in the table
+  // ======================= API =======================
+
+  Future<void> fetchOrders() async {
+    isLoading.value = true;
+
+    try {
+
+      final response = await http.get(
+        Uri.parse(
+            AppLink.ordersView,),
+      );
+
+      final body = jsonDecode(response.body);
+
+      if (body['status'] == 'success') {
+        final List orders = body['data'];
+
+        dataList.assignAll(
+          orders.map<Map<String, String>>((o) {
+            return {
+              'id': o['id'].toString(),
+
+              'Column1': o['id'].toString(),
+              'Column2': o['users'] ?? '-',
+              'Column3': o['supermarket'] ?? '-',
+              'Column4': o['driver'] ?? '-',
+              'Column5': o['total_amount'] ?? '0',
+              'Column6': o['payment_method'] ?? '',
+              'Column7': o['status'] ?? '',
+              'Column8': _formatDate(o['created_at']),
+            };
+          }).toList(),
+        );
+
+        filteredDataList.assignAll(dataList);
+        selectedRows.assignAll(
+          List.generate(filteredDataList.length, (_) => false),
+        );
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Failed to load orders");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  // ======================= DATA CELLS =======================
+
   List<DataCell> getDataCells(Map<String, dynamic> data) {
     return [
-      DataCell(Text(data['Column1'] ?? '', overflow: TextOverflow.ellipsis)),
-      DataCell(Text(data['Column2'] ?? '', overflow: TextOverflow.ellipsis)),
-      DataCell(Text(data['Column3'] ?? '', overflow: TextOverflow.ellipsis)),
-      DataCell(Text(data['Column4'] ?? '', overflow: TextOverflow.ellipsis)),
-      DataCell(Text(data['Column5'] ?? '', overflow: TextOverflow.ellipsis)),
-      DataCell(Text(data['Column6'] ?? '', overflow: TextOverflow.ellipsis)),
-      DataCell(Text(data['Column7'] ?? '', overflow: TextOverflow.ellipsis)),
-      DataCell(
-        SizedBox(
-          width: 100, // Fixed width for buttons
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Flexible(
-                child: IconButton(
-                  icon: const Icon(Icons.person, color: Colors.grey, size: 25),
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                  onPressed: () => print('View ${data['Column1']}'),
-                  tooltip: 'View'.tr,
-                ),
-              ),
-              Flexible(
-                child: IconButton(
-                  icon: const Icon(Icons.edit, color: Colors.blue, size: 25),
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                  onPressed: () => print('Edit ${data['Column1']}'),
-                  tooltip: 'Edit'.tr,
-                ),
-              ),
-              Flexible(
-                child: IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.red, size: 25),
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                  onPressed: () => print('Delete ${data['Column1']}'),
-                  tooltip: 'Delete'.tr,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      _textCell(data['Column1'], 80),
+      _textCell(data['Column2'], 160),
+      _textCell(data['Column3'], 160),
+      _textCell(data['Column4'], 150),
+      _textCell(data['Column5'], 100),
+      _textCell(data['Column6'], 120),
+      _statusCell(data['Column7']),
+      _textCell(data['Column8'], 130),
+      _actionCell(data),
     ];
   }
 
-  /// Define table columns with sorting support
+  // ======================= HELPERS =======================
+
+  DataCell _textCell(String? text, double width) {
+    return DataCell(
+      Tooltip(
+        message: text ?? '-',
+        child: SizedBox(
+          width: width,
+          child: Text(
+            text ?? '-',
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ),
+    );
+  }
+
+  DataCell _statusCell(String? status) {
+    Color color;
+
+    switch (status) {
+      case "pending":
+        color = Colors.orange;
+        break;
+      case "on_the_way":
+        color = Colors.blue;
+        break;
+      case "delivered":
+        color = Colors.green;
+        break;
+      case "cancelled":
+        color = Colors.red;
+        break;
+      default:
+        color = Colors.grey;
+    }
+
+    return DataCell(
+      Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text(
+          status ?? '',
+          style: TextStyle(
+            color: color,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
+  DataCell _actionCell(Map<String, dynamic> data) {
+    return DataCell(
+      SizedBox(
+        width: 100,
+        child: Row(
+          children: [
+            IconButton(
+              icon: const Icon(Icons.visibility),
+              onPressed: () => print("view ${data['id']}"),
+            ),
+            IconButton(
+              icon: const Icon(Icons.delivery_dining),
+              onPressed: () => print("assign driver ${data['id']}"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ======================= TABLE COLUMNS =======================
+
   List<DataColumn> get tableColumns => [
-    DataColumn(
-      label: Text('name'.tr),
-      onSort: (columnIndex, ascending) => sortData(0, ascending),
-    ),
-    DataColumn(
-      label: Text('user_email'.tr),
-      onSort: (columnIndex, ascending) => sortData(1, ascending),
-    ),
-    DataColumn(
-      label: Text('phone'.tr),
-      onSort: (columnIndex, ascending) => sortData(2, ascending),
-    ),
-    DataColumn(
-      label: Text('type'.tr),
-      onSort: (columnIndex, ascending) => sortData(3, ascending),
-    ),
-    DataColumn(
-      label: Text('status'.tr),
-      onSort: (columnIndex, ascending) => sortData(4, ascending),
-    ),
-    DataColumn(
-      label: Text('registration_date'.tr),
-      onSort: (columnIndex, ascending) => sortData(5, ascending),
-    ),
-    DataColumn(
-      label: Text('last_activity'.tr),
-      onSort: (columnIndex, ascending) => sortData(6, ascending),
-    ),
-    DataColumn(
-      label: Text('actions'.tr),
-      onSort: (columnIndex, ascending) => sortData(6, ascending),
-    ),
+    DataColumn(label: Text('رقم الطلب'), onSort: (i, a) => sortData(0, a)),
+    DataColumn(label: Text('العميل'), onSort: (i, a) => sortData(1, a)),
+    DataColumn(label: Text('السوبرماركت'), onSort: (i, a) => sortData(2, a)),
+    DataColumn(label: Text('المندوب'), onSort: (i, a) => sortData(3, a)),
+    DataColumn(label: Text('المبلغ'), onSort: (i, a) => sortData(4, a)),
+    DataColumn(label: Text('الدفع'), onSort: (i, a) => sortData(5, a)),
+    DataColumn(label: Text('الحالة'), onSort: (i, a) => sortData(6, a)),
+    DataColumn(label: Text('التاريخ'), onSort: (i, a) => sortData(7, a)),
+    const DataColumn(label: Text('الإجراءات')),
   ];
 
-  /// Sort data by selected column
+  // ======================= SORT =======================
+
   void sortData(int columnIndex, bool ascending) {
     sortColumnIndex.value = columnIndex;
     sortAscending.value = ascending;
 
-    String columnKey = 'Column${columnIndex + 1}';
+    final key = 'Column${columnIndex + 1}';
 
     filteredDataList.sort((a, b) {
-      final valueA = a[columnKey]!.toLowerCase();
-      final valueB = b[columnKey]!.toLowerCase();
-      return ascending ? valueA.compareTo(valueB) : valueB.compareTo(valueA);
+      final aVal = a[key] ?? '';
+      final bVal = b[key] ?? '';
+      return ascending
+          ? aVal.toLowerCase().compareTo(bVal.toLowerCase())
+          : bVal.toLowerCase().compareTo(aVal.toLowerCase());
     });
 
     filteredDataList.refresh();
   }
 
-  /// Execute search in table
+  // ======================= SEARCH =======================
+
   void searchQuery(String query) {
-    List<Map<String, String>> results;
     if (query.isEmpty) {
-      results = dataList;
+      filteredDataList.assignAll(dataList);
     } else {
-      results = dataList
-          .where((item) => item.values
-          .any((value) => value.toLowerCase().contains(query.toLowerCase())))
-          .toList();
+      filteredDataList.assignAll(
+        dataList.where((item) {
+          return item.values
+              .any((v) => v.toLowerCase().contains(query.toLowerCase()));
+        }).toList(),
+      );
     }
 
-    filteredDataList.assignAll(results);
-    selectedRows.assignAll(List.generate(filteredDataList.length, (index) => false));
-  }
-
-  /// Load sample user data
-  void fetchUsers() {
-    final userTypes = ['Client'.tr, 'Agent'.tr, 'Supermarket'.tr, 'Admin'.tr];
-    final statuses = ['Active'.tr, 'Inactive'.tr];
-
-    dataList.assignAll(
-      List.generate(
-        20,
-            (index) => {
-          'Column1': '${'User'.tr} ${index + 1}', // Name
-          'Column2': 'user${index + 1}@gmail.com', // Email
-          'Column3': '77${9000000 + index}', // Phone
-          'Column4': userTypes[index % userTypes.length], // Type
-          'Column5': statuses[index % statuses.length], // Status
-          'Column6': '2025-0${(index % 9) + 1}-15', // Registration Date
-          'Column7': '2025-11-${(index % 28) + 1}', // Last Activity
-        },
-      ),
-    );
-
-    filteredDataList.assignAll(dataList);
     selectedRows.assignAll(
-      List.generate(filteredDataList.length, (index) => false),
+      List.generate(filteredDataList.length, (_) => false),
     );
   }
 
+  // ======================= DATE FORMAT =======================
+
+  String _formatDate(String? dateTime) {
+    if (dateTime == null || dateTime.isEmpty) return '-';
+    return dateTime.split(' ').first;
+  }
   final selectedValue = 'all_types'.obs;
 
   final options = [

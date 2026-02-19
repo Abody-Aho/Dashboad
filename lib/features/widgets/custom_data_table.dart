@@ -32,6 +32,15 @@ class CustomDataTable extends StatelessWidget {
           ),
         );
       }
+      // ===== EMPTY STATE =====
+      if (controller.filteredDataList.isEmpty) {
+        return const SizedBox(
+          height: 400,
+          child: Center(
+            child: Text("لا توجد بيانات"),
+          ),
+        );
+      }
       // لجعل الجدول يتحدث عند تغير البيانات
       Visibility(
         visible: false,

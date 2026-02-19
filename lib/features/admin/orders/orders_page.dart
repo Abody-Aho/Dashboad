@@ -100,6 +100,7 @@ class OrdersPage extends StatelessWidget {
                       const SizedBox(height: 10),
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: 20),
+                        alignment: Alignment.topRight,
                         child: Text(
                           "orders_list".tr,
                           style: TextStyle(
@@ -109,6 +110,7 @@ class OrdersPage extends StatelessWidget {
                       const SizedBox(height: 8),
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: 20),
+                        alignment: Alignment.topRight,
                         child: Text(
                           "orders_management_description".tr,
                           style:

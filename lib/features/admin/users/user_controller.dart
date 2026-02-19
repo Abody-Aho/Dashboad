@@ -275,9 +275,10 @@ class UserController extends GetxController {
                                       user.image!.isNotEmpty &&
                                       user.image != "empty")
                                       ? NetworkImage(
-                                    "http://46.101.225.45/flymarket/app/customer/upload/supermarket/${user.image}?v=${DateTime.now().millisecondsSinceEpoch}",
+                                    "${AppLink.image}${user.image}",
                                   )
                                       : null,
+
                                   child: controller.imageBytes == null &&
                                       (user.image == null ||
                                           user.image!.isEmpty ||
@@ -298,7 +299,7 @@ class UserController extends GetxController {
 
                       const SizedBox(height: 30),
 
-                      // ====== حقول السوبرماركت ======
+                      /// ====== حقول السوبرماركت ======
                       if (user.role == "supermarket") ...[
                         TextField(
                           controller: nameArController,
@@ -317,7 +318,7 @@ class UserController extends GetxController {
                         const SizedBox(height: 25),
                       ],
 
-                      // ====== الحقول الأساسية ======
+                      /// ====== الحقول الأساسية ======
                       TextField(
                         controller: nameController,
                         decoration: greenInput("الاسم"),
@@ -424,6 +425,8 @@ class UserController extends GetxController {
                   );
 
                   showEditDialog(user);
+                  print("IMAGE NAME => ${user.image}");
+
                 },
                 tooltip: 'Edit'.tr,
               ),
@@ -868,7 +871,7 @@ class UserController extends GetxController {
       var request = http.MultipartRequest(
         "POST",
         Uri.parse(
-          "http://46.101.225.45/flymarket/dashboard/admin/user_management/update_account.php",
+          AppLink.updateAccount,
         ),
       );
 
