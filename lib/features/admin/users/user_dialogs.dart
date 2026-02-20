@@ -1,0 +1,299 @@
+import 'package:dashbord2/features/admin/users/user_controller.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../../../core/constants/app_link.dart';
+import '../../../data/models/user_model.dart';
+
+mixin UserDialogs on GetxController {
+
+
+  void showEditDialog(UserModel user) {
+    (this as UserController).fillControllers(user);
+
+    // ====== تصميم الحقول الأخضر ======
+    InputDecoration greenInput(String label) {
+      return InputDecoration(
+        labelText: label,
+        filled: true,
+        fillColor: Colors.white,
+        labelStyle: const TextStyle(
+          color: Color(0xFF2E7D32),
+          fontWeight: FontWeight.w500,
+        ),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: BorderSide(color: Colors.green.shade200),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: Color(0xFF2E7D32), width: 2),
+        ),
+      );
+    }
+
+    Get.dialog(
+      Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 700),
+          child: Material(
+            color: Colors.white,
+            elevation: 12,
+            borderRadius: BorderRadius.circular(20),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFF1F8F4), Colors.white],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(30),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      /// ====== العنوان ======
+                      Row(
+                        children: const [
+                          Icon(Icons.edit, color: Color(0xFF2E7D32)),
+                          SizedBox(width: 10),
+                          Text(
+                            "تعديل المستخدم",
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF1B5E20),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 30),
+
+                      /// ====== الصورة ======
+                      GetBuilder<UserController>(
+                        builder: (controller) {
+                          return GestureDetector(
+                            onTap: () async {
+                              await controller.pickImage();
+                            },
+                            child: Center(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: const Color(0xFF4CAF50),
+                                    width: 3,
+                                  ),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Colors.black12,
+                                      blurRadius: 10,
+                                      offset: Offset(0, 5),
+                                    ),
+                                  ],
+                                ),
+                                child: CircleAvatar(
+                                  radius: 60,
+                                  backgroundColor: Colors.grey.shade100,
+                                  backgroundImage: controller.imageBytes != null
+                                      ? MemoryImage(controller.imageBytes!)
+                                      : (user.image != null &&
+                                      user.image!.isNotEmpty &&
+                                      user.image != "empty")
+                                      ? NetworkImage(
+                                    "${AppLink.image}${user.image}",
+                                  )
+                                      : AssetImage("assets/images/mapp.png"),
+
+                                  child: controller.imageBytes == null &&
+                                      (user.image == null ||
+                                          user.image!.isEmpty ||
+                                          user.image == "empty")
+                                      ? const Icon(
+                                    Icons.camera_alt,
+                                    size: 30,
+                                    color: Color(0xFF4CAF50),
+                                  )
+                                      : null,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+
+
+                      const SizedBox(height: 30),
+
+                      /// ====== حقول السوبرماركت ======
+                      if (user.role == "supermarket") ...[
+                        TextField(
+                          controller: (this as UserController).nameArController,
+                          decoration: greenInput("الاسم بالعربي"),
+                        ),
+                        const SizedBox(height: 15),
+                        TextField(
+                          controller: (this as UserController).locationController,
+                          decoration: greenInput("الموقع"),
+                        ),
+                        const SizedBox(height: 15),
+                        TextField(
+                          controller: (this as UserController).timeOpenController,
+                          decoration: greenInput("وقت العمل"),
+                        ),
+                        const SizedBox(height: 25),
+                      ],
+
+                      /// ====== الحقول الأساسية ======
+                      TextField(
+                        controller: (this as UserController).nameController,
+                        decoration: greenInput("الاسم"),
+                      ),
+                      const SizedBox(height: 15),
+
+                      if (user.role == "admin" ||
+                          user.role == "supermarket") ...[
+                        TextField(
+                          controller: (this as UserController).emailController,
+                          decoration: greenInput("البريد"),
+                        ),
+                        const SizedBox(height: 15),
+                      ],
+
+                      TextField(
+                        controller: (this as UserController).phoneController,
+                        decoration: greenInput("الهاتف"),
+                      ),
+
+                      const SizedBox(height: 15),
+
+                      /// ====== حقل المندوب ======
+                      if (user.role == "driver") ...[
+                        TextField(
+                          controller: (this as UserController).vehicleController,
+                          decoration: greenInput("رقم المركبة"),
+                        ),
+                        const SizedBox(height: 25),
+                      ],
+
+                      /// ====== زر الحفظ ======
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(double.infinity, 55),
+                          backgroundColor: const Color(0xFF2E7D32),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          elevation: 6,
+                        ),
+                        onPressed: () => (this as UserController).updateUser(user),
+                        child: const Text(
+                          "حفظ التعديلات",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void showDeleteDialog(Map<String, dynamic> data) {
+    Get.dialog(
+      Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 500, minWidth: 300),
+          child: Material(
+            borderRadius: BorderRadius.circular(16),
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: Colors.red.withValues(alpha: 0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.warning_amber_rounded,
+                      color: Colors.red,
+                      size: 42,
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  const Text(
+                    "تأكيد الحذف",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  const Text(
+                    "هل أنت متأكد من حذف هذا المستخدم؟\nلا يمكن التراجع عن هذه العملية.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.grey),
+                  ),
+
+                  const SizedBox(height: 25),
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () => Get.back(),
+                          child: const Text("إلغاء"),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Get.back();
+                            (this as UserController).deleteUserFromServer(
+                              id: data['id'],
+                              role: data['role_raw'],
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                          ),
+                          child: const Text(
+                            "حذف",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+      barrierDismissible: false,
+    );
+  }
+}

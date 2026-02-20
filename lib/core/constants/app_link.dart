@@ -1,9 +1,9 @@
 
 class AppLink {
-  // static const String server = 'http://46.101.225.45/flymarket/dashboard/';
-  static const String server = 'http://localhost/flymarket_php_api/dashboard/';
-   // static const String image = 'http://46.101.225.45/flymarket/app/customer/upload/supermarket/';
-   static const String image = 'http://localhost/flymarket_php_api/app/customer/upload/supermarket/';
+  static const String server = 'http://46.101.225.45/flymarket/dashboard/';
+  // static const String server = 'http://localhost/flymarket_php_api/dashboard/';
+   static const String image = 'http://46.101.225.45/flymarket/app/customer/upload/supermarket/';
+   // static const String image = 'http://localhost/flymarket_php_api/app/customer/upload/supermarket/';
 
   static const String login = '${server}auth/login.php';
   static const String signup = '${server}auth/signup.php';
