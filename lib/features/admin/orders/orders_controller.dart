@@ -27,10 +27,10 @@ class OrdersController extends GetxController {
   // ======================= API =======================
 
   Future<void> fetchOrders() async {
-    isLoading.value = true;
+
 
     try {
-
+      isLoading.value = true;
       final response = await http.get(
         Uri.parse(
             AppLink.ordersView,),
@@ -147,13 +147,26 @@ class OrdersController extends GetxController {
         width: 100,
         child: Row(
           children: [
-            IconButton(
-              icon: const Icon(Icons.visibility),
-              onPressed: () => print("view ${data['id']}"),
+            Flexible(
+              child: IconButton(
+                icon: const Icon(Icons.visibility,color: Colors.grey,),
+                onPressed: () => print("view ${data['id']}"),
+                padding: EdgeInsets.zero,
+              ),
             ),
-            IconButton(
-              icon: const Icon(Icons.delivery_dining),
-              onPressed: () => print("assign driver ${data['id']}"),
+            Flexible(
+              child: IconButton(
+                icon: const Icon(Icons.delivery_dining),
+                onPressed: () => print("assign driver ${data['id']}"),
+                padding: EdgeInsets.zero,
+              ),
+            ),
+            Flexible(
+              child: IconButton(
+                icon: const Icon(Icons.close,color: Colors.red,),
+                onPressed: () => print("assign driver ${data['id']}"),
+                padding: EdgeInsets.zero,
+              ),
             ),
           ],
         ),

@@ -277,7 +277,7 @@ class UserController extends GetxController {
                                       ? NetworkImage(
                                     "${AppLink.image}${user.image}",
                                   )
-                                      : null,
+                                      : AssetImage("assets/images/mapp.png"),
 
                                   child: controller.imageBytes == null &&
                                       (user.image == null ||
@@ -385,7 +385,7 @@ class UserController extends GetxController {
     final bool isActive = status == 'active'.tr;
     return DataCell(
       SizedBox(
-        width: 100, // عرض ثابت للأزرار
+        width: 100,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -397,7 +397,6 @@ class UserController extends GetxController {
                   size: 25,
                 ),
                 padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
                 onPressed: () => toggleUserStatus(data),
                 tooltip: 'View'.tr,
               ),
@@ -406,7 +405,6 @@ class UserController extends GetxController {
               child: IconButton(
                 icon: const Icon(Icons.edit, color: Colors.blue, size: 25),
                 padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
                 onPressed: () {
                   final user = UserModel(
                     id: int.tryParse(data['id'] ?? ''),
@@ -435,7 +433,6 @@ class UserController extends GetxController {
               child: IconButton(
                 icon: const Icon(Icons.delete, color: Colors.red, size: 25),
                 padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
                 onPressed: () {
                   Get.dialog(
                     Center(
@@ -740,7 +737,7 @@ class UserController extends GetxController {
   // ======================= SEARCH =======================
   Future<void> searchQuery(String query) async {
     if (query.isEmpty) {
-      await fetchUsers(); // يرجع البيانات الأصلية
+      await fetchUsers();
       return;
     }
 
@@ -758,12 +755,16 @@ class UserController extends GetxController {
           filteredDataList.assignAll(
             data.map<Map<String, String>>((user) {
               return {
+                'id': user['id']?.toString() ?? '',
+                'role_raw': user['role']?.toString() ?? '',
+                'name': user['name']?.toString() ?? '',
+
                 'Column1': user['name']?.toString() ?? '',
                 'Column2': user['email']?.toString() ?? '-',
                 'Column3': user['phone']?.toString() ?? '-',
-                'Column4': user['type']?.toString() ?? '',
-                'Column5': 'active'.tr, // مؤقت إذا ما رجع status
-                'Column6': '-', // إذا ما رجع تاريخ
+                'Column4': user['role']?.toString() ?? '',
+                'Column5': 'active'.tr,
+                'Column6': '-',
               };
             }).toList(),
           );
@@ -779,6 +780,7 @@ class UserController extends GetxController {
       print("Search Error: $e");
     }
   }
+
 
   // ======================= API =======================
   Future<void> fetchUsers() async {
