@@ -86,27 +86,6 @@ class UserController extends GetxController with UserApi, UserForm, UserTable, U
 
 
 
-
-  // ======================= HELPERS =======================
-  DataCell _textCell(String? text, double width) {
-    return DataCell(
-      Tooltip(
-        message: text ?? '-',
-        child: SizedBox(
-          width: width,
-          child: Text(
-            text ?? '-',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-      ),
-    );
-  }
-
-
-
-
   // ======================= FILTER =======================
   final selectedValue = 'all_types'.obs;
   final options = ['all_types', 'admin', 'users', 'driver', 'supermarket'];
@@ -132,7 +111,5 @@ class UserController extends GetxController with UserApi, UserForm, UserTable, U
     );
   }
 
-  void changeValue(String newValue) {
-    selectedValue.value = newValue;
-  }
+
 }

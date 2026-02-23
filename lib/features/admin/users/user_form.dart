@@ -91,6 +91,7 @@ mixin UserForm on GetxController {
     vehicleController.text = user.vehicleNumber ?? '';
 
     imageBytes = null; // مهم جداً
+    update();
   }
 
   void _clearInputs() {
@@ -101,6 +102,8 @@ mixin UserForm on GetxController {
     phoneController.clear();
     locationController.clear();
     timeOpenController.clear();
+    imageBytes = null; // مهم جداً
+    update();
   }
 
   Future<void> addAccount() async {
@@ -200,9 +203,8 @@ mixin UserForm on GetxController {
 
       var response = await request.send();
 
-      // إذا السيرفر رجع خطأ HTTP
       if (response.statusCode != 200) {
-        throw Exception("Server Error");
+        throw Exception("Server Error: ${response.statusCode}");
       }
 
       var responseBody = await response.stream.bytesToString();
@@ -225,7 +227,7 @@ mixin UserForm on GetxController {
       } else {
         Get.snackbar(
           "خطأ",
-          "فشل في تحديث البيانات",
+          body["message"] ?? "فشل في تحديث البيانات",
           backgroundColor: Colors.red,
           colorText: Colors.white,
           snackPosition: SnackPosition.TOP,

@@ -2,6 +2,7 @@ import 'package:dashbord2/features/admin/users/user_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../core/constants/app_link.dart';
 import '../../../data/models/user_model.dart';
 
 mixin UserTable on GetxController {
@@ -104,6 +105,7 @@ mixin UserTable on GetxController {
 
                   (this as UserController).showEditDialog(user);
                   print("IMAGE NAME => ${user.image}");
+                  print("${AppLink.image}${user.image}");
 
                 },
                 tooltip: 'Edit'.tr,
