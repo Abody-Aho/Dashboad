@@ -6,10 +6,10 @@ import '../../../core/constants/app_link.dart';
 import '../../../data/models/user_model.dart';
 
 mixin UserDialogs on GetxController {
-
+  UserController get controller;
 
   void showEditDialog(UserModel user) {
-    (this as UserController).fillControllers(user);
+    controller.fillControllers(user);
 
     // ====== تصميم الحقول الأخضر ======
     InputDecoration greenInput(String label) {
@@ -137,17 +137,17 @@ mixin UserDialogs on GetxController {
                       /// ====== حقول السوبرماركت ======
                       if (user.role == "supermarket") ...[
                         TextField(
-                          controller: (this as UserController).nameArController,
+                          controller: controller.nameArController,
                           decoration: greenInput("الاسم بالعربي"),
                         ),
                         const SizedBox(height: 15),
                         TextField(
-                          controller: (this as UserController).locationController,
+                          controller: controller.locationController,
                           decoration: greenInput("الموقع"),
                         ),
                         const SizedBox(height: 15),
                         TextField(
-                          controller: (this as UserController).timeOpenController,
+                          controller: controller.timeOpenController,
                           decoration: greenInput("وقت العمل"),
                         ),
                         const SizedBox(height: 25),
@@ -155,7 +155,7 @@ mixin UserDialogs on GetxController {
 
                       /// ====== الحقول الأساسية ======
                       TextField(
-                        controller: (this as UserController).nameController,
+                        controller: controller.nameController,
                         decoration: greenInput("الاسم"),
                       ),
                       const SizedBox(height: 15),
@@ -163,14 +163,14 @@ mixin UserDialogs on GetxController {
                       if (user.role == "admin" ||
                           user.role == "supermarket") ...[
                         TextField(
-                          controller: (this as UserController).emailController,
+                          controller: controller.emailController,
                           decoration: greenInput("البريد"),
                         ),
                         const SizedBox(height: 15),
                       ],
 
                       TextField(
-                        controller: (this as UserController).phoneController,
+                        controller: controller.phoneController,
                         decoration: greenInput("الهاتف"),
                       ),
 
@@ -179,7 +179,7 @@ mixin UserDialogs on GetxController {
                       /// ====== حقل المندوب ======
                       if (user.role == "driver") ...[
                         TextField(
-                          controller: (this as UserController).vehicleController,
+                          controller: controller.vehicleController,
                           decoration: greenInput("رقم المركبة"),
                         ),
                         const SizedBox(height: 25),
@@ -195,7 +195,7 @@ mixin UserDialogs on GetxController {
                           ),
                           elevation: 6,
                         ),
-                        onPressed: () => (this as UserController).updateUser(user),
+                        onPressed: () => controller.updateUser(user),
                         child: const Text(
                           "حفظ التعديلات",
                           style: TextStyle(
@@ -271,7 +271,7 @@ mixin UserDialogs on GetxController {
                         child: ElevatedButton(
                           onPressed: () {
                             Get.back();
-                            (this as UserController).deleteUserFromServer(
+                            controller.deleteUserFromServer(
                               id: data['id'],
                               role: data['role_raw'],
                             );

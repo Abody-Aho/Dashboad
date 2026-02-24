@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 /// وحدة تحكم المستخدمين - User Controller
 /// مسؤولة عن إدارة بيانات المستخدمين، البحث، الفرز، والاختيار.
 class ProductsController extends GetxController {
+  var isLoading = false.obs;                         // حالة التحميل
   var dataList = <Map<String, String>>[].obs;        // جميع بيانات المستخدمين
   var filteredDataList = <Map<String, String>>[].obs; // البيانات بعد البحث أو التصفية
   RxList<bool> selectedRows = <bool>[].obs;          // حالة التحديد لكل صف
@@ -145,6 +146,7 @@ class ProductsController extends GetxController {
 
   /// تحميل بيانات تجريبية للمستخدمين
   void fetchProducts() {
+    isLoading.value = true;
     final categories = ['خضار', 'فاكهة', 'مشروبات', 'أدوات منزلية'];
     final supermarkets = ['سوبرماركت الشام', 'سوبرماركت اليمن', 'سوبرماركت المستقبل'];
     final availability = ['متوفر', 'غير متوفر'];
@@ -169,6 +171,7 @@ class ProductsController extends GetxController {
     selectedRows.assignAll(
       List.generate(filteredDataList.length, (index) => false),
     );
+    isLoading.value = false;
   }
 
   final selectedValue = 'all_status'.obs;

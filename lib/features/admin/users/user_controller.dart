@@ -13,6 +13,8 @@ import 'package:http/http.dart' as http;
 class UserController extends GetxController with UserApi, UserForm, UserTable, UserDialogs {
 
   final searchTextController = TextEditingController();
+  @override
+  UserController get controller => this;
 
 
   @override
@@ -22,6 +24,7 @@ class UserController extends GetxController with UserApi, UserForm, UserTable, U
   }
 
   // ======================= API =======================
+  @override
   Future<void> fetchUsers() async {
     try {
       isLoading.value = true;

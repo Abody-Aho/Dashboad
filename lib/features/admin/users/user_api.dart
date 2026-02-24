@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:dashbord2/features/admin/users/user_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -12,6 +11,8 @@ mixin UserApi on GetxController {
   var isLoading = false.obs;
   RxList<bool> selectedRows = <bool>[].obs;
 
+  Future<void> fetchUsers();
+
 
 
 
@@ -20,7 +21,7 @@ mixin UserApi on GetxController {
 // ======================= SEARCH =======================
   Future<void> searchQuery(String query) async {
     if (query.isEmpty) {
-      await (this as UserController).fetchUsers();
+      await fetchUsers();
       return;
     }
 
@@ -86,7 +87,7 @@ mixin UserApi on GetxController {
           colorText: Colors.white,
         );
 
-        await (this as UserController).fetchUsers();
+        await fetchUsers();
       } else {
         Get.snackbar(
           "خطأ",
@@ -166,7 +167,7 @@ mixin UserApi on GetxController {
         );
       }
 
-      await (this as UserController).fetchUsers();
+      await fetchUsers();
 
       Get.snackbar("تم", "تم تحديث حالة المستخدمين");
     } catch (e) {
@@ -195,7 +196,7 @@ mixin UserApi on GetxController {
         List.generate(filteredDataList.length, (_) => false),
       );
 
-      await (this as UserController).fetchUsers();
+      await fetchUsers();
 
       Get.snackbar("تم", "تم حذف المستخدمين المحددين");
     } catch (e) {

@@ -30,6 +30,7 @@ mixin UserForm on GetxController {
   var selectedRole = RxnString();
 
   void setRole(String role) => selectedRole.value = role;
+  Future<void> fetchUsers();
 
 
 
@@ -143,7 +144,7 @@ mixin UserForm on GetxController {
 
       if (response['status'] == 'success') {
         Get.back(); // إغلاق النافذة
-        await (this as UserController).fetchUsers();
+        await fetchUsers();
         Get.snackbar(
           "تم",
           "تمت إضافة $role بنجاح",
@@ -214,7 +215,7 @@ mixin UserForm on GetxController {
       final body = jsonDecode(responseBody);
 
       if (body["status"] == "success") {
-        await (this as UserController).fetchUsers();
+        await fetchUsers();
         Get.back(); // إغلاق الدايلوق
         Get.snackbar(
           "تم التعديل",
