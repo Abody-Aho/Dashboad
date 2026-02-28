@@ -42,7 +42,6 @@ mixin UserApi on GetxController {
                 'id': user['id']?.toString() ?? '',
                 'role_raw': user['role']?.toString() ?? '',
                 'name': user['name']?.toString() ?? '',
-
                 'Column1': user['name']?.toString() ?? '',
                 'Column2': user['email']?.toString() ?? '-',
                 'Column3': user['phone']?.toString() ?? '-',

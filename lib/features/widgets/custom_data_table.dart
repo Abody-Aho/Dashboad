@@ -75,7 +75,7 @@ class CustomDataTable extends StatelessWidget {
             sortColumnIndex: controller.sortColumnIndex.value,
             columns: controller.tableColumns,
             source: GenericDataSource(
-              controller.filteredDataList,
+              controller.filteredDataList.toList(),
               controller.selectedRows,
               controller, // أرسلنا الكنترولر هنا
             ),
@@ -86,9 +86,9 @@ class CustomDataTable extends StatelessWidget {
   }
 }
 
-/// مصدر البيانات العام لأي جدول
-class GenericDataSource extends DataTableSource {
-  final List<Map<String, dynamic>> dataList; // استخدم dynamic لدعم bool
+// مصدر البيانات العام لأي جدول
+class GenericDataSource<T> extends DataTableSource {
+  final List<T> dataList;
   final RxList<bool> selectedRows;
   final dynamic controller;
 
@@ -97,6 +97,7 @@ class GenericDataSource extends DataTableSource {
   @override
   DataRow? getRow(int index) {
     final data = dataList[index];
+
     return DataRow2(
       selected: selectedRows[index],
       onSelectChanged: (value) {

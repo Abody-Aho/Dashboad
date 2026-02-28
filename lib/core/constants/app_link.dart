@@ -14,6 +14,12 @@ class AppLink {
   static const String createAccount = '${server}admin/user_management/create_account.php';
   static const String updateAccount = '${server}admin/user_management/update_account.php';
   static const String ordersView = '${server}admin/orders/list.php';
+  static const String itemsAdminView = '${server}admin/items/get_items_admin.php';
+  static const String addItem = '${server}admin/items/add.php';
+  static const String itemsSearch = '${server}admin/items/search_items.php';
+  static const String supersView = '${server}admin/items/supermarketview.php';
+  static const String categoriesBySuper = '${server}admin/items/categoriesby_super.php';
+  static const String categoriesAll = '${server}admin/items/categoriesallview.php';
 
 
 

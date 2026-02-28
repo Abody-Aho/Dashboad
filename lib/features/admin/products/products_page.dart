@@ -156,7 +156,7 @@ class ProductsPage extends StatelessWidget {
                                   controller: controller,
                                   addButtonText: 'add_product'.tr,
                                   onAddPressed: () {
-                                    print("Add product pressed");
+                                    controller.showAddProductDialog();
                                   },
                                 ),
                                 Container(

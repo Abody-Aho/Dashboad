@@ -7,8 +7,8 @@ import '../../../core/constants/app_link.dart';
 
 class OrdersController extends GetxController {
 
-  var dataList = <Map<String, String>>[].obs;
-  var filteredDataList = <Map<String, String>>[].obs;
+  var dataList = <Map<String, dynamic>>[].obs;
+  var filteredDataList = <Map<String, dynamic>>[].obs;
 
   RxList<bool> selectedRows = <bool>[].obs;
   RxBool isLoading = true.obs;
@@ -42,18 +42,18 @@ class OrdersController extends GetxController {
         final List orders = body['data'];
 
         dataList.assignAll(
-          orders.map<Map<String, String>>((o) {
+          orders.map<Map<String, dynamic>>((order) {
             return {
-              'id': o['id'].toString(),
+              'id': order['id'].toString(),
 
-              'Column1': o['id'].toString(),
-              'Column2': o['users'] ?? '-',
-              'Column3': o['supermarket'] ?? '-',
-              'Column4': o['driver'] ?? '-',
-              'Column5': o['total_amount'] ?? '0',
-              'Column6': o['payment_method'] ?? '',
-              'Column7': o['status'] ?? '',
-              'Column8': _formatDate(o['created_at']),
+              'Column1': order['id'].toString(),
+              'Column2': order['users'] ?? '-',
+              'Column3': order['supermarket'] ?? '-',
+              'Column4': order['driver'] ?? '-',
+              'Column5': order['total_amount'].toString(),
+              'Column6': _mapPayment(order['payment_method']),
+              'Column7': _mapStatus(order['status']),
+              'Column8': _formatDate(order['created_at']),
             };
           }).toList(),
         );
@@ -64,9 +64,28 @@ class OrdersController extends GetxController {
         );
       }
     } catch (e) {
-      Get.snackbar("Error", "Failed to load orders");
+      Get.snackbar("Error", e.toString());
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  String _mapStatus(dynamic s) {
+    switch (s.toString()) {
+      case "0": return "pending";
+      case "1": return "accepted";
+      case "2": return "on_the_way";
+      case "3": return "delivered";
+      case "4": return "cancelled";
+      default: return "-";
+    }
+  }
+
+  String _mapPayment(dynamic p) {
+    switch (p.toString()) {
+      case "0": return "cash";
+      case "1": return "card";
+      default: return "-";
     }
   }
 
