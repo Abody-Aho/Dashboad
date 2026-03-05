@@ -20,6 +20,12 @@ class AppLink {
   static const String supersView = '${server}admin/items/supermarketview.php';
   static const String categoriesBySuper = '${server}admin/items/categoriesby_super.php';
   static const String categoriesAll = '${server}admin/items/categoriesallview.php';
+  static const String addCategoryAll = '${server}admin/items/add_category_all.php';
+  static const String addCategoryPrivate = '${server}admin/items/add_category_private.php';
+  static const String updateCategoryAll = '${server}admin/items/update_category_all.php';
+  static const String updateCategoryPrivate = '${server}admin/items/update_category_private.php';
+  static const String imageItems = 'http://46.101.225.45/flymarket/app/customer/upload/items/';
+  static const String imageCategories = 'http://46.101.225.45/flymarket/app/customer/upload/categories/';
 
 
 

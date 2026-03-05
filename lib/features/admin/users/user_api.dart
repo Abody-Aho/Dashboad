@@ -13,11 +13,6 @@ mixin UserApi on GetxController {
 
   Future<void> fetchUsers();
 
-
-
-
-
-
 // ======================= SEARCH =======================
   Future<void> searchQuery(String query) async {
     if (query.isEmpty) {

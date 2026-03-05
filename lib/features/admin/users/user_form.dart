@@ -1,12 +1,10 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:dashbord2/features/admin/users/user_controller.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-
 import '../../../core/constants/app_link.dart';
 import '../../../core/services/api_service.dart';
 import '../../../data/models/user_model.dart';

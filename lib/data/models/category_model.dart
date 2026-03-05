@@ -2,11 +2,13 @@ class CategoryModel {
   final int id;
   final String name;
   final String nameAr;
+  final String image;
 
   CategoryModel({
     required this.id,
     required this.name,
     required this.nameAr,
+    required this.image,
   });
 
   factory CategoryModel.fromJson(Map<String, dynamic> json) {
@@ -14,6 +16,7 @@ class CategoryModel {
       id: int.tryParse(json['categories_id'].toString()) ?? 0,
       name: json['categories_name'] ?? '',
       nameAr: json['categories_name_ar'] ?? '',
+      image: json['categories_image'] ?? '',
     );
   }
 

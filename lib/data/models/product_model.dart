@@ -12,6 +12,7 @@ class ProductModel {
   final int count;
   final int sales;
   final String date;
+  final String image;
 
   ProductModel({
     required this.nameAr,
@@ -24,6 +25,7 @@ class ProductModel {
     required this.count,
     required this.sales,
     required this.date,
+    required this.image,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
@@ -45,6 +47,7 @@ class ProductModel {
       sales: int.tryParse(json["sales"].toString()) ?? 0,
 
       date: json["itmes_date"].toString().split(" ").first,
+      image: json['itmes_image'] ?? '',
     );
   }
 }

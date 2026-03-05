@@ -139,7 +139,18 @@ class ProductsPage extends StatelessWidget {
                                     controller: controller,
                                     addButtonText: 'add_product'.tr,
                                     onAddPressed: () {
-                                      print("Add product pressed");
+                                      controller.showAddProductDialog();
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
+                                Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 12),
+                                  child: CustomBottom(
+                                    controller: controller,
+                                    addButtonText: 'أضافة فئة'.tr,
+                                    onAddPressed: () {
+                                      controller.showCategoryDialog();
                                     },
                                   ),
                                 ),
@@ -152,12 +163,24 @@ class ProductsPage extends StatelessWidget {
                             return Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                CustomBottom(
-                                  controller: controller,
-                                  addButtonText: 'add_product'.tr,
-                                  onAddPressed: () {
-                                    controller.showAddProductDialog();
-                                  },
+                                Column(
+                                  children: [
+                                    CustomBottom(
+                                      controller: controller,
+                                      addButtonText: 'add_product'.tr,
+                                      onAddPressed: () {
+                                        controller.showAddProductDialog();
+                                      },
+                                    ),
+                                    const SizedBox(height: 20),
+                                    CustomBottom(
+                                      controller: controller,
+                                      addButtonText: 'أضافة فئة'.tr,
+                                      onAddPressed: () {
+                                        controller.showCategoryDialog();
+                                      },
+                                    ),
+                                  ],
                                 ),
                                 Container(
                                   margin: EdgeInsets.only(
@@ -193,7 +216,7 @@ class ProductsPage extends StatelessWidget {
 
                       const SizedBox(height: 15),
 
-                      // جدول المستخدمين
+                      // جدول المنتجات
                       SizedBox(
                         height: 500,
                         child: CustomDataTable(controller: controller),
