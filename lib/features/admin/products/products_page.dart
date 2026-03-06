@@ -139,6 +139,7 @@ class ProductsPage extends StatelessWidget {
                                     controller: controller,
                                     addButtonText: 'add_product'.tr,
                                     onAddPressed: () {
+                                      controller.resetDialogState();
                                       controller.showAddProductDialog();
                                     },
                                   ),
@@ -169,6 +170,7 @@ class ProductsPage extends StatelessWidget {
                                       controller: controller,
                                       addButtonText: 'add_product'.tr,
                                       onAddPressed: () {
+                                        controller.resetDialogState();
                                         controller.showAddProductDialog();
                                       },
                                     ),

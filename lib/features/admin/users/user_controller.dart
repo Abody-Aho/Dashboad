@@ -114,5 +114,40 @@ class UserController extends GetxController with UserApi, UserForm, UserTable, U
     );
   }
 
+  void resetUserDialogState() {
+
+    /// ====== TEXT CONTROLLERS ======
+    nameController.clear();
+    nameArController.clear();
+    emailController.clear();
+    passwordController.clear();
+    confirmPasswordController.clear();
+    phoneController.clear();
+    locationController.clear();
+    timeOpenController.clear();
+    vehicleController.clear();
+
+    /// ====== ROLE ======
+    selectedRole.value = null;
+
+    /// ====== IMAGE ======
+    imageBytes = null;
+    imageName = null;
+
+    /// ====== PASSWORD VISIBILITY ======
+    isPasswordVisible.value = false;
+    isConfirmPasswordVisible.value = false;
+
+    /// ====== SEARCH ======
+    searchTextController.clear();
+
+    /// ====== TABLE SELECTION ======
+    selectedRows.assignAll(
+      List.generate(filteredDataList.length, (_) => false),
+    );
+
+    update(); // لتحديث GetBuilder
+  }
+
 
 }

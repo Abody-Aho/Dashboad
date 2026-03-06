@@ -60,6 +60,7 @@ class ProductsController extends GetxController with ProductApi, ProductDialogs,
   Rx<Uint8List?> categoryImageBytes = Rx<Uint8List?>(null);
   String categoryImageName = "";
   RxString categoryOldImage = "".obs;
+  RxString itemsOldImage = "".obs;
   // عند إنشاء الكنترولر يتم تحميل البيانات مباشرة
   @override
   void onInit() {
@@ -94,6 +95,42 @@ class ProductsController extends GetxController with ProductApi, ProductDialogs,
     selectedCategoryAllId.value = null;
     imageBytes.value = null;
     imageName = "";
+
+  }
+  void resetDialogState() {
+
+    /// ----------- Product -----------
+    nameArController.clear();
+    nameEnController.clear();
+    descArController.clear();
+    descEnController.clear();
+    priceController.clear();
+    countController.clear();
+    discountController.clear();
+    itemsOldImage.value = "";
+
+    selectedSuperId.value = null;
+    selectedCategoryId.value = null;
+    selectedCategoryAllId.value = null;
+
+    imageBytes.value = null;
+    imageName = "";
+    imagePath.value = "";
+
+    /// ----------- Category -----------
+    catNameArController.clear();
+    catNameEnController.clear();
+
+    categoryType.value = "general";
+    categoryImageBytes.value = null;
+    categoryImageName = "";
+    categoryOldImage.value = "";
+
+    isEditCategory.value = false;
+    editingCategoryId.value = null;
+
+    /// ----------- Lists -----------
+    categories.clear();
 
   }
 

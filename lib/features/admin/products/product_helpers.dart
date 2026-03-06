@@ -12,7 +12,10 @@ mixin ProductHelpers on GetxController {
   Widget buildSuperDropdown() {
     return Obx(
       () => DropdownButtonFormField<int>(
-        initialValue: controller.selectedSuperId.value,
+        initialValue: controller.supers
+            .any((e) => e.id == controller.selectedSuperId.value)
+            ? controller.selectedSuperId.value
+            : null,
         decoration: greenDecoration("اختر السوبرماركت"),
         items: controller.supers.map((s) {
           return DropdownMenuItem<int>(value: s.id, child: Text(s.nameAr));
@@ -106,7 +109,10 @@ mixin ProductHelpers on GetxController {
   Widget buildCategoryDropdown() {
     return Obx(
       () => DropdownButtonFormField<int>(
-        initialValue: controller.selectedCategoryId.value,
+        initialValue: controller.categories
+            .any((e) => e.id == controller.selectedCategoryId.value)
+            ? controller.selectedCategoryId.value
+            : null,
         decoration: greenDecoration("الفئة الخاصة"),
         items: controller.categories.map((c) {
           return DropdownMenuItem<int>(value: c.id, child: Text(c.nameAr));
@@ -122,7 +128,10 @@ mixin ProductHelpers on GetxController {
   Widget buildCategoryAllDropdown() {
     return Obx(
       () => DropdownButtonFormField<int>(
-        initialValue: controller.selectedCategoryAllId.value,
+        initialValue: controller.categoriesAll
+            .any((e) => e.id == controller.selectedCategoryAllId.value)
+            ? controller.selectedCategoryAllId.value
+            : null,
         decoration: greenDecoration("الفئة العامة"),
         items: controller.categoriesAll.map((c) {
           return DropdownMenuItem<int>(value: c.id, child: Text(c.nameAr));
@@ -168,29 +177,43 @@ mixin ProductHelpers on GetxController {
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: Constants.greyLight),
               ),
-              child: controller.imageBytes.value == null
-                  ? const Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.cloud_upload,
-                            size: 40,
-                            color: Constants.grey,
-                          ),
-                          SizedBox(height: 8),
-                          Text("اضغط لاختيار صورة"),
-                        ],
-                      ),
-                    )
-                  : ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.memory(
-                        controller.imageBytes.value!,
-                        fit: BoxFit.contain,
-                        width: double.infinity,
-                      ),
+              child: controller.imageBytes.value != null
+              /// إذا تم اختيار صورة جديدة
+                  ? ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.memory(
+                  controller.imageBytes.value!,
+                  fit: BoxFit.contain,
+                  width: double.infinity,
+                ),
+              )
+
+              /// إذا توجد صورة قديمة للمنتج
+                  : controller.itemsOldImage.value.isNotEmpty
+                  ? ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.network(
+                  "${AppLink.imageItems}/${controller.itemsOldImage.value}",
+                  fit: BoxFit.contain,
+                  width: double.infinity,
+                ),
+              )
+
+              /// إذا لا توجد أي صورة
+                  : const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.cloud_upload,
+                      size: 40,
+                      color: Constants.grey,
                     ),
+                    SizedBox(height: 8),
+                    Text("اضغط لاختيار صورة"),
+                  ],
+                ),
+              ),
             ),
           ),
         ],
@@ -210,6 +233,42 @@ mixin ProductHelpers on GetxController {
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: const BorderSide(color: Constants.primary, width: 2),
+      ),
+    );
+  }
+
+  Widget buildInfo(String title, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Constants.greyLight),
+        ),
+
+        child: Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
+          runSpacing: 6,
+          children: [
+
+            Text(
+              title,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            Text(
+              value,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+
+          ],
+        ),
       ),
     );
   }

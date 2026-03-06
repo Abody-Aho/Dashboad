@@ -184,7 +184,7 @@ mixin ProductApi on GetxController {
         imagePath: controller.imagePath.value,
       );
 
-      /// إنشاء الطلب
+      // إنشاء الطلب
       var request = http.MultipartRequest("POST", Uri.parse(AppLink.addItem));
 
       // إضافة الحقول
@@ -228,7 +228,6 @@ mixin ProductApi on GetxController {
           "تمت إضافة المنتج بنجاح",
           backgroundColor: Constants.success,
           colorText: Colors.white,
-          snackPosition: SnackPosition.BOTTOM,
           borderRadius: 12,
           margin: const EdgeInsets.all(15),
         );
@@ -329,6 +328,154 @@ mixin ProductApi on GetxController {
       );
     } finally {
       controller.isAddingCategory.value = false;
+    }
+  }
+
+  Future<void> submitUpdateProduct(int id) async {
+
+    if (!controller.formKey.currentState!.validate()) return;
+
+    controller.isAdding.value = true;
+
+    try {
+
+      var request =
+      http.MultipartRequest("POST", Uri.parse(AppLink.updateItem));
+
+      request.fields.addAll({
+        "id": id.toString(),
+        "name_ar": controller.nameArController.text.trim(),
+        "name_en": controller.nameEnController.text.trim(),
+        "desc_ar": controller.descArController.text.trim(),
+        "desc_en": controller.descEnController.text.trim(),
+        "price": controller.priceController.text.trim(),
+        "count": controller.countController.text.trim(),
+        "discount": controller.discountController.text.trim(),
+        "cat": controller.selectedCategoryId.value.toString(),
+        "cat_all": controller.selectedCategoryAllId.value.toString(),
+        "super": controller.selectedSuperId.value.toString(),
+      });
+
+      // إضافة الصورة فقط إذا تم تغييرها
+      if (controller.imageBytes.value != null) {
+        request.files.add(
+          http.MultipartFile.fromBytes(
+            "image",
+            controller.imageBytes.value!,
+            filename: controller.imageName,
+          ),
+        );
+      }
+
+      final response = await request.send();
+      final responseData = await http.Response.fromStream(response);
+
+      final body = jsonDecode(responseData.body);
+
+      if (body["status"] == "success") {
+
+        await controller.fetchProducts();
+
+        Get.back();
+
+        Get.snackbar(
+          "نجاح",
+          "تم تحديث المنتج بنجاح",
+          backgroundColor: Constants.success,
+          colorText: Colors.white,
+        );
+
+      } else {
+
+        Get.snackbar(
+          "خطأ",
+          "فشل تحديث المنتج",
+          backgroundColor: Constants.error,
+          colorText: Colors.white,
+        );
+      }
+
+    } catch (e) {
+
+      Get.snackbar(
+        "خطأ",
+        "حدث خطأ أثناء الاتصال بالسيرفر",
+        backgroundColor: Constants.error,
+        colorText: Colors.white,
+      );
+
+    } finally {
+
+      controller.isAdding.value = false;
+    }
+  }
+
+  Future<void> deleteProduct(int id) async {
+
+    try {
+
+      final response = await http.post(
+        Uri.parse(AppLink.deleteItem),
+        body: {"id": id.toString()},
+      );
+
+      if (response.statusCode != 200) {
+        Get.snackbar(
+          "خطأ",
+          "فشل الاتصال بالسيرفر",
+          backgroundColor: Constants.error,
+          colorText: Colors.white,
+        );
+        return;
+      }
+
+      final body = jsonDecode(response.body);
+
+      /// نجاح الحذف
+      if (body["status"] == "success") {
+
+        await controller.fetchProducts();
+
+        Get.snackbar(
+          "تم الحذف",
+          "تم حذف المنتج بنجاح",
+          backgroundColor: Constants.success,
+          colorText: Colors.white,
+          icon: const Icon(Icons.check_circle, color: Colors.white),
+          borderRadius: 10,
+          margin: const EdgeInsets.all(15),
+        );
+
+      }
+
+      /// فشل من السيرفر
+      else {
+
+        Get.snackbar(
+          "فشل الحذف",
+          body["message"] ?? "لم يتم حذف المنتج",
+          backgroundColor: Constants.error,
+          colorText: Colors.white,
+          icon: const Icon(Icons.error, color: Colors.white),
+          borderRadius: 10,
+          margin: const EdgeInsets.all(15),
+        );
+      }
+
+    }
+
+    /// خطأ اتصال
+    catch (e) {
+
+      Get.snackbar(
+        "خطأ",
+        "حدث خطأ أثناء الاتصال بالسيرفر",
+        backgroundColor: Colors.orange,
+        colorText: Colors.white,
+        icon: const Icon(Icons.wifi_off, color: Colors.white),
+        borderRadius: 10,
+        margin: const EdgeInsets.all(15),
+      );
     }
   }
 }

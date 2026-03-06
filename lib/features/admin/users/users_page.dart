@@ -135,6 +135,7 @@ class UsersPage extends StatelessWidget {
                                     controller: controller,
                                     addButtonText: 'add_users'.tr,
                                     onAddPressed: () {
+                                      controller.resetUserDialogState();
                                       showCreateAccountDialog(
                                         context: context,
                                         formKey: formKey,
@@ -155,6 +156,7 @@ class UsersPage extends StatelessWidget {
                                   controller: controller,
                                   addButtonText: 'add_users'.tr,
                                   onAddPressed: () {
+                                    controller.resetUserDialogState();
                                     showCreateAccountDialog(
                                       context: context,
                                       formKey: formKey,

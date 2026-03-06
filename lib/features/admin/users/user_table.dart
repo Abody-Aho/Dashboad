@@ -4,8 +4,10 @@ import 'package:get/get.dart';
 
 import '../../../core/constants/app_link.dart';
 import '../../../data/models/user_model.dart';
+import '../../widgets/app_delete_dialog.dart';
 
 mixin UserTable on GetxController {
+  UserController get controller;
 
   RxList<bool> selectedRows = <bool>[].obs;
   RxInt sortColumnIndex = 0.obs;
@@ -116,7 +118,23 @@ mixin UserTable on GetxController {
                 icon: const Icon(Icons.delete, color: Colors.red, size: 25),
                 padding: EdgeInsets.zero,
                 onPressed: () {
-                  (this as UserController).showDeleteDialog(data);
+                  AppDeleteDialog.show(
+
+                    title: "حذف المستخدم",
+
+                    message: "هل تريد حذف المستخدم",
+
+                    itemName: data['name'],
+
+                    onConfirm: () {
+
+                      controller.deleteUserFromServer(
+                        id: data['id'],
+                        role: data['role_raw'],
+                      );
+
+                    },
+                  );;
                 },
                 tooltip: 'Delete'.tr,
               ),

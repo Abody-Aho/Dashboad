@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import '../../../core/constants/app_link.dart';
 import '../../../data/models/product_model.dart';
+import '../../widgets/app_delete_dialog.dart';
 
 mixin ProductTable on GetxController {
   ProductsController get controller;
@@ -26,7 +27,6 @@ mixin ProductTable on GetxController {
                 .map<ProductModel>((item) => ProductModel.fromJson(item))
                 .toList(),
           );
-
           controller.filteredDataList.assignAll(controller.dataList);
           controller.selectedRows.assignAll(
             List.generate(controller.filteredDataList.length, (_) => false),
@@ -88,7 +88,7 @@ mixin ProductTable on GetxController {
                     size: 25,
                   ),
                   padding: EdgeInsets.zero,
-                  onPressed: () => print('View '),
+                  onPressed: () => controller.showProductDetails(data),
                   tooltip: 'view'.tr,
                 ),
               ),
@@ -96,9 +96,10 @@ mixin ProductTable on GetxController {
                 child: IconButton(
                   icon: const Icon(Icons.edit, color: Colors.blue, size: 25),
                   padding: EdgeInsets.zero,
-                  onPressed: () => print(
-                    "${AppLink.imageCategories}${controller.categoryOldImage.value}",
-                  ),
+                  onPressed: ()  {
+                    controller.resetDialogState();
+                    controller.showEditProductDialog(data);
+                  },
                   tooltip: 'edit'.tr,
                 ),
               ),
@@ -106,7 +107,21 @@ mixin ProductTable on GetxController {
                 child: IconButton(
                   icon: const Icon(Icons.delete, color: Colors.red, size: 25),
                   padding: EdgeInsets.zero,
-                  onPressed: () => print('Delete'),
+                  onPressed: () {
+                    controller.resetDialogState();
+                    AppDeleteDialog.show(
+
+                      title: "حذف المنتج",
+
+                      message: "هل تريد حذف المنتج التالي؟",
+
+                      itemName: data.nameAr,
+
+                      onConfirm: () {
+                        controller.deleteProduct(data.id);
+                      },
+                    );
+                  },
                   tooltip: 'delete'.tr,
                 ),
               ),
