@@ -474,8 +474,6 @@ mixin ProductDialogs on GetxController {
     controller.itemsOldImage.value = product.image;
     controller.imageBytes.value = null;
     controller.imageName = "";
-    print("product.descAr : ${product.descAr}");
-    print("product.descEn : ${product.descEn}");
     Get.dialog(
       Dialog(
         backgroundColor: Constants.white,

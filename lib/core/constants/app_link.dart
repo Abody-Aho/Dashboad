@@ -28,6 +28,9 @@ class AppLink {
   static const String imageCategories = 'http://46.101.225.45/flymarket/app/customer/upload/categories/';
   static const String updateItem = '${server}admin/items/update_item.php';
   static const String deleteItem = "${server}admin/items/delete_item.php";
+  static const String updateStatus = "${server}admin/orders/update_order_status.php";
+  static const String deleteOrder = "${server}admin/orders/delete_order.php";
+  static const String orderDetails = "${server}admin/orders/orders_items_view.php";
 
 
 }

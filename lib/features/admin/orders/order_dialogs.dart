@@ -1,0 +1,372 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'orders_controller.dart';
+
+mixin OrderDialogs on GetxController{
+  OrdersController get controller;
+
+  void showStatusDialog(
+      int orderId,
+      int currentStatus,
+      OrdersController controller,
+      ) {
+
+    int selectedStatus = currentStatus;
+
+    final statuses = [
+      {"id": 0, "title": "Pending", "color": Colors.orange, "icon": Icons.schedule},
+      {"id": 1, "title": "Accepted", "color": Colors.blue, "icon": Icons.check_circle},
+      {"id": 2, "title": "On Delivery", "color": Colors.deepPurple, "icon": Icons.delivery_dining},
+      {"id": 3, "title": "Delivered", "color": Colors.green, "icon": Icons.task_alt},
+      {"id": 4, "title": "Cancelled", "color": Colors.red, "icon": Icons.cancel},
+    ];
+
+    Get.dialog(
+
+      Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxWidth: 520,
+          ),
+
+          child: Material(
+            borderRadius: BorderRadius.circular(16),
+
+            child: StatefulBuilder(
+              builder: (context, setState) {
+                return Padding(
+                  padding: const EdgeInsets.all(24),
+
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text(
+                        "تغيير حالة الطلب",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      const SizedBox(height: 20),
+                      Wrap(
+                        spacing: 10,
+                        runSpacing: 10,
+                        children: statuses.map((status) {
+
+                          bool isSelected = selectedStatus == status["id"];
+
+                          return GestureDetector(
+
+                            onTap: () {
+                              setState(() {
+                                selectedStatus = status["id"] as int;
+                              });
+                            },
+
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+
+                              width: 150,
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 14, horizontal: 10),
+
+                              decoration: BoxDecoration(
+
+                                color: isSelected
+                                    ? (status["color"] as Color).withValues(alpha: .15)
+                                    : Colors.grey.withValues(alpha: .08),
+
+                                borderRadius: BorderRadius.circular(12),
+
+                                border: Border.all(
+                                  color: isSelected
+                                      ? status["color"] as Color
+                                      : Colors.transparent,
+                                  width: 2,
+                                ),
+                              ),
+
+                              child: Column(
+                                children: [
+
+                                  Icon(
+                                    status["icon"] as IconData,
+                                    color: status["color"] as Color,
+                                    size: 28,
+                                  ),
+
+                                  const SizedBox(height: 6),
+
+                                  Text(
+                                    status["title"] as String,
+                                    style: TextStyle(
+                                      color: status["color"] as Color,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+
+                        }).toList(),
+                      ),
+                      const SizedBox(height: 25),
+                      Row(
+                        children: [
+
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: () => Get.back(),
+                              child: const Text("إلغاء"),
+                            ),
+                          ),
+
+                          const SizedBox(width: 10),
+
+                          Expanded(
+                            child: ElevatedButton(
+
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                              ),
+
+                              onPressed: () {
+
+                                controller.updateOrderStatus(
+                                    orderId,
+                                    selectedStatus
+                                );
+
+                                Get.back();
+
+                              },
+
+                              child: const Text(
+                                "تحديث الحالة",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      ),
+
+      barrierDismissible: false,
+    );
+  }
+
+  void showOrderDetailsDialog({
+    required Map order,
+    required List items,
+  }) {
+
+    Get.dialog(
+
+      Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxWidth: 750,
+          ),
+
+          child: Material(
+            borderRadius: BorderRadius.circular(16),
+
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+
+                  /// HEADER
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+
+                      Row(
+                        children: [
+
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.green.withValues(alpha: .1),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.receipt_long,
+                              color: Colors.green,
+                            ),
+                          ),
+
+                          const SizedBox(width: 10),
+
+                          Text(
+                            "تفاصيل الطلب #${order['id']}",
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+
+                        ],
+                      ),
+
+                      IconButton(
+                        onPressed: () => Get.back(),
+                        icon: const Icon(Icons.close),
+                      )
+
+                    ],
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  /// ORDER INFO
+                  Container(
+                    padding: const EdgeInsets.all(16),
+
+                    decoration: BoxDecoration(
+                      color: Colors.grey.withValues(alpha: .05),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+
+                    child: Column(
+                      children: [
+
+                        controller.infoRow("العميل", order['Column2']),
+                        controller.infoRow("السوبرماركت", order['Column3']),
+                        controller.infoRow("المندوب", order['Column4']),
+                        controller.infoRow("الدفع", order['Column6']),
+                        controller.infoRow("التاريخ", order['Column8']),
+
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  /// ITEMS TABLE
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey.shade200),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+
+                    child: DataTable(
+
+                      columns: const [
+
+                        DataColumn(label: Text("المنتج")),
+                        DataColumn(label: Text("الكمية")),
+                        DataColumn(label: Text("السعر")),
+                        DataColumn(label: Text("المجموع")),
+
+                      ],
+
+                      rows: items.map<DataRow>((item) {
+
+                        return DataRow(
+                          cells: [
+
+                            DataCell(Text(item['itmes_name_ar'])),
+
+                            DataCell(
+                              Text(item['order_items_quantity'].toString()),
+                            ),
+
+                            DataCell(
+                              Text(item['order_items_price'].toString()),
+                            ),
+
+                            DataCell(
+                              Text(item['order_items_total'].toString()),
+                            ),
+
+                          ],
+                        );
+
+                      }).toList(),
+
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  /// TOTAL
+                  Container(
+                    padding: const EdgeInsets.all(16),
+
+                    decoration: BoxDecoration(
+                      color: Colors.green.withValues(alpha: .08),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+
+                        const Text(
+                          "المجموع الكلي",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+
+                        Text(
+                          "${order['Column5']} ر.ي",
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.green,
+                          ),
+                        ),
+
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  /// CLOSE BUTTON
+                  Align(
+                    alignment: Alignment.centerLeft,
+
+                    child: ElevatedButton.icon(
+
+                      icon: const Icon(Icons.check,color: Colors.white,),
+
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                      ),
+
+                      onPressed: () => Get.back(),
+
+                      label: const Text(
+                        "إغلاق",
+                        style: TextStyle(color: Colors.white),
+                      ),
+
+                    ),
+                  )
+
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+
+      barrierDismissible: true,
+    );
+  }
+
+}

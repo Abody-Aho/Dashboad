@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/services/lang_service.dart';
+import '../admin/supermarket_chat/admin_chat_page.dart';
 
 class AppBarWidget extends StatefulWidget {
   const AppBarWidget({super.key});
@@ -117,7 +118,9 @@ class _AppBarWidgetState extends State<AppBarWidget> {
               IconButton(
                 color: Constants.primary,
                 iconSize: 28,
-                onPressed: () {},
+                onPressed: () {
+                  Get.to(() => AdminChatPage());
+                },
                 icon: const Icon(Icons.notifications_none_outlined),
               ),
               Positioned(

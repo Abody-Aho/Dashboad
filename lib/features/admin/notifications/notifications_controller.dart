@@ -10,6 +10,7 @@ class NotificationsController extends GetxController {
   RxInt sortColumnIndex = 0.obs; // العمود المفعل للفرز
   RxBool sortAscending = true.obs; // اتجاه الفرز (تصاعدي / تنازلي)
   final searchTextController = TextEditingController(); // متحكم حقل البحث
+  var isLoading = false.obs;
 
   /// عند إنشاء الكنترولر يتم تحميل البيانات مباشرة
   @override
@@ -134,6 +135,7 @@ class NotificationsController extends GetxController {
 
   /// تحميل بيانات تجريبية للمستخدمين
   void fetchNotifications() {
+    isLoading.value = true;
     final types = [
       'all_types'.tr,
       'offer'.tr,
@@ -172,6 +174,7 @@ class NotificationsController extends GetxController {
     selectedRows.assignAll(
       List.generate(filteredDataList.length, (index) => false),
     );
+    isLoading.value = false;
   }
 
   final selectedValue = 'all_types'.obs;

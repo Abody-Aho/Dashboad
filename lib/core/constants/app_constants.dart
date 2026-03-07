@@ -24,6 +24,30 @@ class Constants {
   static const Color grey = Color(0xFF9E9E9E);
   static const Color greyDark = Color(0xFF616161);
 
+  // خلفية الشات
+  static const Color waChatBackground = Color(0xFF121B16);
+
+// خلفية السايدبار
+  static const Color waSidebar = Color(0xFF16231D);
+
+// الرسالة الخاصة بالأدمن
+  static const Color waBubbleMe = Color(0xFF1F7A53);
+
+// الرسالة القادمة
+  static const Color waBubbleOther = Color(0xFF1E2A24);
+
+// خلفية حقل الإدخال
+  static const Color waInput = Color(0xFF16231D);
+
+// لون النص الثانوي
+  static const Color waTextSecondary = Color(0xFF8FA39A);
+
+// لون الحدود
+  static const Color waBorder = Color(0xFF22332B);
+
+// لون النص الأساسي
+  static const Color waText = Color(0xFFE6F2EC);
+
   //  ألوان للخلفيات الثانوية أو التظليل
   static const Color backgroundLight = Color(0xFFF9FFF9); // أفتح من background
   static const Color backgroundDark = Color(0xFFE8F5E9);  // أخضر فاتح جدًا
@@ -74,4 +98,6 @@ class AppColors {
   static const Color contentColorPink = Color(0xFFFF3AF2);
   static const Color contentColorRed = Color(0xFFE80054);
   static const Color contentColorCyan = Color(0xFF50E4FF);
+
+
 }

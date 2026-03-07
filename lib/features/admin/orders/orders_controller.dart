@@ -1,11 +1,16 @@
 import 'dart:convert';
+import 'package:dashbord2/features/admin/orders/order_dialogs.dart';
+import 'package:dashbord2/features/admin/orders/order_helpers.dart';
+import 'package:dashbord2/features/admin/orders/order_table.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../core/constants/app_link.dart';
+import '../../widgets/app_delete_dialog.dart';
+import 'order_api.dart';
 
-class OrdersController extends GetxController {
+class OrdersController extends GetxController with OrderApi, OrderDialogs, OrderTable, OrderHelpers{
 
   var dataList = <Map<String, dynamic>>[].obs;
   var filteredDataList = <Map<String, dynamic>>[].obs;
@@ -46,14 +51,16 @@ class OrdersController extends GetxController {
             return {
               'id': order['id'].toString(),
 
+              'status_raw': order['orders_status'],
+
               'Column1': order['id'].toString(),
-              'Column2': order['users'] ?? '-',
+              'Column2': order['user'] ?? '-',
               'Column3': order['supermarket'] ?? '-',
               'Column4': order['driver'] ?? '-',
-              'Column5': order['total_amount'].toString(),
-              'Column6': _mapPayment(order['payment_method']),
-              'Column7': _mapStatus(order['status']),
-              'Column8': _formatDate(order['created_at']),
+              'Column5': order['orders_totalprice'].toString(),
+              'Column6': _mapPayment(order['orders_paymentmethod']),
+              'Column7': _mapStatus(order['orders_status']),
+              'Column8': _formatDate(order['orders_datetime']),
             };
           }).toList(),
         );
@@ -169,21 +176,51 @@ class OrdersController extends GetxController {
             Flexible(
               child: IconButton(
                 icon: const Icon(Icons.visibility,color: Colors.grey,),
-                onPressed: () => print("view ${data['id']}"),
+                onPressed: () async{
+                  var items = await controller.getOrderItems(
+                      int.parse(data['id'])
+                  );
+                  print("items = $items"); // أضف هذا
+
+                  controller.showOrderDetailsDialog(
+                    order: data,
+                    items: items,
+                  );
+                },
                 padding: EdgeInsets.zero,
               ),
             ),
             Flexible(
               child: IconButton(
                 icon: const Icon(Icons.delivery_dining),
-                onPressed: () => print("assign driver ${data['id']}"),
+                onPressed: () {
+                  showStatusDialog(
+                    int.parse(data['id']),
+                    int.parse(data['status_raw'].toString()),
+                    controller,
+                  );
+                },
                 padding: EdgeInsets.zero,
               ),
             ),
             Flexible(
               child: IconButton(
                 icon: const Icon(Icons.close,color: Colors.red,),
-                onPressed: () => print("assign driver ${data['id']}"),
+                onPressed: () {
+                  AppDeleteDialog.show(
+                    title: "حذف الطلب",
+                    message: "هل أنت متأكد من حذف الطلب رقم",
+                    itemName: "#${data['id']}",
+                    icon: Icons.delete_outline,
+                    color: Colors.red,
+                    onConfirm: () {
+                      controller.deleteOrder(
+                        int.parse(data['id']),
+                      );
+                    },
+
+                  );
+                },
                 padding: EdgeInsets.zero,
               ),
             ),
@@ -263,4 +300,7 @@ class OrdersController extends GetxController {
   void changeValue(String newValue) {
     selectedValue.value = newValue;
   }
+
+  @override
+  OrdersController get controller => this;
 }
