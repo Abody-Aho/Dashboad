@@ -31,6 +31,13 @@ class AppLink {
   static const String updateStatus = "${server}admin/orders/update_order_status.php";
   static const String deleteOrder = "${server}admin/orders/delete_order.php";
   static const String orderDetails = "${server}admin/orders/orders_items_view.php";
+  static const String notificationsView = "${server}admin/notification/notification_view.php";
+  static const notificationsCreate = "${server}admin/notification/create_notification.php";
+  static const bannerAdd = "${server}admin/notification/add_banner.php";
+  static const bannerDelete = "${server}admin/notification/delete_banner.php";
+  static const bannerView = "${server}admin/notification/banner_view.php";
+  static const imageBanner = "http://46.101.225.45/flymarket/app/customer/upload/banners/";
+
 
 
 }

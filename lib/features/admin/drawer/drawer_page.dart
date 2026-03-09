@@ -19,6 +19,7 @@ final List<ButtonsInfo> buttonsInfo = [
   ButtonsInfo(title: "products_management", icon: Icons.inventory_2),
   ButtonsInfo(title: "payment_management", icon: Icons.payment),
   ButtonsInfo(title: "notifications", icon: Icons.notifications),
+  ButtonsInfo(title: "Profile", icon: Icons.person),
 ];
 
 class DrawerPage extends StatelessWidget {

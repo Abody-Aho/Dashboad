@@ -8,6 +8,8 @@ class AdminChatPage extends StatelessWidget {
   final ChatController controller = Get.put(ChatController());
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
+  AdminChatPage({super.key});
+
   @override
   Widget build(BuildContext context) {
 

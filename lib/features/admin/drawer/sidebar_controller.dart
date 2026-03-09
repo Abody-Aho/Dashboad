@@ -8,6 +8,7 @@ import '../notifications/notifications_page.dart';
 import '../orders/orders_page.dart';
 import '../payment/payment_page.dart';
 import '../products/products_page.dart';
+import '../profile/admin_profile_page.dart';
 import '../users/users_page.dart';
 
 class SidebarController extends GetxController {
@@ -21,6 +22,7 @@ class SidebarController extends GetxController {
     ProductsPage(),
     PaymentPage(),
     NotificationsPage(),
+    AdminProfilePage()
   ];
 
   Widget get currentPage => pages[selectedIndex.value];

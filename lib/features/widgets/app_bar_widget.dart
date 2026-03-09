@@ -18,26 +18,28 @@ class _AppBarWidgetState extends State<AppBarWidget> {
       context: context,
       builder: (_) => AlertDialog(
         title: Text("choose_language".tr),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              title: Text("العربية"),
-              onTap: () async {
-                Get.updateLocale(const Locale("ar"));
-                await LangService.saveLang("ar");
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text("English"),
-              onTap: () async {
-                Get.updateLocale(const Locale("en"));
-                await LangService.saveLang("en");
-                Navigator.pop(context);
-              },
-            ),
-          ],
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: Text("العربية"),
+                onTap: () async {
+                  Get.updateLocale(const Locale("ar"));
+                  await LangService.saveLang("ar");
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: Text("English"),
+                onTap: () async {
+                  Get.updateLocale(const Locale("en"));
+                  await LangService.saveLang("en");
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

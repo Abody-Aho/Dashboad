@@ -137,7 +137,18 @@ class NotificationsPage extends StatelessWidget {
                                     controller: controller,
                                     addButtonText: 'create_notification'.tr,
                                     onAddPressed: () {
-                                      print("Add user pressed");
+                                      controller.showCreateNotificationDialog();
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
+                                Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 11),
+                                  child: CustomBottom(
+                                    controller: controller,
+                                    addButtonText: 'أضافة بنر'.tr,
+                                    onAddPressed: () {
+                                      controller.showAddBannerDialog();
                                     },
                                   ),
                                 ),
@@ -149,12 +160,24 @@ class NotificationsPage extends StatelessWidget {
                             return Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                CustomBottom(
-                                  controller: controller,
-                                  addButtonText: 'create_notification'.tr,
-                                  onAddPressed: () {
-                                    print("Add user pressed");
-                                  },
+                                Column(
+                                  children: [
+                                    CustomBottom(
+                                      controller: controller,
+                                      addButtonText: 'create_notification'.tr,
+                                      onAddPressed: () {
+                                        controller.showCreateNotificationDialog();
+                                      },
+                                    ),
+                                    const SizedBox(height: 20),
+                                    CustomBottom(
+                                      controller: controller,
+                                      addButtonText: 'اضافة بنر'.tr,
+                                      onAddPressed: () {
+                                        controller.showAddBannerDialog();
+                                      },
+                                    ),
+                                  ],
                                 ),
                                 Container(
                                   margin: EdgeInsets.only(left: 5.w),
