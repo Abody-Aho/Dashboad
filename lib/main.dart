@@ -3,10 +3,13 @@ import 'package:dashbord2/routes/app_pages.dart';
 import 'package:dashbord2/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'core/lang/translations.dart';
 import 'core/services/lang_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:firebase_core/firebase_core.dart'; // <--- إضافة Firebase
+import 'package:firebase_core/firebase_core.dart';
+import 'features/auth/auth_binding.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +25,7 @@ void main() async {
       appId: "1:571768389468:web:2261fae6418bddbd6e0b99",
     ),
   );
-
+  await GetStorage.init();
   // Load saved locale
   Locale locale = await LangService.getSavedLocale();
 
@@ -54,6 +57,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: AppRoutes.login,
       getPages: AppPages.routes,
+      initialBinding: AuthBinding(),
       debugShowCheckedModeBanner: false,
     );
   }

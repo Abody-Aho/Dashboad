@@ -4,9 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import '../../core/services/api_service.dart';
+import 'package:get_storage/get_storage.dart';
 
 class AuthController extends GetxController {
   final _auth = FirebaseAuth.instance;
+  var currentUser = Rxn<UserModel>();
+  final box = GetStorage();
 
 
   //  أدوار المستخدمين
@@ -39,7 +42,16 @@ class AuthController extends GetxController {
   var isPasswordVisible = false.obs;
   var isConfirmPasswordVisible = false.obs;
 
+  @override
+  void onInit() {
+    super.onInit();
 
+    final data = box.read("user");
+
+    if (data != null) {
+      currentUser.value = UserModel.fromJson(data);
+    }
+  }
   //  تسجيل الدخول
 
   Future<void> login() async {
@@ -61,7 +73,8 @@ class AuthController extends GetxController {
 
       if (apiResponse['status'] == 'success') {
         final user = UserModel.fromJson(apiResponse['data']);
-
+        currentUser.value = user;
+        box.write("user", apiResponse['data']);
         if (user.role == 'admin') {
           Get.offAllNamed(AppRoutes.dashboardAdmin);
         } else if (user.role == 'supermarket') {

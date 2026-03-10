@@ -95,11 +95,14 @@ class AdminProfilePage extends StatelessWidget {
                             width: 3,
                           ),
                         ),
-                        child: Obx(() => CircleAvatar(
-                          radius: 60,
-                          backgroundImage:
-                          AssetImage(controller.imageUrl.value),
-                        )),
+                        child: Obx(() {
+                          return CircleAvatar(
+                            radius: 60,
+                            backgroundImage: controller.imageUrl.value.isEmpty
+                                ? const AssetImage("images/profile.png")
+                                : NetworkImage(controller.imageUrl.value) as ImageProvider,
+                          );
+                        }),
                       ),
 
                       Positioned(

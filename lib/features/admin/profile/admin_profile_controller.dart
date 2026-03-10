@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../core/constants/app_link.dart';
+import '../../auth/auth_controller.dart';
+
 class AdminProfileController extends GetxController {
+
+  final AuthController authController = Get.find();
 
   var isEdit = false.obs;
 
@@ -9,15 +14,33 @@ class AdminProfileController extends GetxController {
   final phoneController = TextEditingController();
   final emailController = TextEditingController();
 
-  var imageUrl =
-      "images/profile.png".obs;
+  var imageUrl = "".obs;
 
   @override
   void onInit() {
-    nameController.text = "Admin Name";
-    phoneController.text = "777777777";
-    emailController.text = "admin@email.com";
     super.onInit();
+
+    _loadUser();
+    ever(authController.currentUser, (_) {
+      _loadUser();
+    });
+  }
+
+  void _loadUser() {
+
+    final user = authController.currentUser.value;
+
+    if (user == null) return;
+
+    nameController.text = user.name;
+    phoneController.text = user.phone;
+    emailController.text = user.email;
+
+    if (user.image != null && user.image!.isNotEmpty) {
+      imageUrl.value = "${AppLink.image}/${user.image}";
+    } else {
+      imageUrl.value = "";
+    }
   }
 
   void toggleEdit() {
@@ -25,7 +48,7 @@ class AdminProfileController extends GetxController {
   }
 
   void saveProfile() {
-    /// هنا تربطه مع API
+
     Get.snackbar(
       "تم الحفظ",
       "تم تحديث بيانات الأدمن",
@@ -36,7 +59,5 @@ class AdminProfileController extends GetxController {
     isEdit.value = false;
   }
 
-  void changeImage() {
-    /// FilePicker او ImagePicker
-  }
+  void changeImage() {}
 }
