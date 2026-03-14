@@ -10,6 +10,47 @@ import 'orders_controller.dart';
 mixin OrderApi on GetxController{
   OrdersController get controller;
 
+  Future<void> fetchOrders() async {
+    try {
+      controller.isLoading.value = true;
+      final response = await http.get(Uri.parse(AppLink.ordersView));
+
+      final body = jsonDecode(response.body);
+
+      if (body['status'] == 'success') {
+        final List orders = body['data'];
+
+        controller.dataList.assignAll(
+          orders.map<Map<String, dynamic>>((order) {
+            return {
+              'id': order['id'].toString(),
+
+              'status_raw': order['orders_status'],
+
+              'Column1': order['id'].toString(),
+              'Column2': order['user'] ?? '-',
+              'Column3': order['supermarket'] ?? '-',
+              'Column4': order['driver'] ?? '-',
+              'Column5': order['orders_totalprice'].toString(),
+              'Column6': controller.mapPayment(order['orders_paymentmethod']),
+              'Column7': controller.mapStatus(order['orders_status']),
+              'Column8': controller.formatDate(order['orders_datetime']),
+            };
+          }).toList(),
+        );
+
+        controller.filteredDataList.assignAll(controller.dataList);
+        controller.selectedRows.assignAll(
+          List.generate(controller.filteredDataList.length, (_) => false),
+        );
+      }
+    } catch (e) {
+      Get.snackbar("Error", e.toString());
+    } finally {
+      controller.isLoading.value = false;
+    }
+  }
+
   Future updateOrderStatus(int orderId, int status) async {
 
     try {
