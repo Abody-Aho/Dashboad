@@ -5,6 +5,7 @@ class AppLink {
    static const String image = 'http://46.101.225.45/flymarket/app/customer/upload/supermarket/';
   //  static const String image = 'http://localhost/flymarket_php_api/app/customer/upload/supermarket/';
 
+  //======================= Admin =======================
   static const String login = '${server}auth/login.php';
   static const String signup = '${server}auth/signup.php';
   static const String status = '${server}admin/user_management/toggle_status.php';
@@ -37,6 +38,16 @@ class AppLink {
   static const bannerDelete = "${server}admin/notification/delete_banner.php";
   static const bannerView = "${server}admin/notification/banner_view.php";
   static const imageBanner = "http://46.101.225.45/flymarket/app/customer/upload/banners/";
+  static const updateProfile = "${server}admin/profile/update_profile.php";
+
+
+  //======================= SuperMarket =======================
+  static const itemsSupermarketView = "${server}supermarket/items/get_items.php";
+  static const addItemSupermarket = "${server}supermarket/items/add_item.php";
+  static const updateItemSupermarket = "${server}supermarket/items/update_item.php";
+
+  static const deleteItemSupermarket = "${server}supermarket/items/delete_item.php";
+  static const itemsSearchSupermarket = "${server}supermarket/items/search_items.php";
 
 
 

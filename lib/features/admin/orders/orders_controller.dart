@@ -10,8 +10,8 @@ import '../../../core/constants/app_link.dart';
 import '../../widgets/app_delete_dialog.dart';
 import 'order_api.dart';
 
-class OrdersController extends GetxController with OrderApi, OrderDialogs, OrderTable, OrderHelpers{
-
+class OrdersController extends GetxController
+    with OrderApi, OrderDialogs, OrderTable, OrderHelpers {
   var dataList = <Map<String, dynamic>>[].obs;
   var filteredDataList = <Map<String, dynamic>>[].obs;
 
@@ -32,14 +32,9 @@ class OrdersController extends GetxController with OrderApi, OrderDialogs, Order
   // ======================= API =======================
 
   Future<void> fetchOrders() async {
-
-
     try {
       isLoading.value = true;
-      final response = await http.get(
-        Uri.parse(
-            AppLink.ordersView,),
-      );
+      final response = await http.get(Uri.parse(AppLink.ordersView));
 
       final body = jsonDecode(response.body);
 
@@ -79,20 +74,37 @@ class OrdersController extends GetxController with OrderApi, OrderDialogs, Order
 
   String _mapStatus(dynamic s) {
     switch (s.toString()) {
-      case "0": return "pending";
-      case "1": return "accepted";
-      case "2": return "on_the_way";
-      case "3": return "delivered";
-      case "4": return "cancelled";
-      default: return "-";
+      case "0":
+        return "pending";
+
+      case "1":
+        return "accepted";
+
+      case "2":
+        return "ready";
+
+      case "3":
+        return "on_delivery";
+
+      case "4":
+        return "delivered";
+
+      case "5":
+        return "cancelled";
+
+      default:
+        return "-";
     }
   }
 
   String _mapPayment(dynamic p) {
     switch (p.toString()) {
-      case "0": return "cash";
-      case "1": return "card";
-      default: return "-";
+      case "0":
+        return "cash";
+      case "1":
+        return "card";
+      default:
+        return "-";
     }
   }
 
@@ -120,10 +132,7 @@ class OrdersController extends GetxController with OrderApi, OrderDialogs, Order
         message: text ?? '-',
         child: SizedBox(
           width: width,
-          child: Text(
-            text ?? '-',
-            overflow: TextOverflow.ellipsis,
-          ),
+          child: Text(text ?? '-', overflow: TextOverflow.ellipsis),
         ),
       ),
     );
@@ -136,15 +145,27 @@ class OrdersController extends GetxController with OrderApi, OrderDialogs, Order
       case "pending":
         color = Colors.orange;
         break;
-      case "on_the_way":
+
+      case "accepted":
         color = Colors.blue;
         break;
+
+      case "ready":
+        color = Colors.teal;
+        break;
+
+      case "on_delivery":
+        color = Colors.deepPurple;
+        break;
+
       case "delivered":
         color = Colors.green;
         break;
+
       case "cancelled":
         color = Colors.red;
         break;
+
       default:
         color = Colors.grey;
     }
@@ -158,10 +179,7 @@ class OrdersController extends GetxController with OrderApi, OrderDialogs, Order
         ),
         child: Text(
           status ?? '',
-          style: TextStyle(
-            color: color,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: color, fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -175,17 +193,14 @@ class OrdersController extends GetxController with OrderApi, OrderDialogs, Order
           children: [
             Flexible(
               child: IconButton(
-                icon: const Icon(Icons.visibility,color: Colors.grey,),
-                onPressed: () async{
+                icon: const Icon(Icons.visibility, color: Colors.grey),
+                onPressed: () async {
                   var items = await controller.getOrderItems(
-                      int.parse(data['id'])
+                    int.parse(data['id']),
                   );
                   print("items = $items"); // أضف هذا
 
-                  controller.showOrderDetailsDialog(
-                    order: data,
-                    items: items,
-                  );
+                  controller.showOrderDetailsDialog(order: data, items: items);
                 },
                 padding: EdgeInsets.zero,
               ),
@@ -205,7 +220,7 @@ class OrdersController extends GetxController with OrderApi, OrderDialogs, Order
             ),
             Flexible(
               child: IconButton(
-                icon: const Icon(Icons.close,color: Colors.red,),
+                icon: const Icon(Icons.close, color: Colors.red),
                 onPressed: () {
                   AppDeleteDialog.show(
                     title: "حذف الطلب",
@@ -214,11 +229,8 @@ class OrdersController extends GetxController with OrderApi, OrderDialogs, Order
                     icon: Icons.delete_outline,
                     color: Colors.red,
                     onConfirm: () {
-                      controller.deleteOrder(
-                        int.parse(data['id']),
-                      );
+                      controller.deleteOrder(int.parse(data['id']));
                     },
-
                   );
                 },
                 padding: EdgeInsets.zero,
@@ -271,8 +283,9 @@ class OrdersController extends GetxController with OrderApi, OrderDialogs, Order
     } else {
       filteredDataList.assignAll(
         dataList.where((item) {
-          return item.values
-              .any((v) => v.toLowerCase().contains(query.toLowerCase()));
+          return item.values.any(
+            (v) => v.toLowerCase().contains(query.toLowerCase()),
+          );
         }).toList(),
       );
     }
@@ -288,14 +301,10 @@ class OrdersController extends GetxController with OrderApi, OrderDialogs, Order
     if (dateTime == null || dateTime.isEmpty) return '-';
     return dateTime.split(' ').first;
   }
+
   final selectedValue = 'all_types'.obs;
 
-  final options = [
-    'all_types',
-    'clients',
-    'agents',
-    'supermarkets',
-  ];
+  final options = ['all_types', 'clients', 'agents', 'supermarkets'];
 
   void changeValue(String newValue) {
     selectedValue.value = newValue;

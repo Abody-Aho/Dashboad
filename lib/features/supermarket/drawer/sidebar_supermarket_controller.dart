@@ -1,28 +1,20 @@
-import 'package:dashbord2/features/admin/home/home_page.dart';
 import 'package:dashbord2/routes/app_routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import '../management_supermarket/mangmant_supermarket_page.dart';
-import '../notifications/notifications_page.dart';
-import '../orders/orders_page.dart';
-import '../payment/payment_page.dart';
-import '../products/products_page.dart';
-import '../profile/admin_profile_page.dart';
-import '../users/users_page.dart';
+import '../home/home_page.dart';
+import '../products/products_supermarket_page.dart';
 
-class SidebarController extends GetxController {
+class SidebarSupermarketController extends GetxController {
   var selectedIndex = 0.obs;
 
   final List<Widget> pages = [
     HomePage(),
-    UsersPage(),
-    ManagementSupermarketPage(),
-    OrdersPage(),
-    ProductsPage(),
-    PaymentPage(),
-    NotificationsPage(),
-    AdminProfilePage()
+    // OrdersPage(),
+    ProductsSupermarketPage(),
+    // PaymentPage(),
+    // NotificationsPage(),
+    // AdminProfilePage()
   ];
 
   Widget get currentPage => pages[selectedIndex.value];

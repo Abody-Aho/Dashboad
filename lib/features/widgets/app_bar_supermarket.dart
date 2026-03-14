@@ -5,14 +5,14 @@ import '../../core/constants/app_constants.dart';
 import '../../core/services/lang_service.dart';
 import '../admin/supermarket_chat/admin_chat_page.dart';
 
-class AppBarWidget extends StatefulWidget {
-  const AppBarWidget({super.key});
+class AppBarSupermarket extends StatefulWidget {
+  const AppBarSupermarket({super.key});
 
   @override
-  _AppBarWidgetState createState() => _AppBarWidgetState();
+  _AppBarSupermarketState createState() => _AppBarSupermarketState();
 }
 
-class _AppBarWidgetState extends State<AppBarWidget> {
+class _AppBarSupermarketState extends State<AppBarSupermarket> {
   void changeLanguageDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -98,7 +98,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(Constants.kPadding / 2),
-                child: Text("admin_panel".tr),
+                child: Text("مالك سوبرماركت".tr),
               ),
             ),
 

@@ -1,4 +1,4 @@
-import 'package:dashbord2/features/admin/drawer/sidebar_controller.dart';
+import 'package:dashbord2/features/supermarket/drawer/sidebar_supermarket_controller.dart';
 import 'package:dashbord2/features/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,21 +13,20 @@ class ButtonsInfo {
 
 final List<ButtonsInfo> buttonsInfo = [
   ButtonsInfo(title: "home", icon: Icons.home),
-  ButtonsInfo(title: "users_management", icon: Icons.people),
-  ButtonsInfo(title: "supermarket_management", icon: Icons.store),
-  ButtonsInfo(title: "orders_management", icon: Icons.shopping_bag),
+  // ButtonsInfo(title: "users_management", icon: Icons.people),
+  // ButtonsInfo(title: "orders_management", icon: Icons.shopping_bag),
   ButtonsInfo(title: "products_management", icon: Icons.inventory_2),
-  ButtonsInfo(title: "payment_management", icon: Icons.payment),
-  ButtonsInfo(title: "notifications", icon: Icons.notifications),
-  ButtonsInfo(title: "Profile", icon: Icons.person),
+  // ButtonsInfo(title: "payment_management", icon: Icons.payment),
+  // ButtonsInfo(title: "notifications", icon: Icons.notifications),
+  // ButtonsInfo(title: "Profile", icon: Icons.person),
 ];
 
-class DrawerPage extends StatelessWidget {
-  const DrawerPage({super.key});
+class DrawerSupermarketPage extends StatelessWidget {
+  const DrawerSupermarketPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = Get.find<SidebarController>();
+    final ctrl = Get.find<SidebarSupermarketController>();
 
     return Drawer(
       backgroundColor: Colors.green[50],

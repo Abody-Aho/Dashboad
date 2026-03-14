@@ -1,33 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../core/constants/app_constants.dart';
 import 'orders_controller.dart';
 
-mixin OrderDialogs on GetxController{
+mixin OrderDialogs on GetxController {
   OrdersController get controller;
 
   void showStatusDialog(
-      int orderId,
-      int currentStatus,
-      OrdersController controller,
-      ) {
-
+    int orderId,
+    int currentStatus,
+    OrdersController controller,
+  ) {
     int selectedStatus = currentStatus;
 
     final statuses = [
-      {"id": 0, "title": "Pending", "color": Colors.orange, "icon": Icons.schedule},
-      {"id": 1, "title": "Accepted", "color": Colors.blue, "icon": Icons.check_circle},
-      {"id": 2, "title": "On Delivery", "color": Colors.deepPurple, "icon": Icons.delivery_dining},
-      {"id": 3, "title": "Delivered", "color": Colors.green, "icon": Icons.task_alt},
-      {"id": 4, "title": "Cancelled", "color": Colors.red, "icon": Icons.cancel},
+      {
+        "id": 0,
+        "title": "Pending",
+        "color": Colors.orange,
+        "icon": Icons.schedule,
+      },
+      {
+        "id": 1,
+        "title": "Accepted",
+        "color": Colors.blue,
+        "icon": Icons.check_circle,
+      },
+      {"id": 2, "title": "Ready", "color": Colors.teal, "icon": Icons.store},
+      {
+        "id": 3,
+        "title": "On Delivery",
+        "color": Colors.deepPurple,
+        "icon": Icons.delivery_dining,
+      },
+      {
+        "id": 4,
+        "title": "Delivered",
+        "color": Colors.green,
+        "icon": Icons.task_alt,
+      },
+      {
+        "id": 5,
+        "title": "Cancelled",
+        "color": Colors.red,
+        "icon": Icons.cancel,
+      },
     ];
 
     Get.dialog(
-
       Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            maxWidth: 520,
-          ),
+          constraints: const BoxConstraints(maxWidth: 520),
 
           child: Material(
             borderRadius: BorderRadius.circular(16),
@@ -53,11 +76,9 @@ mixin OrderDialogs on GetxController{
                         spacing: 10,
                         runSpacing: 10,
                         children: statuses.map((status) {
-
                           bool isSelected = selectedStatus == status["id"];
 
                           return GestureDetector(
-
                             onTap: () {
                               setState(() {
                                 selectedStatus = status["id"] as int;
@@ -69,12 +90,15 @@ mixin OrderDialogs on GetxController{
 
                               width: 150,
                               padding: const EdgeInsets.symmetric(
-                                  vertical: 14, horizontal: 10),
+                                vertical: 14,
+                                horizontal: 10,
+                              ),
 
                               decoration: BoxDecoration(
-
                                 color: isSelected
-                                    ? (status["color"] as Color).withValues(alpha: .15)
+                                    ? (status["color"] as Color).withValues(
+                                        alpha: .15,
+                                      )
                                     : Colors.grey.withValues(alpha: .08),
 
                                 borderRadius: BorderRadius.circular(12),
@@ -89,7 +113,6 @@ mixin OrderDialogs on GetxController{
 
                               child: Column(
                                 children: [
-
                                   Icon(
                                     status["icon"] as IconData,
                                     color: status["color"] as Color,
@@ -109,17 +132,15 @@ mixin OrderDialogs on GetxController{
                               ),
                             ),
                           );
-
                         }).toList(),
                       ),
                       const SizedBox(height: 25),
                       Row(
                         children: [
-
                           Expanded(
                             child: OutlinedButton(
                               onPressed: () => Get.back(),
-                              child: const Text("إلغاء"),
+                              child: const Text("إلغاء",style: TextStyle(color: Constants.text),),
                             ),
                           ),
 
@@ -127,20 +148,17 @@ mixin OrderDialogs on GetxController{
 
                           Expanded(
                             child: ElevatedButton(
-
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.green,
                               ),
 
                               onPressed: () {
-
                                 controller.updateOrderStatus(
-                                    orderId,
-                                    selectedStatus
+                                  orderId,
+                                  selectedStatus,
                                 );
 
                                 Get.back();
-
                               },
 
                               child: const Text(
@@ -164,18 +182,11 @@ mixin OrderDialogs on GetxController{
     );
   }
 
-  void showOrderDetailsDialog({
-    required Map order,
-    required List items,
-  }) {
-
+  void showOrderDetailsDialog({required Map order, required List items}) {
     Get.dialog(
-
       Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            maxWidth: 750,
-          ),
+          constraints: const BoxConstraints(maxWidth: 750),
 
           child: Material(
             borderRadius: BorderRadius.circular(16),
@@ -186,15 +197,12 @@ mixin OrderDialogs on GetxController{
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-
                   /// HEADER
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-
                       Row(
                         children: [
-
                           Container(
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
@@ -216,15 +224,13 @@ mixin OrderDialogs on GetxController{
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-
                         ],
                       ),
 
                       IconButton(
                         onPressed: () => Get.back(),
                         icon: const Icon(Icons.close),
-                      )
-
+                      ),
                     ],
                   ),
 
@@ -241,13 +247,11 @@ mixin OrderDialogs on GetxController{
 
                     child: Column(
                       children: [
-
                         controller.infoRow("العميل", order['Column2']),
                         controller.infoRow("السوبرماركت", order['Column3']),
                         controller.infoRow("المندوب", order['Column4']),
                         controller.infoRow("الدفع", order['Column6']),
                         controller.infoRow("التاريخ", order['Column8']),
-
                       ],
                     ),
                   ),
@@ -262,40 +266,33 @@ mixin OrderDialogs on GetxController{
                     ),
 
                     child: DataTable(
-
                       columns: const [
-
                         DataColumn(label: Text("المنتج")),
                         DataColumn(label: Text("الكمية")),
                         DataColumn(label: Text("السعر")),
                         DataColumn(label: Text("المجموع")),
-
                       ],
 
                       rows: items.map<DataRow>((item) {
-
                         return DataRow(
                           cells: [
+                            DataCell(Text(item['item_name_ar'] ?? '-')),
 
-                            DataCell(Text(item['itmes_name_ar'])),
+                            DataCell(Text((item['quantity'] ?? 0).toString())),
 
                             DataCell(
-                              Text(item['order_items_quantity'].toString()),
+                              Text(
+                                (item['item_price_after_discount'] ?? 0)
+                                    .toString(),
+                              ),
                             ),
 
                             DataCell(
-                              Text(item['order_items_price'].toString()),
+                              Text((item['total_items_price'] ?? 0).toString()),
                             ),
-
-                            DataCell(
-                              Text(item['order_items_total'].toString()),
-                            ),
-
                           ],
                         );
-
                       }).toList(),
-
                     ),
                   ),
 
@@ -313,12 +310,9 @@ mixin OrderDialogs on GetxController{
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-
                         const Text(
                           "المجموع الكلي",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         ),
 
                         Text(
@@ -329,7 +323,6 @@ mixin OrderDialogs on GetxController{
                             color: Colors.green,
                           ),
                         ),
-
                       ],
                     ),
                   ),
@@ -341,8 +334,7 @@ mixin OrderDialogs on GetxController{
                     alignment: Alignment.centerLeft,
 
                     child: ElevatedButton.icon(
-
-                      icon: const Icon(Icons.check,color: Colors.white,),
+                      icon: const Icon(Icons.check, color: Colors.white),
 
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
@@ -354,10 +346,8 @@ mixin OrderDialogs on GetxController{
                         "إغلاق",
                         style: TextStyle(color: Colors.white),
                       ),
-
                     ),
-                  )
-
+                  ),
                 ],
               ),
             ),
@@ -368,5 +358,4 @@ mixin OrderDialogs on GetxController{
       barrierDismissible: true,
     );
   }
-
 }

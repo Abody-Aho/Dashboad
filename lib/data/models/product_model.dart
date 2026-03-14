@@ -11,6 +11,9 @@ class ProductModel {
   final String catAr;
   final String catEn;
 
+  final String catAllAr;
+  final String catAllEn;
+
   final int catId;
   final int catAllId;
 
@@ -45,7 +48,7 @@ class ProductModel {
     required this.discount,
     required this.sales,
     required this.date,
-    required this.image,
+    required this.image, required this.catAllAr, required this.catAllEn,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
@@ -62,6 +65,9 @@ class ProductModel {
 
       catAr: json["categories_name_ar"] ?? '',
       catEn: json["categories_name"] ?? '',
+
+      catAllAr: json["cat_ar"] ?? '',
+      catAllEn: json["cat_en"] ?? '',
 
       catId: int.tryParse(json["itmes_cat"].toString()) ?? 0,
       catAllId: int.tryParse(json["itmes_cat_all"].toString()) ?? 0,
