@@ -45,9 +45,18 @@ class AppLink {
   static const itemsSupermarketView = "${server}supermarket/items/get_items.php";
   static const addItemSupermarket = "${server}supermarket/items/add_item.php";
   static const updateItemSupermarket = "${server}supermarket/items/update_item.php";
-
   static const deleteItemSupermarket = "${server}supermarket/items/delete_item.php";
   static const itemsSearchSupermarket = "${server}supermarket/items/search_items.php";
+  static const ordersViewSupermarket = "${server}supermarket/orders/view_orders.php";
+  static const ordersViewDetails = "${server}supermarket/orders/orders_items_details.php";
+  static const updateStatusSuper = "${server}supermarket/orders/update_order_status_super.php";
+  static const deleteSuperOrder = "${server}supermarket/orders/delete_super_order.php";
+  static const updateSupermarketProfile = "${server}supermarket/profile/update_super_profile.php";
+  static const getOrCreateRoom = "${server}supermarket/supermarket_chat/get_or_create_room.php";
+  static const sendMessage = "${server}supermarket/supermarket_chat/send_message.php";
+  static const getMessage = "${server}supermarket/supermarket_chat/get_messages.php";
+  static const getSupermarkets = "${server}supermarket/supermarket_chat/get_supermarkets.php";
+  static const saveToken = "${server}save_token.php";
 
 
 

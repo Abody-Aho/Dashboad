@@ -3,16 +3,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import '../home/home_page.dart';
+import '../orders/orders_supermarket_page.dart';
 import '../products/products_supermarket_page.dart';
+import '../profile/supermarket_profile_page.dart';
 
 class SidebarSupermarketController extends GetxController {
   var selectedIndex = 0.obs;
 
   final List<Widget> pages = [
     HomePage(),
-    // OrdersPage(),
+    OrdersSupermarketPage(),
     ProductsSupermarketPage(),
-    // PaymentPage(),
+    SupermarketProfilePage(),
     // NotificationsPage(),
     // AdminProfilePage()
   ];

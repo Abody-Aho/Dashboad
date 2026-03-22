@@ -1,6 +1,7 @@
 import 'package:dashbord2/core/constants/app_constants.dart';
 import 'package:dashbord2/routes/app_pages.dart';
 import 'package:dashbord2/routes/app_routes.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -9,12 +10,12 @@ import 'core/services/lang_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'features/auth/auth_binding.dart';
+import 'features/auth/auth_controller.dart';
 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase
   await Firebase.initializeApp(
     options: const FirebaseOptions(
       apiKey: "AIzaSyAoK7_-KbIPfV_U2J5qtIDXh8bN_SyEv14",
@@ -25,8 +26,55 @@ void main() async {
       appId: "1:571768389468:web:2261fae6418bddbd6e0b99",
     ),
   );
+
+  await FirebaseMessaging.instance.requestPermission();
+  FirebaseMessaging.onMessageOpenedApp.listen((message) {
+
+  });
+
+  String? token = await FirebaseMessaging.instance.getToken(
+    vapidKey: "BIMaxXuMXgoEhOrL8yRxs_XnNanF1TgnCQsHWNJEX4c19keSYCnaVR4fx9usP0fGnnzfIkHYdunp6Tm7Km1DMMw",
+  );
+
+  print("FCM TOKEN: $token");
+
+  FirebaseMessaging.onMessage.listen((message) {
+
+    Get.snackbar(
+      message.notification?.title ?? "إشعار",
+      message.notification?.body ?? "",
+      backgroundColor: Colors.green,
+      colorText: Colors.white,
+      onTap: (snack) {
+
+        String page = message.data["pagename"];
+
+        if (page == "chat") {
+
+          final auth = Get.find<AuthController>();
+
+          if (auth.currentUser.value?.role == "admin") {
+
+            Get.toNamed(AppRoutes.adminChat, arguments: {
+              "room_id": message.data["pageid"]
+            });
+
+          } else {
+
+            Get.toNamed(AppRoutes.marketChat, arguments: {
+              "room_id": message.data["pageid"]
+            });
+          }
+        }
+      }
+    );
+
+  });
+
+
+
   await GetStorage.init();
-  // Load saved locale
+
   Locale locale = await LangService.getSavedLocale();
 
   runApp(

@@ -20,67 +20,68 @@ class StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+
     return Card(
-      color: Colors.grey[100],
-      elevation: 3,
+      elevation: 2,
+      color: Colors.white,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(18),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: IntrinsicHeight(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.grey,
-                ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 🔹 العنوان
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: width < 500 ? 12 : 14,
+                color: Colors.grey[600],
+                fontWeight: FontWeight.w500,
               ),
-              const SizedBox(height: 8),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Flexible(
-                    child: Text(
-                      value,
-                      style: const TextStyle(
-                        fontSize: 22,
+            ),
+
+            const SizedBox(height: 10),
+
+            // 🔹 الرقم + النسبة
+            Row(
+              children: [
+                Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: width < 500 ? 20 : 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Row(
+                  children: [
+                    Icon(percentIcon, color: percentColor, size: 16),
+                    Text(
+                      percent,
+                      style: TextStyle(
+                        color: percentColor,
                         fontWeight: FontWeight.bold,
                       ),
-                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  Row(
-                    children: [
-                      Icon(percentIcon, color: percentColor, size: 16),
-                      const SizedBox(width: 2),
-                      Text(
-                        percent,
-                        style: TextStyle(
-                          color: percentColor,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(height: 4),
-              Text(
-                subtitle,
-                style: const TextStyle(
-                  color: Colors.grey,
-                  fontSize: 13,
+                  ],
                 ),
-                overflow: TextOverflow.ellipsis,
+              ],
+            ),
+
+            const SizedBox(height: 6),
+
+            // 🔹 الوصف
+            Text(
+              subtitle,
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey[500],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

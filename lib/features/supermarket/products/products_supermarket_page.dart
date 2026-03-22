@@ -8,6 +8,7 @@ import '../../widgets/custom_bottom.dart';
 import '../../widgets/custom_card.dart';
 import '../../widgets/custom_dropdown_button.dart';
 import '../../widgets/custom_search_bar.dart';
+import '../../widgets/responsive_grid.dart';
 class ProductsSupermarketPage extends StatelessWidget {
   const ProductsSupermarketPage({super.key});
 
@@ -68,25 +69,9 @@ class ProductsSupermarketPage extends StatelessWidget {
               const SizedBox(height: 20),
 
               // بطاقات الإحصائيات
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  int crossAxisCount = 1;
-                  if (constraints.maxWidth > 900) {
-                    crossAxisCount = 4;
-                  } else if (constraints.maxWidth > 500) {
-                    crossAxisCount = 2;
-                  }
-
-                  return GridView.count(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    crossAxisCount: crossAxisCount,
-                    crossAxisSpacing: 20,
-                    mainAxisSpacing: 20,
-                    childAspectRatio: 2.0,
-                    children: statCards,
-                  );
-                },
+              ResponsiveGrid(
+                itemCount: statCards.length,
+                itemBuilder: (context, index) => statCards[index],
               ),
               const SizedBox(height: 20),
 

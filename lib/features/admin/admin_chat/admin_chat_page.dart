@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/constants/app_link.dart';
 import 'chat_controller.dart';
 
 class AdminChatPage extends StatelessWidget {
@@ -21,9 +22,7 @@ class AdminChatPage extends StatelessWidget {
         return Scaffold(
 
           key: scaffoldKey,
-
           backgroundColor: Constants.waChatBackground,
-
           drawer: isMobile ? _sidebar(isMobile) : null,
 
           body: SafeArea(
@@ -53,41 +52,32 @@ class AdminChatPage extends StatelessWidget {
     );
   }
 
-  /// HEADER
+  /// 🔵 HEADER
   Widget _header(bool isMobile) {
 
     return Container(
 
       height: 65,
-
       padding: const EdgeInsets.symmetric(horizontal: 8),
 
       decoration: const BoxDecoration(
         color: Constants.waSidebar,
         border: Border(
-          bottom: BorderSide(
-            color: Constants.waBorder,
-          ),
+          bottom: BorderSide(color: Constants.waBorder),
         ),
       ),
 
       child: Row(
         children: [
 
-          /// زر الرجوع (دائماً ظاهر)
           IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new,
-                color: Colors.white),
-            onPressed: () {
-              Get.back();
-            },
+            icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
+            onPressed: () => Get.back(),
           ),
 
-          /// زر القائمة للموبايل
           if (isMobile)
             IconButton(
-              icon: const Icon(Icons.menu,
-                  color: Colors.white),
+              icon: const Icon(Icons.menu, color: Colors.white),
               onPressed: () {
                 scaffoldKey.currentState!.openDrawer();
               },
@@ -95,72 +85,97 @@ class AdminChatPage extends StatelessWidget {
 
           const SizedBox(width: 4),
 
-          const CircleAvatar(
-            radius: 20,
-            backgroundColor: Constants.primary,
-            child: Icon(Icons.store,color: Colors.white),
-          ),
+          /// 🖼️ صورة السوبرماركت
+          Obx(() {
+            if (controller.markets.isEmpty) {
+              return const CircleAvatar(
+                radius: 20,
+                backgroundColor: Constants.primary,
+                child: Icon(Icons.store, color: Colors.white),
+              );
+            }
+
+            final market =
+            controller.markets[controller.selectedMarket.value];
+
+            return CircleAvatar(
+              radius: 20,
+              backgroundColor: Colors.grey[300],
+              backgroundImage: market.image.isNotEmpty
+                  ? NetworkImage("${AppLink.image}${market.image}")
+                  : null,
+              child: market.image.isEmpty
+                  ? const Icon(Icons.store, color: Colors.white)
+                  : null,
+            );
+          }),
 
           const SizedBox(width: 10),
 
-          Obx(() => Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+          /// 🟢 الاسم حسب اللغة
+          Expanded(
+            child: Obx(() {
 
-              Text(
-                controller.markets[
-                controller.selectedMarket.value].name,
+              if (controller.markets.isEmpty) {
+                return const Text("...");
+              }
 
-                style: const TextStyle(
-                    color: Constants.waText,
-                    fontWeight: FontWeight.bold),
-              ),
+              final market =
+              controller.markets[controller.selectedMarket.value];
 
-              const Text(
-                "online",
-                style: TextStyle(
-                    fontSize: 12,
-                    color: Constants.waTextSecondary),
-              )
-            ],
-          )),
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
 
-          const Spacer(),
+                  Text(
+                    market.getName(controller.lang),
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Constants.waText,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  const Text(
+                    "online",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Constants.waTextSecondary,
+                    ),
+                  )
+                ],
+              );
+            }),
+          ),
 
           IconButton(
               onPressed: () {},
-              icon: const Icon(Icons.search,
-                  color: Colors.white)),
+              icon: const Icon(Icons.search, color: Colors.white)),
 
           IconButton(
               onPressed: () {},
-              icon: const Icon(Icons.more_vert,
-                  color: Colors.white))
+              icon: const Icon(Icons.more_vert, color: Colors.white))
         ],
       ),
     );
   }
 
-  /// SIDEBAR
+  /// 🟣 SIDEBAR
   Widget _sidebar(bool isMobile) {
 
     return Container(
 
       width: 300,
-
       color: Constants.waSidebar,
 
       child: Column(
         children: [
 
-          Container(
-            padding: const EdgeInsets.all(16),
-            alignment: Alignment.centerLeft,
-
-            child: const Text(
+          const Padding(
+            padding: EdgeInsets.all(16),
+            child: Text(
               "Chats",
-
               style: TextStyle(
                   fontSize: 18,
                   color: Constants.waText,
@@ -181,36 +196,30 @@ class AdminChatPage extends StatelessWidget {
 
                 return ListTile(
 
-                  leading: const CircleAvatar(
-                    backgroundColor: Constants.primary,
-                    child: Icon(Icons.store,
-                        color: Colors.white),
+                  /// 🖼️ صورة
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.grey[300],
+                    backgroundImage: market.image.isNotEmpty
+                        ? NetworkImage("${AppLink.image}${market.image}")
+                        : null,
+                    child: market.image.isEmpty
+                        ? const Icon(Icons.store, color: Colors.white)
+                        : null,
                   ),
 
+                  /// 🟢 اسم حسب اللغة
                   title: Text(
-                    market.name,
-                    style: const TextStyle(
-                        color: Constants.waText),
-                  ),
-
-                  subtitle: const Text(
-                    "Tap to chat",
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: Constants.waTextSecondary),
+                    market.getName(controller.lang),
+                    style: const TextStyle(color: Constants.waText),
                   ),
 
                   selected:
-                  controller.selectedMarket.value ==
-                      index,
+                  controller.selectedMarket.value == index,
 
-                  selectedTileColor:
-                  Constants.waBorder,
+                  selectedTileColor: Constants.waBorder,
 
                   onTap: () {
-
                     controller.selectMarket(index);
-
                     if (isMobile) Get.back();
                   },
                 );
@@ -222,7 +231,7 @@ class AdminChatPage extends StatelessWidget {
     );
   }
 
-  /// MESSAGES
+  /// 🟢 الرسائل
   Widget _messages() {
 
     return Obx(() => ListView.builder(
@@ -245,8 +254,7 @@ class AdminChatPage extends StatelessWidget {
 
           child: Container(
 
-            margin:
-            const EdgeInsets.symmetric(vertical: 4),
+            margin: const EdgeInsets.symmetric(vertical: 4),
 
             padding: const EdgeInsets.symmetric(
                 horizontal: 12, vertical: 8),
@@ -285,39 +293,30 @@ class AdminChatPage extends StatelessWidget {
     ));
   }
 
-  /// INPUT
+  /// 🟡 INPUT
   Widget _input() {
 
     return Container(
 
       padding:
-      const EdgeInsets.symmetric(
-          horizontal: 10, vertical: 8),
+      const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
 
       decoration: const BoxDecoration(
         color: Constants.waInput,
         border: Border(
-          top: BorderSide(
-              color: Constants.waBorder),
+          top: BorderSide(color: Constants.waBorder),
         ),
       ),
 
       child: Row(
         children: [
 
-          IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                  Icons.emoji_emotions_outlined,
-                  color: Colors.white)),
-
           Expanded(
             child: TextField(
 
               controller: controller.messageController,
 
-              style: const TextStyle(
-                  color: Constants.waText),
+              style: const TextStyle(color: Constants.waText),
 
               decoration: InputDecoration(
 
@@ -331,14 +330,12 @@ class AdminChatPage extends StatelessWidget {
                 fillColor: Constants.waBubbleOther,
 
                 border: OutlineInputBorder(
-                  borderRadius:
-                  BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(30),
                   borderSide: BorderSide.none,
                 ),
 
                 contentPadding:
-                const EdgeInsets.symmetric(
-                    horizontal: 16),
+                const EdgeInsets.symmetric(horizontal: 16),
               ),
             ),
           ),
@@ -350,8 +347,7 @@ class AdminChatPage extends StatelessWidget {
             backgroundColor: Constants.primary,
 
             child: IconButton(
-              icon: const Icon(Icons.send,
-                  color: Colors.white),
+              icon: const Icon(Icons.send, color: Colors.white),
               onPressed: controller.sendMessage,
             ),
           )

@@ -5,6 +5,8 @@ class UserModel {
   final String phone;
   final String role;
   final int status;
+  final double? lat;
+  final double? lng;
 
   final int? id;
   final String? nameAr;
@@ -26,6 +28,8 @@ class UserModel {
     this.timeOpen,
     this.vehicleNumber,
     this.image,
+    this.lng,
+    this.lat,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -36,33 +40,45 @@ class UserModel {
       phone: json['phone'] ?? '',
       role: json['role'] ?? '',
       status: int.tryParse(json['status'].toString()) ?? 0,
+
       id: json['id'] != null ? int.tryParse(json['id'].toString()) : null,
+
       nameAr: json['name_ar'],
-      location: json['supermarket_location'],
-      timeOpen: json['supermarket_time_open'],
-      vehicleNumber: json['vehicle_number'],
+      location: json['location'],
+      timeOpen: json['time_open'],
       image: json['image'],
+
+      lat: json['lat'] != null
+          ? double.tryParse(json['lat'].toString())
+          : null,
+
+      lng: json['lng'] != null
+          ? double.tryParse(json['lng'].toString())
+          : null,
     );
   }
 
   Map<String, String> toFields() {
     return {
       if (id != null) 'id': id.toString(),
+
       'role': role,
       'name': name,
       'email': email,
       'phone': phone,
 
       'name_ar': nameAr ?? '',
-      'supermarket_location': location ?? '',
-      'supermarket_time_open': timeOpen ?? '',
+      'location': location ?? '',
+      'time_open': timeOpen ?? '',
+
+      if (lat != null) 'lat': lat.toString(),
+      if (lng != null) 'lng': lng.toString(),
+
       'vehicle_number': vehicleNumber ?? '',
     };
   }
 
 }
-
-
 
 class SearchUserModel {
   final int id;

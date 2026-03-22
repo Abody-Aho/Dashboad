@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/constants/app_constants.dart';
-import 'admin_profile_controller.dart';
+import 'supermarket_profile_controller.dart';
 
-class AdminProfilePage extends StatelessWidget {
-  final AdminProfileController controller = Get.put(AdminProfileController());
+class SupermarketProfilePage extends StatelessWidget {
+  final SupermarketProfileController controller = Get.put(SupermarketProfileController());
 
-  AdminProfilePage({super.key});
+  SupermarketProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    // تحديد عرض المحتوى ليكون مريحاً للعين في الويب
     double contentWidth = width > 1200 ? 1100 : width;
 
     return Scaffold(
@@ -19,7 +18,7 @@ class AdminProfilePage extends StatelessWidget {
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
-          child: Container(
+          child: SizedBox(
             width: contentWidth,
             child: width < 850
                 ? Column(
@@ -110,7 +109,7 @@ class AdminProfilePage extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
-              "System Administrator",
+              "System Supermarket",
               style: TextStyle(color: Constants.primary, fontSize: 13, fontWeight: FontWeight.w600),
             ),
           ),
@@ -168,11 +167,29 @@ class AdminProfilePage extends StatelessWidget {
     return LayoutBuilder(builder: (context, constraints) {
       return Column(
         children: [
-          buildField("Full Name", controller.nameController, Icons.person_outline),
+
+          buildField("English Name", controller.nameController, Icons.person_outline),
           const SizedBox(height: 24),
+
+          buildField("Arabic Name", controller.nameArController, Icons.translate),
+          const SizedBox(height: 24),
+
           buildField("Phone Number", controller.phoneController, Icons.phone_android_outlined),
           const SizedBox(height: 24),
+
           buildField("Email Address", controller.emailController, Icons.alternate_email_rounded),
+          const SizedBox(height: 24),
+
+          buildField("Location", controller.locationController, Icons.location_on_outlined),
+          const SizedBox(height: 24),
+
+          buildField("Opening Time", controller.timeOpenController, Icons.access_time),
+          const SizedBox(height: 24),
+
+          buildField("Latitude", controller.latController, Icons.map_outlined),
+          const SizedBox(height: 24),
+
+          buildField("Longitude", controller.lngController, Icons.map),
         ],
       );
     });

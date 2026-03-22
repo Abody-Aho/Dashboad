@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/services/lang_service.dart';
-import '../admin/supermarket_chat/admin_chat_page.dart';
+import '../../routes/app_routes.dart';
+import '../admin/admin_chat/admin_chat_page.dart';
 
 class AppBarAdmin extends StatefulWidget {
   const AppBarAdmin({super.key});
@@ -122,6 +123,7 @@ class _AppBarAdminState extends State<AppBarAdmin> {
                 iconSize: 28,
                 onPressed: () {
                   Get.to(() => AdminChatPage());
+                  Get.toNamed(AppRoutes.adminChat);
                 },
                 icon: const Icon(Icons.notifications_none_outlined),
               ),
