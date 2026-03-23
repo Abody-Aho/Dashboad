@@ -50,7 +50,7 @@ mixin ProductTable on GetxController {
               : ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: Image.network(
-                    "${AppLink.imageItems}/${data.image}",
+                    "${AppLink.imageItems}${data.image}",
                     fit: BoxFit.contain,
                     loadingBuilder: (context, child, loadingProgress) {
                       if (loadingProgress == null) return child;

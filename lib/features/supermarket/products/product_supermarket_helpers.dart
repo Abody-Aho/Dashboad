@@ -193,7 +193,7 @@ mixin ProductSupermarketHelpers on GetxController {
                   ? ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Image.network(
-                  "${AppLink.imageItems}/${controller.itemsOldImage.value}",
+                  "${AppLink.imageItems}${controller.itemsOldImage.value}",
                   fit: BoxFit.contain,
                   width: double.infinity,
                 ),

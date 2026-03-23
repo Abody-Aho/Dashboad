@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import '../../../data/models/category_all_model.dart';
 import '../../widgets/custom_bottom.dart';
 import '../../widgets/custom_card.dart';
 import '../../widgets/custom_dropdown_button.dart';
 import '../../widgets/custom_search_bar.dart';
 import '../../widgets/responsive_grid.dart';
+
 class ProductsPage extends StatelessWidget {
   const ProductsPage({super.key});
 
@@ -17,8 +19,6 @@ class ProductsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<ProductsController>();
 
-
-    // بطاقات الإحصائيات
     List<Widget> statCards = [
       StatCard(
         title: 'total_products'.tr,
@@ -55,7 +55,6 @@ class ProductsPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // العنوان
               Container(
                 alignment: Alignment.centerRight,
                 child: Text(
@@ -69,14 +68,12 @@ class ProductsPage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // بطاقات الإحصائيات
               ResponsiveGrid(
                 itemCount: statCards.length,
                 itemBuilder: (context, index) => statCards[index],
               ),
               const SizedBox(height: 20),
 
-              // جدول المستخدمين مع الخلفية المستديرة
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Container(
@@ -87,37 +84,60 @@ class ProductsPage extends StatelessWidget {
                     children: [
                       const SizedBox(height: 10),
 
-                      // الصف العلوي (زر + قائمة + بحث)
                       LayoutBuilder(
                         builder: (context, constraints) {
-                          bool isPhone =
-                              constraints.maxWidth < 600; // يمكن تعديل القيمة حسب الحاجة
+                          bool isPhone = constraints.maxWidth < 600;
 
                           if (isPhone) {
-                            // عمودي - فوق بعض
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                CustomSearchBar(controller: controller, hintText: 'search'.tr,),
-                                const SizedBox(height: 20),
-                                Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 10),
-                                  child: CustomDropdownButton(
-                                    selectedValue: controller.selectedCategories,
-                                    options: controller.supermarketCategories,
-                                    onChanged: controller.changeCategories,
-                                  ),
+                                CustomSearchBar(
+                                  controller: controller,
+                                  hintText: 'search'.tr,
                                 ),
                                 const SizedBox(height: 20),
+
                                 Container(
                                   margin: EdgeInsets.symmetric(horizontal: 10),
-                                  child: CustomDropdownButton(
+                                  child: Obx(() {
+                                    if (controller.categoriesAll.isEmpty) {
+                                      return const CircularProgressIndicator();
+                                    }
+
+                                    return CustomDropdownButton<CategoryAllModel?>(
+                                      selectedValue: controller.selectedCategory,
+                                      options: [
+                                        null,
+                                        ...controller.categoriesAll,
+                                      ],
+                                      getLabel: (cat) {
+                                        if (cat == null) return "كل الفئات";
+                                        return cat.nameAr;
+                                      },
+                                      onChanged: (value) {
+                                        controller.selectedCategory.value = value;
+                                        controller.filterByCategory(value?.id);
+                                      },
+                                    );
+                                  }),
+                                ),
+
+                                const SizedBox(height: 20),
+
+                                Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 10),
+                                  child: CustomDropdownButton<String>(
                                     selectedValue: controller.selectedValue,
                                     options: controller.options,
-                                    onChanged: controller.changeValue,
+                                    onChanged: (value) {
+                                      controller.filterByStatus(value);
+                                    },
                                   ),
                                 ),
+
                                 const SizedBox(height: 20),
+
                                 Container(
                                   margin: EdgeInsets.symmetric(horizontal: 12),
                                   child: CustomBottom(
@@ -129,7 +149,9 @@ class ProductsPage extends StatelessWidget {
                                     },
                                   ),
                                 ),
+
                                 const SizedBox(height: 20),
+
                                 Container(
                                   margin: EdgeInsets.symmetric(horizontal: 12),
                                   child: CustomBottom(
@@ -140,12 +162,11 @@ class ProductsPage extends StatelessWidget {
                                     },
                                   ),
                                 ),
-                                const SizedBox(height: 20),
 
+                                const SizedBox(height: 20),
                               ],
                             );
                           } else {
-                            // أفقي - بجانب بعض
                             return Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -169,30 +190,47 @@ class ProductsPage extends StatelessWidget {
                                     ),
                                   ],
                                 ),
+
                                 Container(
-                                  margin: EdgeInsets.only(
-                                    left: 5.w,
-                                  ),
-                                  child: CustomDropdownButton(
-                                    selectedValue: controller.selectedCategories,
-                                    options: controller.supermarketCategories,
-                                    onChanged: controller.changeCategories,
-                                  ),
+                                  margin: EdgeInsets.only(left: 5.w),
+                                  child: Obx(() {
+                                    if (controller.categoriesAll.isEmpty) {
+                                      return const CircularProgressIndicator();
+                                    }
+
+                                    return CustomDropdownButton<CategoryAllModel?>(
+                                      selectedValue: controller.selectedCategory,
+                                      options: [
+                                        null,
+                                        ...controller.categoriesAll,
+                                      ],
+                                      getLabel: (cat) {
+                                        if (cat == null) return "كل الفئات";
+                                        return cat.nameAr;
+                                      },
+                                      onChanged: (value) {
+                                        controller.selectedCategory.value = value;
+                                        controller.filterByCategory(value?.id);
+                                      },
+                                    );
+                                  }),
                                 ),
+
                                 Container(
-                                  margin: EdgeInsets.only(
-                                    left: 5.w,
-                                  ),
-                                  child: CustomDropdownButton(
+                                  margin: EdgeInsets.only(left: 5.w),
+                                  child: CustomDropdownButton<String>(
                                     selectedValue: controller.selectedValue,
                                     options: controller.options,
-                                    onChanged: controller.changeValue,
+                                    onChanged: (value) {
+                                      controller.filterByStatus(value);
+                                    },
                                   ),
                                 ),
 
                                 Expanded(
                                   child: CustomSearchBar(
-                                    controller: controller, hintText: 'search'.tr,
+                                    controller: controller,
+                                    hintText: 'search'.tr,
                                   ),
                                 ),
                               ],
@@ -203,7 +241,6 @@ class ProductsPage extends StatelessWidget {
 
                       const SizedBox(height: 15),
 
-                      // جدول المنتجات
                       SizedBox(
                         height: 500,
                         child: CustomDataTable(controller: controller),

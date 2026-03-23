@@ -60,6 +60,46 @@ mixin ProductApi on GetxController {
     }
   }
 
+  Future<void> fetchProductsFiltered() async {
+    try {
+      controller.isLoading.value = true;
+
+      final Map<String, String> query = {};
+
+      // فلترة الفئة
+      if (controller.selectedCategoryId.value != null) {
+        query['category'] = controller.selectedCategoryId.value.toString();
+      }
+
+      // فلترة الحالة
+      if (controller.selectedValue.value != 'all_status') {
+        query['status'] = controller.selectedValue.value;
+      }
+
+      final uri = Uri.parse(AppLink.itemsFilter).replace(
+        queryParameters: query.isEmpty ? null : query,
+      );
+
+      final response = await http.get(uri);
+
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+
+        if (body['status'] == 'success') {
+          final List items = body['data'];
+
+          controller.dataList.assignAll(
+            items.map<ProductModel>((e) => ProductModel.fromJson(e)).toList(),
+          );
+
+          controller.filteredDataList.assignAll(controller.dataList);
+        }
+      }
+    } finally {
+      controller.isLoading.value = false;
+    }
+  }
+
   Future<void> submitCategory() async {
     if (!controller.isEditCategory.value &&
         controller.categoryImageBytes.value == null) {

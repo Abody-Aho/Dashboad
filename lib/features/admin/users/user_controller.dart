@@ -25,12 +25,22 @@ class UserController extends GetxController with UserApi, UserForm, UserTable, U
 
   // ======================= API =======================
   @override
-  Future<void> fetchUsers() async {
+  Future<void> fetchUsers({String? role}) async {
     try {
       isLoading.value = true;
 
+      final Map<String, String> query = {};
+
+      if (role != null && role != 'all_types') {
+        query['role'] = role;
+      }
+
+      final uri = Uri.parse(AppLink.viewUsers).replace(
+        queryParameters: query.isEmpty ? null : query,
+      );
+
       final response = await http.get(
-        Uri.parse(AppLink.viewUsers),
+        uri,
         headers: {'Accept': 'application/json'},
       );
 
@@ -44,32 +54,22 @@ class UserController extends GetxController with UserApi, UserForm, UserTable, U
             users.map<Map<String, String>>((user) {
               return {
                 'id': user['id']?.toString() ?? '',
-                'role_raw': user['role']?.toString() ?? '',
-                'image': user['image']?.toString() ?? '',
-                'name_ar': user['name_ar']?.toString() ?? '',
-                'name': user['name']?.toString() ?? '',
-                'vehicle_number': user['vehicle_number']?.toString() ?? '',
-                'supermarket_location':
-                user['supermarket_location']?.toString() ?? '',
-                'supermarket_time_open':
-                user['supermarket_time_open']?.toString() ?? '',
-
-                'Column1': user['role'] == 'supermarket'
-                    ? user['name_ar']?.toString() ?? ''
-                    : user['name']?.toString() ?? '',
-
-                'Column2': user['email']?.toString() ?? '-',
-                'Column3': user['phone']?.toString() ?? '-',
                 'Column4': user['role']?.toString() ?? '',
+                'Column1': user['role'] == 'supermarket'
+                    ? user['name_ar'] ?? ''
+                    : user['name'] ?? '',
+                'Column2': user['email'] ?? '-',
+                'Column3': user['phone'] ?? '-',
                 'Column5': user['status'].toString() == '1'
                     ? 'active'.tr
                     : 'inactive'.tr,
-                'Column6': _formatDate(user['created_at']?.toString()),
+                'Column6': _formatDate(user['created_at']),
               };
             }).toList(),
           );
 
           filteredDataList.assignAll(dataList);
+
           selectedRows.assignAll(
             List.generate(filteredDataList.length, (_) => false),
           );
@@ -98,20 +98,8 @@ class UserController extends GetxController with UserApi, UserForm, UserTable, U
   void filterByType(String value) {
     selectedValue.value = value;
 
-    if (value == 'all_types') {
-      filteredDataList.assignAll(dataList);
-    } else {
-      filteredDataList.assignAll(
-        dataList.where((item) {
-          final role = item['Column4']?.toLowerCase();
-          return role == value;
-        }).toList(),
-      );
-    }
-
-    selectedRows.assignAll(
-      List.generate(filteredDataList.length, (_) => false),
-    );
+    searchTextController.clear();
+    fetchUsers(role: value);
   }
 
   void resetUserDialogState() {

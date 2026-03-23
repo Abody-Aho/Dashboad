@@ -269,22 +269,52 @@ class NotificationsController extends GetxController {
   }
 
   /// البحث
-  void searchQuery(String query) {
+  Future<void> searchQuery(String query) async {
     if (query.isEmpty) {
-      filteredDataList.assignAll(dataList);
-    } else {
-      filteredDataList.assignAll(
-        dataList.where((item) {
-          return item.values.any(
-            (value) => value.toLowerCase().contains(query.toLowerCase()),
-          );
-        }).toList(),
-      );
+      await fetchNotifications();
+      return;
     }
 
-    selectedRows.assignAll(
-      List.generate(filteredDataList.length, (index) => false),
-    );
+    try {
+      isLoading.value = true; // 🔥 مهم
+
+      final response = await http.get(
+        Uri.parse("${AppLink.notificationsSearch}?query=${Uri.encodeComponent(query)}"),
+      );
+
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+
+        if (body['status'] == true) {
+          List data = body['data'];
+
+          filteredDataList.assignAll(
+            data.map<Map<String, String>>((e) {
+              return {
+                'Column1': e['notification_title'] ?? '',
+                'Column2': e['notification_type'] ?? '',
+                'Column3': e['notification_receivers'] ?? '',
+                'Column4': e['notification_sent_count'].toString(),
+                'Column5': e['notification_read_count'].toString(),
+                'Column6': "${e['read_rate']}%",
+                'Column7': e['notification_status'] ?? '',
+                'Column8': e['notification_datetime'].split(" ")[0],
+              };
+            }).toList(),
+          );
+
+          selectedRows.assignAll(
+            List.generate(filteredDataList.length, (_) => false),
+          );
+        } else {
+          filteredDataList.clear();
+        }
+      }
+    } catch (e) {
+      print("Search Error: $e");
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   Future pickBannerImage() async {

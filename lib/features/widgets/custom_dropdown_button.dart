@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 class CustomDropdownButton<T> extends StatelessWidget {
   final Rx<T> selectedValue; // القيمة المختارة
   final List<T> options;      // الخيارات
+  final String Function(T item)? getLabel;
   final void Function(T value)? onChanged;
   final double height;
   final Color backgroundColor;
@@ -15,6 +16,7 @@ class CustomDropdownButton<T> extends StatelessWidget {
     required this.selectedValue,
     required this.options,
     this.onChanged,
+    this.getLabel,
     this.height = 35,
     this.backgroundColor = const Color(0xFFE6F2EC),
     this.borderColor = Colors.green,
@@ -47,7 +49,11 @@ class CustomDropdownButton<T> extends StatelessWidget {
                 .map((item) => DropdownMenuItem<T>(
               value: item,
               child: Text(
-                item.toString().tr,
+                item == null
+                    ? "كل الفئات"
+                    : getLabel != null
+                    ? getLabel!(item)
+                    : item.toString().tr,
               ),
             ))
                 .toList(),

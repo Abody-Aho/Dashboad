@@ -10,7 +10,7 @@ import '../../../data/models/product_model.dart';
 import '../../../data/models/super_model.dart';
 import 'dart:typed_data';
 
-class ProductsController extends GetxController with ProductApi, ProductDialogs, ProductHelpers, ProductTable{
+class ProductsController extends GetxController with ProductApi, ProductDialogs, ProductHelpers, ProductTable {
 
   @override
   ProductsController get controller => this;
@@ -25,12 +25,12 @@ class ProductsController extends GetxController with ProductApi, ProductDialogs,
   final discountController = TextEditingController();
 
   RxString imagePath = "".obs;
-  var isLoading = false.obs;                         // حالة التحميل
+  var isLoading = false.obs; // حالة التحميل
 
-  RxList<bool> selectedRows = <bool>[].obs;          // حالة التحديد لكل صف
+  RxList<bool> selectedRows = <bool>[].obs; // حالة التحديد لكل صف
 
-  RxInt sortColumnIndex = 0.obs;                     // العمود المفعل للفرز
-  RxBool sortAscending = true.obs;                   // اتجاه الفرز (تصاعدي / تنازلي)
+  RxInt sortColumnIndex = 0.obs; // العمود المفعل للفرز
+  RxBool sortAscending = true.obs; // اتجاه الفرز (تصاعدي / تنازلي)
   final searchTextController = TextEditingController(); // متحكم حقل البحث
   var dataList = <ProductModel>[].obs;
   var filteredDataList = <ProductModel>[].obs;
@@ -43,10 +43,12 @@ class ProductsController extends GetxController with ProductApi, ProductDialogs,
   var selectedSuperId = RxnInt();
   var selectedCategoryId = RxnInt();
   var selectedCategoryAllId = RxnInt();
+
   // القوائم القادمة من API
   var supers = <SuperModel>[].obs;
   var categories = <CategoryModel>[].obs;
   var categoriesAll = <CategoryAllModel>[].obs;
+
   // ===== Category Add Controllers =====
   final catNameArController = TextEditingController();
   final catNameEnController = TextEditingController();
@@ -54,6 +56,7 @@ class ProductsController extends GetxController with ProductApi, ProductDialogs,
   RxString categoryType = "general".obs; // general | private
   RxBool isAddingCategory = false.obs;
   final categoryFormKey = GlobalKey<FormState>();
+  Rxn<CategoryAllModel> selectedCategory = Rxn<CategoryAllModel>();
   RxBool isEditCategory = false.obs;
   RxnInt editingCategoryId = RxnInt();
 
@@ -61,11 +64,13 @@ class ProductsController extends GetxController with ProductApi, ProductDialogs,
   String categoryImageName = "";
   RxString categoryOldImage = "".obs;
   RxString itemsOldImage = "".obs;
+
   // عند إنشاء الكنترولر يتم تحميل البيانات مباشرة
   @override
   void onInit() {
     super.onInit();
     fetchProducts();
+    fetchCategoriesAll();
   }
 
   void resetCategoryForm() {
@@ -95,8 +100,8 @@ class ProductsController extends GetxController with ProductApi, ProductDialogs,
     selectedCategoryAllId.value = null;
     imageBytes.value = null;
     imageName = "";
-
   }
+
   void resetDialogState() {
 
     /// ----------- Product -----------
@@ -131,35 +136,24 @@ class ProductsController extends GetxController with ProductApi, ProductDialogs,
 
     /// ----------- Lists -----------
     categories.clear();
-
   }
 
   // إنشاء خلايا البيانات الخاصة بكل صف في الجدول
 
 
   final selectedValue = 'all_status'.obs;
-  final options = ['all_status','available', 'not_available'];
+  final options = ['all_status', 'available', 'not_available'];
 
   // عند التغيير
-  void changeValue(String newValue) {
-    selectedValue.value = newValue;
+  void filterByCategory(int? id) {
+    selectedCategoryId.value = id;
+    fetchProductsFiltered();
   }
 
-  final selectedCategories = 'all_categories'.obs;
-  final List<String> supermarketCategories = [
-    'all_categories',
-    'bakery',
-    'dairy',
-    'grains',
-    'fruits',
-    'vegetables',
-    'meat',
-    'drinks',
-    'detergents',
-  ];
-
-  // عند التغيير
-  void changeCategories(String newValue) {
-    selectedCategories.value = newValue;
+  void filterByStatus(String value) {
+    selectedValue.value = value;
+    fetchProductsFiltered();
   }
+
 }
+  // عند التغيير

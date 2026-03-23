@@ -11,6 +11,8 @@ class AppLink {
   static const String status = '${server}admin/user_management/toggle_status.php';
   static const String delete = '${server}admin/user_management/delete_account.php';
   static const String searchUsers = '${server}admin/user_management/search_users.php';
+  static const String ordersSearch = '${server}admin/orders/orders_search.php';
+  static const String notificationsSearch = '${server}admin/notification/notifications_search.php';
   static const String viewUsers = '${server}admin/user_management/view.php';
   static const String createAccount = '${server}admin/user_management/create_account.php';
   static const String updateAccount = '${server}admin/user_management/update_account.php';
@@ -25,6 +27,7 @@ class AppLink {
   static const String addCategoryPrivate = '${server}admin/items/add_category_private.php';
   static const String updateCategoryAll = '${server}admin/items/update_category_all.php';
   static const String updateCategoryPrivate = '${server}admin/items/update_category_private.php';
+  static const String itemsFilter = '${server}admin/items/items_by_category.php';
   static const String imageItems = 'http://46.101.225.45/flymarket/app/customer/upload/items/';
   static const String imageCategories = 'http://46.101.225.45/flymarket/app/customer/upload/categories/';
   static const String updateItem = '${server}admin/items/update_item.php';

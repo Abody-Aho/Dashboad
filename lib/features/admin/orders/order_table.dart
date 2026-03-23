@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 
+import '../../../core/constants/app_link.dart';
 import 'orders_controller.dart';
 
 mixin OrderTable on GetxController{
@@ -53,22 +57,51 @@ mixin OrderTable on GetxController{
 
   // ======================= SEARCH =======================
 
-  void searchQuery(String query) {
+  Future<void> searchQuery(String query) async {
     if (query.isEmpty) {
-      controller.filteredDataList.assignAll(controller.dataList);
-    } else {
-      controller.filteredDataList.assignAll(
-        controller.dataList.where((item) {
-          return item.values.any(
-                (v) => v.toLowerCase().contains(query.toLowerCase()),
-          );
-        }).toList(),
-      );
+      await controller.fetchOrders();
+      return;
     }
 
-    controller.selectedRows.assignAll(
-      List.generate(controller.filteredDataList.length, (_) => false),
-    );
+    try {
+      final response = await http.get(
+        Uri.parse("${AppLink.ordersSearch}?query=${Uri.encodeComponent(query)}"),
+      );
+
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+
+        if (body['status'] == true) {
+          List data = body['data'];
+
+          controller.filteredDataList.assignAll(
+            data.map<Map<String, dynamic>>((order) {
+              return {
+                'id': order['id'].toString(),
+                'status_raw': order['orders_status'],
+
+                'Column1': order['id'].toString(),
+                'Column2': order['user'] ?? '-',
+                'Column3': order['supermarket'] ?? '-',
+                'Column4': order['driver'] ?? '-',
+                'Column5': order['orders_totalprice'].toString(),
+                'Column6': controller.mapPayment(order['orders_paymentmethod']),
+                'Column7': controller.mapStatus(order['orders_status']),
+                'Column8': formatDate(order['orders_datetime']),
+              };
+            }).toList(),
+          );
+
+          controller.selectedRows.assignAll(
+            List.generate(controller.filteredDataList.length, (_) => false),
+          );
+        } else {
+          controller.filteredDataList.clear();
+        }
+      }
+    } catch (e) {
+      print("Search Error: $e");
+    }
   }
 
   // ======================= DATE FORMAT =======================

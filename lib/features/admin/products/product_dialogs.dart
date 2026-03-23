@@ -709,7 +709,7 @@ mixin ProductDialogs on GetxController {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: Image.network(
-                      "${AppLink.imageItems}/${product.image}",
+                      "${AppLink.imageItems}${product.image}",
                       height: 180,
                       fit: BoxFit.contain,
                     ),
