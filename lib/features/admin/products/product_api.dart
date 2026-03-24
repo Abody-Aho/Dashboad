@@ -177,6 +177,12 @@ mixin ProductApi on GetxController {
               .map((e) => CategoryAllModel.fromJson(e))
               .toList(),
         );
+
+        /// ✅ هنا تحط التعديل
+        controller.selectedCategoryOptions.assignAll([
+          null,
+          ...controller.categoriesAll.map((e) => e.id),
+        ]);
       }
     }
   }

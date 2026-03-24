@@ -21,19 +21,13 @@ class SupermarketProfilePage extends StatelessWidget {
           child: SizedBox(
             width: contentWidth,
             child: width < 850
-                ? Column(
-              children: [
-                profileImage(context),
-                const SizedBox(height: 24),
-                profileInfo(),
-              ],
-            )
+                ? Column(children: [profileImage(context), const SizedBox(height: 24), profileInfo(context)])
                 : Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(flex: 3, child: profileImage(context)),
                 const SizedBox(width: 32),
-                Expanded(flex: 7, child: profileInfo()),
+                Expanded(flex: 7, child: profileInfo(context)),
               ],
             ),
           ),
@@ -42,54 +36,37 @@ class SupermarketProfilePage extends StatelessWidget {
     );
   }
 
-  // ===================== PROFILE IMAGE CARD =====================
   Widget profileImage(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(40),
       decoration: BoxDecoration(
         color: Constants.background,
         borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          )
-        ],
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 20, offset: const Offset(0, 10))],
         border: Border.all(color: Colors.green.withOpacity(0.1)),
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
         children: [
           Stack(
             alignment: Alignment.bottomRight,
             children: [
               Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.green.withOpacity(0.2), width: 4),
-                ),
-                child: Obx(() {
-                  return CircleAvatar(
-                    radius: 75,
-                    backgroundColor: Colors.grey.shade100,
-                    backgroundImage: controller.imageBytes.value != null
-                        ? MemoryImage(controller.imageBytes.value!)
-                        : (controller.imageUrl.value.isEmpty
-                        ? const AssetImage("assets/images/mapp.png")
-                        : NetworkImage(controller.imageUrl.value)) as ImageProvider,
-                  );
-                }),
+                decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.green.withOpacity(0.2), width: 4)),
+                child: Obx(() => CircleAvatar(
+                  radius: 75,
+                  backgroundColor: Colors.grey.shade100,
+                  backgroundImage: controller.imageBytes.value != null
+                      ? MemoryImage(controller.imageBytes.value!)
+                      : (controller.imageUrl.value.isEmpty
+                      ? const AssetImage("assets/images/mapp.png")
+                      : NetworkImage(controller.imageUrl.value)) as ImageProvider,
+                )),
               ),
               InkWell(
                 onTap: controller.changeImage,
                 child: Container(
                   padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Constants.primary,
-                    shape: BoxShape.circle,
-                    boxShadow: [BoxShadow(color: Colors.green.withOpacity(0.3), blurRadius: 10)],
-                  ),
+                  decoration: const BoxDecoration(color: Colors.green, shape: BoxShape.circle),
                   child: const Icon(Icons.camera_alt_rounded, size: 20, color: Colors.white),
                 ),
               ),
@@ -97,41 +74,21 @@ class SupermarketProfilePage extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           Obx(() => Text(
-            controller.authController.currentUser.value?.name ?? "Admin Name",
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: Color(0xFF2D312E)),
+            controller.authController.currentUser.value?.name ?? "Supermarket",
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
           )),
-          const SizedBox(height: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.green.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              "System Supermarket",
-              style: TextStyle(color: Constants.primary, fontSize: 13, fontWeight: FontWeight.w600),
-            ),
-          ),
         ],
       ),
     );
   }
 
-  // ===================== PROFILE INFO CARD =====================
-  Widget profileInfo() {
+  Widget profileInfo(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(40),
       decoration: BoxDecoration(
         color: Constants.background,
         borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          )
-        ],
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 20)],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -140,56 +97,84 @@ class SupermarketProfilePage extends StatelessWidget {
             children: [
               const Icon(Icons.badge_outlined, color: Colors.green, size: 28),
               const SizedBox(width: 12),
-              const Text(
-                "Personal Details",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFF2D312E)),
-              ),
+              const Text("بيانات السوبرماركت", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
               const Spacer(),
-              Obx(() => _buildAnimatedButton()),
+              Obx(() => Row(
+                children: [
+                  if (controller.isEdit.value)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: OutlinedButton(
+                        onPressed: controller.toggleEdit,
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.red,
+                          side: const BorderSide(color: Colors.red),
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                        child: const Text("إلغاء"),
+                      ),
+                    ),
+                  _buildAnimatedButton(),
+                ],
+              )),
             ],
           ),
-          const SizedBox(height: 12),
-          Text(
-            "Manage your account information and preferences",
-            style: TextStyle(color: Colors.grey.shade500, fontSize: 14),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 24),
-            child: Divider(height: 1),
-          ),
-          _buildResponsiveFields(),
+          const Divider(height: 48),
+          buildField("English Name", controller.nameController, Icons.person_outline),
+          const SizedBox(height: 24),
+          buildField("Arabic Name", controller.nameArController, Icons.translate),
+          const SizedBox(height: 24),
+          buildField("Phone Number", controller.phoneController, Icons.phone_android_outlined),
+          const SizedBox(height: 24),
+          buildField("Location Address", controller.locationController, Icons.location_on_outlined),
+          const SizedBox(height: 24),
+          _buildMapCard(context),
+          const SizedBox(height: 24),
+          buildField("Opening Time", controller.timeOpenController, Icons.access_time),
         ],
       ),
     );
   }
 
-  Widget _buildResponsiveFields() {
-    return LayoutBuilder(builder: (context, constraints) {
+  Widget _buildMapCard(BuildContext context) {
+    return Obx(() {
+      bool isEdit = controller.isEdit.value;
       return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
-          buildField("English Name", controller.nameController, Icons.person_outline),
-          const SizedBox(height: 24),
-
-          buildField("Arabic Name", controller.nameArController, Icons.translate),
-          const SizedBox(height: 24),
-
-          buildField("Phone Number", controller.phoneController, Icons.phone_android_outlined),
-          const SizedBox(height: 24),
-
-          buildField("Email Address", controller.emailController, Icons.alternate_email_rounded),
-          const SizedBox(height: 24),
-
-          buildField("Location", controller.locationController, Icons.location_on_outlined),
-          const SizedBox(height: 24),
-
-          buildField("Opening Time", controller.timeOpenController, Icons.access_time),
-          const SizedBox(height: 24),
-
-          buildField("Latitude", controller.latController, Icons.map_outlined),
-          const SizedBox(height: 24),
-
-          buildField("Longitude", controller.lngController, Icons.map),
+          const Text("الموقع على الخريطة (GPS)",
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF5F6368))),
+          const SizedBox(height: 8),
+          InkWell(
+            onTap: () => controller.openMapPicker(context),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: isEdit ? Colors.white : const Color(0xFFF1F3F4),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: isEdit ? Colors.green : Colors.grey.shade200),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.map_rounded, color: isEdit ? Colors.green : Colors.grey),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(isEdit ? "اضغط لتحديد الموقع من الخريطة" : "إحداثيات الموقع الحالي",
+                            style: TextStyle(color: isEdit ? Colors.green.shade700 : Colors.black87, fontWeight: FontWeight.bold)),
+                        Text("Lat: ${controller.latController.text} | Lng: ${controller.lngController.text}",
+                            style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                      ],
+                    ),
+                  ),
+                  if (isEdit) const Icon(Icons.edit_location_alt, color: Colors.orange),
+                ],
+              ),
+            ),
+          ),
         ],
       );
     });
@@ -199,20 +184,16 @@ class SupermarketProfilePage extends StatelessWidget {
     bool isEdit = controller.isEdit.value;
     return ElevatedButton.icon(
       style: ElevatedButton.styleFrom(
-        elevation: 0,
-        backgroundColor: isEdit ? Colors.orange.shade700 : Constants.primary,
-        foregroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        backgroundColor: isEdit ? Colors.green : Colors.green, // بقاء اللون أخضر أو تغييره حسب الرغبة
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 15),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       onPressed: () => isEdit ? controller.saveProfile() : controller.toggleEdit(),
-      icon: Icon(isEdit ? Icons.check_circle_outline : Icons.edit_note_rounded),
-      label: Text(isEdit ? "Save Changes" : "Edit Profile",
-          style: const TextStyle(fontWeight: FontWeight.bold, letterSpacing: 0.5)),
+      icon: Icon(isEdit ? Icons.check : Icons.edit),
+      label: Text(isEdit ? "حفظ التغييرات" : "تعديل البروفايل"),
     );
   }
 
-  // ===================== CUSTOM INPUT FIELD =====================
   Widget buildField(String label, TextEditingController controllerField, IconData icon) {
     return Obx(() {
       bool isEdit = controller.isEdit.value;
@@ -224,21 +205,13 @@ class SupermarketProfilePage extends StatelessWidget {
           TextField(
             controller: controllerField,
             readOnly: !isEdit,
-            style: const TextStyle(fontWeight: FontWeight.w500),
             decoration: InputDecoration(
-              prefixIcon: Icon(icon, color: isEdit ? Constants.primary : Colors.grey),
+              prefixIcon: Icon(icon, color: isEdit ? Colors.green : Colors.grey),
               filled: true,
               fillColor: isEdit ? Colors.white : const Color(0xFFF1F3F4),
-              hintText: "Enter your $label",
-              contentPadding: const EdgeInsets.all(20),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: Colors.grey.shade200),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: Constants.primary, width: 2),
-              ),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Colors.grey.shade200)),
+              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Colors.green, width: 2)),
             ),
           ),
         ],

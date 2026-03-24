@@ -4,8 +4,7 @@ import 'package:dashbord2/features/widgets/custom_data_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-
-import '../../../data/models/category_all_model.dart';
+import '../../widgets/category_dropdown.dart';
 import '../../widgets/custom_bottom.dart';
 import '../../widgets/custom_card.dart';
 import '../../widgets/custom_dropdown_button.dart';
@@ -100,27 +99,13 @@ class ProductsPage extends StatelessWidget {
 
                                 Container(
                                   margin: EdgeInsets.symmetric(horizontal: 10),
-                                  child: Obx(() {
-                                    if (controller.categoriesAll.isEmpty) {
-                                      return const CircularProgressIndicator();
-                                    }
-
-                                    return CustomDropdownButton<CategoryAllModel?>(
-                                      selectedValue: controller.selectedCategory,
-                                      options: [
-                                        null,
-                                        ...controller.categoriesAll,
-                                      ],
-                                      getLabel: (cat) {
-                                        if (cat == null) return "كل الفئات";
-                                        return cat.nameAr;
-                                      },
-                                      onChanged: (value) {
-                                        controller.selectedCategory.value = value;
-                                        controller.filterByCategory(value?.id);
-                                      },
-                                    );
-                                  }),
+                                  child: CategoryDropdown(
+                                    categories: controller.categoriesAll,
+                                    selectedCategory: controller.selectedCategory,
+                                    onChanged: (value) {
+                                      controller.filterByCategory(value);
+                                    },
+                                  ),
                                 ),
 
                                 const SizedBox(height: 20),
@@ -193,27 +178,13 @@ class ProductsPage extends StatelessWidget {
 
                                 Container(
                                   margin: EdgeInsets.only(left: 5.w),
-                                  child: Obx(() {
-                                    if (controller.categoriesAll.isEmpty) {
-                                      return const CircularProgressIndicator();
-                                    }
-
-                                    return CustomDropdownButton<CategoryAllModel?>(
-                                      selectedValue: controller.selectedCategory,
-                                      options: [
-                                        null,
-                                        ...controller.categoriesAll,
-                                      ],
-                                      getLabel: (cat) {
-                                        if (cat == null) return "كل الفئات";
-                                        return cat.nameAr;
-                                      },
-                                      onChanged: (value) {
-                                        controller.selectedCategory.value = value;
-                                        controller.filterByCategory(value?.id);
-                                      },
-                                    );
-                                  }),
+                                  child: CategoryDropdown(
+                                    categories: controller.categoriesAll,
+                                    selectedCategory: controller.selectedCategory,
+                                    onChanged: (value) {
+                                      controller.filterByCategory(value);
+                                    },
+                                  ),
                                 ),
 
                                 Container(

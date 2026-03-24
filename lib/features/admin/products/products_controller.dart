@@ -144,11 +144,19 @@ class ProductsController extends GetxController with ProductApi, ProductDialogs,
   final selectedValue = 'all_status'.obs;
   final options = ['all_status', 'available', 'not_available'];
 
-  // عند التغيير
-  void filterByCategory(int? id) {
-    selectedCategoryId.value = id;
+  final selectedCategoryAll = RxnInt();
+  RxList<int?> selectedCategoryOptions = <int?>[].obs;
+
+  // الفئة المختارة
+
+// الفلترة
+  void filterByCategory(CategoryAllModel? category) {
+    selectedCategory.value = category;
+    selectedCategoryId.value = category?.id;
+
     fetchProductsFiltered();
   }
+
 
   void filterByStatus(String value) {
     selectedValue.value = value;
