@@ -71,11 +71,18 @@ class SupermarketProfileController extends GetxController {
       barrierLabel: "Map",
       pageBuilder: (context, anim1, anim2) => Center(
         child: Container(
-          width: MediaQuery.of(context).size.width * (MediaQuery.of(context).size.width > 800 ? 0.5 : 0.9),
+          width:
+              MediaQuery.of(context).size.width *
+              (MediaQuery.of(context).size.width > 800 ? 0.5 : 0.9),
           height: MediaQuery.of(context).size.height * 0.7,
           clipBehavior: Clip.antiAlias,
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
-          child: MapPickerWidget(initialLocation: LatLng(currentLat, currentLng)),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: MapPickerWidget(
+            initialLocation: LatLng(currentLat, currentLng),
+          ),
         ),
       ),
     );
@@ -93,14 +100,14 @@ class SupermarketProfileController extends GetxController {
 
     bool isChanged =
         nameController.text != user.name ||
-            nameArController.text != (user.nameAr ?? "") ||
-            emailController.text != user.email ||
-            phoneController.text != user.phone ||
-            locationController.text != (user.location ?? "") ||
-            timeOpenController.text != (user.timeOpen ?? "") ||
-            latController.text != (user.lat?.toString() ?? "") ||
-            lngController.text != (user.lng?.toString() ?? "") ||
-            imageBytes.value != null;
+        nameArController.text != (user.nameAr ?? "") ||
+        emailController.text != user.email ||
+        phoneController.text != user.phone ||
+        locationController.text != (user.location ?? "") ||
+        timeOpenController.text != (user.timeOpen ?? "") ||
+        latController.text != (user.lat?.toString() ?? "") ||
+        lngController.text != (user.lng?.toString() ?? "") ||
+        imageBytes.value != null;
 
     if (!isChanged) {
       isEdit.value = false;
@@ -108,9 +115,15 @@ class SupermarketProfileController extends GetxController {
     }
 
     try {
-      Get.dialog(const Center(child: CircularProgressIndicator(color: Colors.green)), barrierDismissible: false);
+      Get.dialog(
+        const Center(child: CircularProgressIndicator(color: Colors.green)),
+        barrierDismissible: false,
+      );
 
-      var request = http.MultipartRequest("POST", Uri.parse(AppLink.updateSupermarketProfile));
+      var request = http.MultipartRequest(
+        "POST",
+        Uri.parse(AppLink.updateSupermarketProfile),
+      );
       request.fields["id"] = user.id.toString();
       request.fields["name"] = nameController.text;
       request.fields["name_ar"] = nameArController.text;
@@ -122,7 +135,13 @@ class SupermarketProfileController extends GetxController {
       request.fields["lng"] = lngController.text;
 
       if (imageBytes.value != null) {
-        request.files.add(http.MultipartFile.fromBytes("image", imageBytes.value!, filename: imageName));
+        request.files.add(
+          http.MultipartFile.fromBytes(
+            "image",
+            imageBytes.value!,
+            filename: imageName,
+          ),
+        );
       }
 
       var response = await request.send();
@@ -132,20 +151,36 @@ class SupermarketProfileController extends GetxController {
       var data = jsonDecode(respStr);
 
       if (data["status"] == "success") {
-        Get.snackbar("نجاح", "تم تحديث البيانات بنجاح", backgroundColor: Colors.green, colorText: Colors.white);
+        Get.snackbar(
+          "نجاح",
+          "تم تحديث البيانات بنجاح",
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
         isEdit.value = false;
-        // ملاحظة: يفضل هنا تحديث بيانات الـ User في AuthController ببيانات الرد الجديدة
       } else {
-        Get.snackbar("تنبيه", data["message"] ?? "حدث خطأ ما", backgroundColor: Colors.orange);
+        Get.snackbar(
+          "تنبيه",
+          data["message"] ?? "حدث خطأ ما",
+          backgroundColor: Colors.orange,
+        );
       }
     } catch (e) {
       if (Get.isDialogOpen!) Get.back();
-      Get.snackbar("خطأ", "حدث خطأ أثناء الحفظ", backgroundColor: Colors.red, colorText: Colors.white);
+      Get.snackbar(
+        "خطأ",
+        "حدث خطأ أثناء الحفظ",
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
   }
 
   void changeImage() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image, withData: true);
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      withData: true,
+    );
     if (result != null) {
       imageBytes.value = result.files.single.bytes;
       imageName = result.files.single.name;
@@ -155,6 +190,7 @@ class SupermarketProfileController extends GetxController {
 
 class MapPickerWidget extends StatefulWidget {
   final LatLng initialLocation;
+
   const MapPickerWidget({super.key, required this.initialLocation});
 
   @override
@@ -163,6 +199,7 @@ class MapPickerWidget extends StatefulWidget {
 
 class _MapPickerWidgetState extends State<MapPickerWidget> {
   late LatLng _currentPosition;
+
   @override
   void initState() {
     super.initState();
@@ -173,22 +210,39 @@ class _MapPickerWidgetState extends State<MapPickerWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("اسحب الخريطة لتحديد الموقع", style: TextStyle(fontSize: 16)),
+        title: const Text(
+          "اسحب الخريطة لتحديد الموقع",
+          style: TextStyle(fontSize: 16),
+        ),
         centerTitle: true,
         backgroundColor: Colors.white,
-        leading: IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(context)),
+        leading: IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: () => Navigator.pop(context),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, _currentPosition),
-            child: const Text("تأكيد", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green)),
-          )
+            child: const Text(
+              "تأكيد",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.green,
+              ),
+            ),
+          ),
         ],
       ),
       body: GoogleMap(
-        initialCameraPosition: CameraPosition(target: _currentPosition, zoom: 15),
+        initialCameraPosition: CameraPosition(
+          target: _currentPosition,
+          zoom: 15,
+        ),
         onTap: (pos) => setState(() => _currentPosition = pos),
         onCameraMove: (pos) => _currentPosition = pos.target,
-        markers: { Marker(markerId: const MarkerId("1"), position: _currentPosition) },
+        markers: {
+          Marker(markerId: const MarkerId("1"), position: _currentPosition),
+        },
       ),
     );
   }

@@ -71,6 +71,7 @@ class ApiServices {
     String? firebaseUid,
     String? location,
     String? timeOpen,
+    String? password,
     String? vehicleNumber,
     required String name_ar,
   }) async {
@@ -90,6 +91,7 @@ class ApiServices {
           "firebase_uid": firebaseUid ?? "",
           "location": location ?? "",
           "time_open": timeOpen ?? "",
+          "password": password ?? "",
           "vehicle_number": vehicleNumber ?? "", // أضفناه للمندوب
         },
       );

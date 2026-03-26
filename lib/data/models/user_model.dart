@@ -7,6 +7,8 @@ class UserModel {
   final int status;
   final double? lat;
   final double? lng;
+  final String? license;
+  final double? ratingAvg;
 
   final int? id;
   final String? nameAr;
@@ -24,6 +26,8 @@ class UserModel {
     required this.status,
     this.id,
     this.nameAr,
+    this.license,
+    this.ratingAvg,
     this.location,
     this.timeOpen,
     this.vehicleNumber,
@@ -46,6 +50,11 @@ class UserModel {
       nameAr: json['name_ar'],
       location: json['location'],
       timeOpen: json['time_open'],
+      license: json['license'],
+      ratingAvg: json['rating_avg'] != null
+          ? double.tryParse(json['rating_avg'].toString())
+          : null,
+      vehicleNumber: json['vehicle_number'],
       image: json['image'],
 
       lat: json['lat'] != null

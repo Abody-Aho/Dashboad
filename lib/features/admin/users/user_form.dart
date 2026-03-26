@@ -26,6 +26,9 @@ mixin UserForm on GetxController {
   final vehicleController = TextEditingController();
 
   var selectedRole = RxnString();
+  Uint8List? licenseBytes;
+  String? licenseName;
+
 
   void setRole(String role) => selectedRole.value = role;
   Future<void> fetchUsers();
@@ -105,6 +108,20 @@ mixin UserForm on GetxController {
     update();
   }
 
+  Future<void> pickLicense() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+      withData: true,
+    );
+
+    if (result != null) {
+      licenseBytes = result.files.first.bytes;
+      licenseName = result.files.first.name;
+      update();
+    }
+  }
+
   Future<void> addAccount() async {
     if (selectedRole.value == null) {
       Get.snackbar("تنبيه", "يرجى اختيار الرتبة أولاً");
@@ -135,6 +152,7 @@ mixin UserForm on GetxController {
         name_ar: nameArController.text.trim(),
         phone: phoneController.text.trim(),
         email: emailController.text.trim(),
+        password: passwordController.text.trim(),
         firebaseUid: uid,
         location: "غير محدد",
         timeOpen: "6am to 6pm",

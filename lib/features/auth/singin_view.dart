@@ -19,7 +19,6 @@ class _SignInViewState extends State<SignInView> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
       body: Container(
         height: double.infinity,
@@ -30,14 +29,12 @@ class _SignInViewState extends State<SignInView> {
           child: Column(
             children: [
               SizedBox(height: 30.h),
-
-              /// أيقونة التسجيل
               Container(
                 alignment: Alignment.center,
                 height: 80,
                 width: 78,
                 decoration: BoxDecoration(
-                  color: Colors.green[900]?.withValues(alpha: 0.7),
+                  color: Colors.green[900]?.withOpacity(0.7),
                   borderRadius: BorderRadius.circular(25),
                 ),
                 child: const FaIcon(
@@ -46,9 +43,7 @@ class _SignInViewState extends State<SignInView> {
                   color: Colors.white,
                 ),
               ),
-
               SizedBox(height: 30.h),
-
               Text(
                 "signup_title".tr,
                 textAlign: TextAlign.center,
@@ -58,17 +53,13 @@ class _SignInViewState extends State<SignInView> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-
               SizedBox(height: 5.h),
-
               Text(
                 "signup_subtitle".tr,
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.green[700], fontSize: 18),
               ),
-
               SizedBox(height: 30.h),
-
               Center(
                 child: Container(
                   width: screenWidth > 600 ? 500 : double.infinity,
@@ -86,7 +77,6 @@ class _SignInViewState extends State<SignInView> {
                         key: _formKey,
                         child: Column(
                           children: [
-                            // عنوان إنشاء الحساب
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -104,9 +94,7 @@ class _SignInViewState extends State<SignInView> {
                                   height: 35,
                                   width: 35,
                                   decoration: BoxDecoration(
-                                    color: Colors.green[900]?.withValues(
-                                      alpha: 0.7,
-                                    ),
+                                    color: Colors.green[900]?.withOpacity(0.7),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: const Icon(
@@ -116,74 +104,48 @@ class _SignInViewState extends State<SignInView> {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 10),
-                            Text(
-                              "create_account_desc".tr,
-                              style: TextStyle(
-                                color: Colors.green[700],
-                                fontSize: 16,
-                              ),
-                            ),
                             const SizedBox(height: 20),
 
-                            // نوع المستخدم
+                            // اسم السوبرماركت (English)
                             Align(
                               alignment: Alignment.topRight,
-                              child: Text("user_type".tr, style: _titleStyle()),
-                            ),
-                            const SizedBox(height: 10),
-
-                            Obx(
-                              () => DropdownButtonFormField<String>(
-                                initialValue: controller.selectedRole.value,
-                                hint: Text(
-                                  "choose".tr,
-                                  style: const TextStyle(color: Colors.green),
-                                ),
-                                decoration: _inputDecoration(),
-                                items: controller.roles.map((role) {
-                                  return DropdownMenuItem<String>(
-                                    value: role['value'] as String,
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          role['icon'] as IconData,
-                                          color: role['color'] as Color,
-                                        ),
-                                        const SizedBox(width: 10),
-                                        Text(role['label'] as String),
-                                      ],
-                                    ),
-                                  );
-                                }).toList(),
-                                onChanged: (value) =>
-                                    controller.setRole(value!),
-                                validator: (v) =>
-                                    v == null ? "role_required".tr : null,
+                              child: Text(
+                                "الاسم (English)",
+                                style: _titleStyle(),
                               ),
-                            ),
-
-                            const SizedBox(height: 20),
-
-                            // الاسم
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: Text("name".tr, style: _titleStyle()),
                             ),
                             const SizedBox(height: 10),
                             TextFormField(
                               controller: controller.nameController,
                               decoration: _inputDecoration(
-                                hint: "name_hint".tr,
-                                icon: Icons.person,
+                                hint: "Ex: Al-Amal Market",
+                                icon: Icons.store,
                               ),
-                              validator: (v) =>
-                                  v!.isEmpty ? "name_required".tr : null,
+                              validator: (v) => v!.isEmpty ? "Required" : null,
                             ),
-
                             const SizedBox(height: 20),
 
-                            // الإيميل
+                            // اسم السوبرماركت (عربي)
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: Text(
+                                "اسم السوبرماركت (عربي)",
+                                style: _titleStyle(),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            TextFormField(
+                              controller: controller.nameArController,
+                              textAlign: TextAlign.right,
+                              decoration: _inputDecoration(
+                                hint: "مثال: سوبرماركت الأمل",
+                                icon: Icons.storefront,
+                              ),
+                              validator: (v) => v!.isEmpty ? "مطلوب" : null,
+                            ),
+                            const SizedBox(height: 20),
+
+                            // البريد والإيميل
                             Align(
                               alignment: Alignment.topRight,
                               child: Text("email".tr, style: _titleStyle()),
@@ -195,16 +157,46 @@ class _SignInViewState extends State<SignInView> {
                                 hint: "email_hint".tr,
                                 icon: Icons.email,
                               ),
-                              validator: (v) => v!.isEmpty
-                                  ? "email_required".tr
-                                  : !GetUtils.isEmail(v)
-                                  ? "email_invalid".tr
-                                  : null,
+                              validator: (v) => GetUtils.isEmail(v!)
+                                  ? null
+                                  : "email_invalid".tr,
                             ),
-
                             const SizedBox(height: 20),
 
-                            // الرقم
+                            // رفع الرخصة (خاص بالسوبرماركت)
+                            Obx(
+                              () => Column(
+                                children: [
+                                  Align(
+                                    alignment: Alignment.topRight,
+                                    child: Text(
+                                      "رخصة المحل (PDF)",
+                                      style: _titleStyle(),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  ListTile(
+                                    shape: RoundedRectangleBorder(
+                                      side: BorderSide(color: Colors.green),
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    leading: const Icon(
+                                      Icons.upload_file,
+                                      color: Colors.red,
+                                    ),
+                                    title: Text(
+                                      controller.pdfName.value == ""
+                                          ? "اضغط لرفع الرخصة"
+                                          : controller.pdfName.value,
+                                    ),
+                                    onTap: () => controller.pickPdfWeb(),
+                                  ),
+                                  const SizedBox(height: 20),
+                                ],
+                              ),
+                            ),
+
+                            // رقم الهاتف
                             Align(
                               alignment: Alignment.topRight,
                               child: Text(
@@ -216,25 +208,13 @@ class _SignInViewState extends State<SignInView> {
                             TextFormField(
                               controller: controller.phoneController,
                               decoration: _inputDecoration(
-                                hint: "phone_hint".tr,
+                                hint: "777xxxxxx",
                                 icon: Icons.phone,
                               ),
                               keyboardType: TextInputType.phone,
-
-                              validator: (v) {
-                                if (v == null || v.isEmpty) {
-                                  return "phone_required".tr;
-                                }
-                                if(v.length < 9){
-                                  return "must_be_9_number".tr;
-                                }
-                                if (!GetUtils.isPhoneNumber(v)) {
-                                  return "phone_invalid".tr;
-                                }
-                                return null;
-                              },
+                              validator: (v) =>
+                                  v!.length < 9 ? "must_be_9_number".tr : null,
                             ),
-
                             const SizedBox(height: 20),
 
                             // كلمة المرور
@@ -259,16 +239,16 @@ class _SignInViewState extends State<SignInView> {
                                       color: Colors.green,
                                     ),
                                     onPressed: () =>
-                                        controller.isPasswordVisible.value =
-                                            !controller.isPasswordVisible.value,
+                                        controller.isPasswordVisible.toggle(),
                                   ),
                                 ),
                                 validator: (v) =>
                                     v!.isEmpty ? "password_required".tr : null,
                               ),
                             ),
-
                             const SizedBox(height: 20),
+
+                            // تأكيد كلمة المرور
                             Align(
                               alignment: Alignment.topRight,
                               child: Text(
@@ -293,24 +273,15 @@ class _SignInViewState extends State<SignInView> {
                                           : Icons.visibility_off,
                                       color: Colors.green,
                                     ),
-                                    onPressed: () {
-                                      controller
-                                          .isConfirmPasswordVisible
-                                          .value = !controller
-                                          .isConfirmPasswordVisible
-                                          .value;
-                                    },
+                                    onPressed: () => controller
+                                        .isConfirmPasswordVisible
+                                        .toggle(),
                                   ),
                                 ),
-                                validator: (v) {
-                                  if (v == null || v.isEmpty) {
-                                    return "confirm_required".tr;
-                                  }
-                                  if (v != controller.passwordController.text) {
-                                    return "password_not_match".tr;
-                                  }
-                                  return null;
-                                },
+                                validator: (v) =>
+                                    v != controller.passwordController.text
+                                    ? "password_not_match".tr
+                                    : null,
                               ),
                             ),
                             const SizedBox(height: 30),
@@ -328,9 +299,8 @@ class _SignInViewState extends State<SignInView> {
                                 onPressed: controller.isLoading.value
                                     ? null
                                     : () {
-                                        if (_formKey.currentState!.validate()) {
+                                        if (_formKey.currentState!.validate())
                                           controller.register();
-                                        }
                                       },
                                 child: controller.isLoading.value
                                     ? const CircularProgressIndicator(
@@ -345,9 +315,7 @@ class _SignInViewState extends State<SignInView> {
                                       ),
                               ),
                             ),
-
                             const SizedBox(height: 10),
-
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [

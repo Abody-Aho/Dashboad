@@ -54,6 +54,15 @@ class UserController extends GetxController with UserApi, UserForm, UserTable, U
             users.map<Map<String, String>>((user) {
               return {
                 'id': user['id']?.toString() ?? '',
+                'role_raw': user['role']?.toString() ?? '',
+                'name': user['name']?.toString() ?? '',
+                'name_ar': user['name_ar']?.toString() ?? '',
+                'image': user['image']?.toString() ?? '',
+                'license': user['license']?.toString() ?? '',
+                'rating_avg': user['rating_avg']?.toString() ?? '',
+                'vehicle_number': user['vehicle_number']?.toString() ?? '',
+                'supermarket_location': user['supermarket_location']?.toString() ?? '',
+                'supermarket_time_open': user['supermarket_time_open']?.toString() ?? '',
                 'Column4': user['role']?.toString() ?? '',
                 'Column1': user['role'] == 'supermarket'
                     ? user['name_ar'] ?? ''

@@ -20,7 +20,6 @@ class SuperMarket {
     );
   }
 
-  /// 🔥 يرجع الاسم حسب اللغة
   String getName(String langCode) {
     return langCode == 'ar' ? nameAr : nameEn;
   }

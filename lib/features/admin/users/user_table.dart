@@ -13,6 +13,7 @@ mixin UserTable on GetxController {
   RxInt sortColumnIndex = 0.obs;
   RxBool sortAscending = true.obs;
   var filteredDataList = <Map<String, String>>[].obs;
+
   // ======================= DATA CELLS =======================
   List<DataCell> getDataCells(Map<String, dynamic> data) {
     return [
@@ -42,7 +43,6 @@ mixin UserTable on GetxController {
       ),
     );
   }
-
 
   DataCell _statusCell(String? status) {
     final bool isActive = status == 'active'.tr;
@@ -75,23 +75,16 @@ mixin UserTable on GetxController {
             Flexible(
               child: IconButton(
                 icon: Icon(
-                  isActive ? Icons.person : Icons.person_off,
+                  Icons.remove_red_eye,
                   color: Colors.grey,
                   size: 25,
                 ),
                 padding: EdgeInsets.zero,
-                onPressed: () => (this as UserController).toggleUserStatus(data),
-                tooltip: 'View'.tr,
-              ),
-            ),
-            Flexible(
-              child: IconButton(
-                icon: const Icon(Icons.edit, color: Colors.blue, size: 25),
-                padding: EdgeInsets.zero,
                 onPressed: () {
                   final user = UserModel(
-                    id: int.tryParse(data['id'] ?? ''),
+                    id: int.tryParse(data['id'] ?? '0') ?? 0,
                     firebaseUid: '',
+
                     name: data['name'] ?? '',
                     email: data['Column2'] ?? '',
                     phone: data['Column3'] ?? '',
@@ -100,15 +93,55 @@ mixin UserTable on GetxController {
 
                     image: data['image'],
                     nameAr: data['name_ar'],
+                    license: data['license'],
+                    ratingAvg: double.tryParse(data['rating_avg'] ?? '0'),
+                    location: data['supermarket_location'],
+                    timeOpen: data['supermarket_time_open'],
+                    vehicleNumber: data['vehicle_number'],
+                  );
+                  print("license = ${user.license}");
+                  print("${AppLink.pdf}${user.license}");
+                  controller.showUserDetailsDialog(user);},
+                tooltip: 'View'.tr,
+              ),
+            ),
+            Flexible(
+              child: IconButton(
+                icon: Icon(
+                  isActive ? Icons.person : Icons.person_off,
+                  color: Colors.grey,
+                  size: 25,
+                ),
+                padding: EdgeInsets.zero,
+                onPressed: () =>
+                    (this as UserController).toggleUserStatus(data),
+                tooltip: 'status'.tr,
+              ),
+            ),
+            Flexible(
+              child: IconButton(
+                icon: const Icon(Icons.edit, color: Colors.blue, size: 25),
+                padding: EdgeInsets.zero,
+                onPressed: () {
+                  final user = UserModel(
+                    id: int.tryParse(data['id'] ?? '0') ?? 0,
+                    firebaseUid: '',
+                    name: data['name'] ?? '',
+                    email: data['Column2'] ?? '',
+                    phone: data['Column3'] ?? '',
+                    role: data['role_raw'] ?? '',
+                    status: data['Column5'] == 'active'.tr ? 1 : 0,
+                    image: data['image'],
+                    nameAr: data['name_ar'],
                     vehicleNumber: data['vehicle_number'],
                     location: data['supermarket_location'],
+
                     timeOpen: data['supermarket_time_open'],
                   );
 
                   (this as UserController).showEditDialog(user);
                   print("IMAGE NAME => ${user.image}");
                   print("${AppLink.image}${user.image}");
-
                 },
                 tooltip: 'Edit'.tr,
               ),
@@ -119,22 +152,18 @@ mixin UserTable on GetxController {
                 padding: EdgeInsets.zero,
                 onPressed: () {
                   AppDeleteDialog.show(
-
                     title: "حذف المستخدم",
-
                     message: "هل تريد حذف المستخدم",
-
                     itemName: data['name'],
 
                     onConfirm: () {
-
                       controller.deleteUserFromServer(
-                        id: data['id'],
-                        role: data['role_raw'],
+                        id: data['id']?.toString() ?? "0",
+                        role: data['role_raw']?.toString() ?? "user",
                       );
-
                     },
-                  );;
+                  );
+                  ;
                 },
                 tooltip: 'Delete'.tr,
               ),
@@ -200,5 +229,4 @@ mixin UserTable on GetxController {
 
     return selectedUsers;
   }
-
 }
