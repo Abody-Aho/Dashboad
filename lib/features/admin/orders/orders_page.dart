@@ -2,6 +2,7 @@ import 'package:dashbord2/core/constants/app_constants.dart';
 import 'package:dashbord2/features/widgets/custom_data_table.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../widgets/custom_bottom.dart';
 import '../../widgets/custom_card.dart';
 import '../../widgets/custom_dropdown_button.dart';
 import '../../widgets/custom_search_bar.dart';
@@ -119,11 +120,13 @@ class OrdersPage extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 20),
                                 Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 10),
-                                  child: CustomDropdownButton(
-                                    selectedValue: controller.selectedValue,
-                                    options: controller.options,
-                                    onChanged: controller.changeValue,
+                                  margin: EdgeInsets.symmetric(horizontal: 12),
+                                  child: CustomBottom(
+                                    controller: controller,
+                                    addButtonText: 'add_coupon'.tr,
+                                    onAddPressed: () {
+                                      controller.showCouponDialog();
+                                    },
                                   ),
                                 ),
                               ],
@@ -132,10 +135,12 @@ class OrdersPage extends StatelessWidget {
                             return Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                CustomDropdownButton(
-                                  selectedValue: controller.selectedValue,
-                                  options: controller.options,
-                                  onChanged: controller.changeValue,
+                                CustomBottom(
+                                  controller: controller,
+                                  addButtonText: 'add_coupon'.tr,
+                                  onAddPressed: () {
+                                    controller.showCouponDialog();
+                                  },
                                 ),
                                 Expanded(
                                   child: CustomSearchBar(

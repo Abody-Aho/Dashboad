@@ -3,6 +3,7 @@ class AppLink {
   static const String server = 'http://46.101.225.45/flymarket/dashboard/';
   // static const String server = 'http://localhost/flymarket_php_api/dashboard/';
    static const String image = 'http://46.101.225.45/flymarket/app/customer/upload/supermarket/';
+   static const String imageOrders = 'http://46.101.225.45/flymarket/app/customer/upload/pay/';
    static const String pdf = 'http://46.101.225.45/flymarket/dashboard/admin/upload/licenses/';
   //  static const String image = 'http://localhost/flymarket_php_api/app/customer/upload/supermarket/';
 
@@ -35,6 +36,10 @@ class AppLink {
   static const String deleteItem = "${server}admin/items/delete_item.php";
   static const String updateStatus = "${server}admin/orders/update_order_status.php";
   static const String deleteOrder = "${server}admin/orders/delete_order.php";
+  static const String viewCoupon = "${server}admin/coupon/view.php";
+  static const String addCoupon = "${server}admin/coupon/add.php";
+  static const String editCoupon = "${server}admin/coupon/edit.php";
+  static const String deleteCoupon = "${server}admin/coupon/delete.php";
   static const String orderDetails = "${server}admin/orders/orders_items_view.php";
   static const String notificationsView = "${server}admin/notification/notification_view.php";
   static const notificationsCreate = "${server}admin/notification/create_notification.php";
@@ -60,6 +65,7 @@ class AppLink {
   static const sendMessage = "${server}supermarket/supermarket_chat/send_message.php";
   static const getMessage = "${server}supermarket/supermarket_chat/get_messages.php";
   static const getSupermarkets = "${server}supermarket/supermarket_chat/get_supermarkets.php";
+  static const itemsFilterSupermarket = "${server}supermarket/items/items_filter_supermarket.php";
   static const saveToken = "${server}save_token.php";
 
 

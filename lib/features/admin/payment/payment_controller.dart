@@ -1,25 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-/// وحدة تحكم المستخدمين - User Controller
-/// مسؤولة عن إدارة بيانات المستخدمين، البحث، الفرز، والاختيار.
 class PaymentController extends GetxController {
-  var dataList = <Map<String, String>>[].obs;        // جميع بيانات المستخدمين
-  var filteredDataList = <Map<String, String>>[].obs; // البيانات بعد البحث أو التصفية
-  RxList<bool> selectedRows = <bool>[].obs;          // حالة التحديد لكل صف
+  var dataList = <Map<String, String>>[].obs;
+  var filteredDataList = <Map<String, String>>[].obs;
+  RxList<bool> selectedRows = <bool>[].obs;
 
-  RxInt sortColumnIndex = 0.obs;                     // العمود المفعل للفرز
-  RxBool sortAscending = true.obs;                   // اتجاه الفرز (تصاعدي / تنازلي)
-  final searchTextController = TextEditingController(); // متحكم حقل البحث
+  RxInt sortColumnIndex = 0.obs;
+  RxBool sortAscending = true.obs;
+  final searchTextController = TextEditingController();
+  var isLoading = false.obs;
 
-  /// عند إنشاء الكنترولر يتم تحميل البيانات مباشرة
   @override
   void onInit() {
     super.onInit();
     fetchPayments();
   }
 
-  /// إنشاء خلايا البيانات الخاصة بكل صف في الجدول
   List<DataCell> getDataCells(Map<String, dynamic> data) {
     return [
       DataCell(Text(data['Column1'] ?? '', overflow: TextOverflow.ellipsis)),
@@ -52,7 +49,6 @@ class PaymentController extends GetxController {
     ];
   }
 
-  /// تعريف أعمدة الجدول مع دعم الفرز
   List<DataColumn> get tableColumns => [
     DataColumn(
       label: Text('transaction_number'.tr),
@@ -73,10 +69,6 @@ class PaymentController extends GetxController {
     DataColumn(
       label: Text('payment_method'.tr),
       onSort: (columnIndex, ascending) => sortData(4, ascending),
-    ),
-    DataColumn(
-      label: Text('status'.tr),
-      onSort: (columnIndex, ascending) => sortData(5, ascending),
     ),
     DataColumn(
       label: Text('supermarket'.tr),
@@ -127,10 +119,9 @@ class PaymentController extends GetxController {
 
   /// تحميل بيانات تجريبية للمستخدمين
   void fetchPayments() {
-    final paymentMethods = ['Cash'.tr, 'E-Wallet'.tr, 'Bank Transfer'.tr, 'POS'.tr];
-    final statuses = ['Completed'.tr, 'Pending'.tr, 'Failed'.tr];
+    final paymentMethods = ['Cash'.tr, 'E-Wallet'.tr, 'POS'.tr];
     final supermarkets = ['Sham Supermarket'.tr, 'Yemen Supermarket'.tr, 'Future Supermarket'.tr];
-
+    isLoading.value = true;
     dataList.assignAll(
       List.generate(
         20,
@@ -140,7 +131,6 @@ class PaymentController extends GetxController {
           'Column3': '${'Customer'.tr} ${index + 1}',
           'Column4': '${(index + 1) * 1200} ريال',
           'Column5': paymentMethods[index % paymentMethods.length],
-          'Column6': statuses[index % statuses.length],
           'Column7': supermarkets[index % supermarkets.length],
           'Column8': '2025-11-${(index % 28) + 1}',
         },
@@ -151,6 +141,7 @@ class PaymentController extends GetxController {
     selectedRows.assignAll(
       List.generate(filteredDataList.length, (index) => false),
     );
+    isLoading.value = false;
   }
 
   final selectedValue = 'all_statuses'.obs;

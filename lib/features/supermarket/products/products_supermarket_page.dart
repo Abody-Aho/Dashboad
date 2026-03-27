@@ -4,6 +4,7 @@ import 'package:dashbord2/features/widgets/custom_data_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import '../../widgets/category_dropdown.dart';
 import '../../widgets/custom_bottom.dart';
 import '../../widgets/custom_card.dart';
 import '../../widgets/custom_dropdown_button.dart';
@@ -101,19 +102,23 @@ class ProductsSupermarketPage extends StatelessWidget {
                                 const SizedBox(height: 20),
                                 Container(
                                   margin: EdgeInsets.symmetric(horizontal: 10),
-                                  child: CustomDropdownButton(
-                                    selectedValue: controller.selectedCategories,
-                                    options: controller.supermarketCategories,
-                                    onChanged: controller.changeCategories,
+                                  child: CategoryDropdown(
+                                    categories: controller.categoriesAll,
+                                    selectedCategory: controller.selectedCategory,
+                                    onChanged: (value) {
+                                      controller.filterByCategory(value);
+                                    },
                                   ),
                                 ),
                                 const SizedBox(height: 20),
                                 Container(
                                   margin: EdgeInsets.symmetric(horizontal: 10),
-                                  child: CustomDropdownButton(
+                                  child: CustomDropdownButton<String>(
                                     selectedValue: controller.selectedValue,
                                     options: controller.options,
-                                    onChanged: controller.changeValue,
+                                    onChanged: (value) {
+                                      controller.filterByStatus(value);
+                                    },
                                   ),
                                 ),
                                 const SizedBox(height: 20),
@@ -145,23 +150,23 @@ class ProductsSupermarketPage extends StatelessWidget {
                                   },
                                 ),
                                 Container(
-                                  margin: EdgeInsets.only(
-                                    left: 5.w,
-                                  ),
-                                  child: CustomDropdownButton(
-                                    selectedValue: controller.selectedCategories,
-                                    options: controller.supermarketCategories,
-                                    onChanged: controller.changeCategories,
+                                  margin: EdgeInsets.only(left: 5.w),
+                                  child: CategoryDropdown(
+                                    categories: controller.categoriesAll,
+                                    selectedCategory: controller.selectedCategory,
+                                    onChanged: (value) {
+                                      controller.filterByCategory(value);
+                                    },
                                   ),
                                 ),
                                 Container(
-                                  margin: EdgeInsets.only(
-                                    left: 5.w,
-                                  ),
-                                  child: CustomDropdownButton(
+                                  margin: EdgeInsets.only(left: 5.w),
+                                  child: CustomDropdownButton<String>(
                                     selectedValue: controller.selectedValue,
                                     options: controller.options,
-                                    onChanged: controller.changeValue,
+                                    onChanged: (value) {
+                                      controller.filterByStatus(value);
+                                    },
                                   ),
                                 ),
 

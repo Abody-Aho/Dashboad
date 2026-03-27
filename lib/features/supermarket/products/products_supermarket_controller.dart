@@ -52,6 +52,7 @@ class ProductsSupermarketController extends GetxController with ProductSupermark
   var categoriesAll = <CategoryAllModel>[].obs;
   // ===== Category Add Controllers =====
   final catNameArController = TextEditingController();
+  Rxn<CategoryAllModel> selectedCategory = Rxn<CategoryAllModel>();
   final catNameEnController = TextEditingController();
 
   RxString categoryType = "general".obs; // general | private
@@ -69,6 +70,7 @@ class ProductsSupermarketController extends GetxController with ProductSupermark
   void onInit() {
     super.onInit();
     fetchProducts();
+    fetchCategoriesAll();
   }
 
   void resetCategoryForm() {
@@ -143,26 +145,19 @@ class ProductsSupermarketController extends GetxController with ProductSupermark
   final selectedValue = 'all_status'.obs;
   final options = ['all_status','available', 'not_available'];
 
-  // عند التغيير
-  void changeValue(String newValue) {
-    selectedValue.value = newValue;
+
+  // الفلترة
+  void filterByCategory(CategoryAllModel? category) {
+    selectedCategory.value = category;
+    selectedCategoryId.value = category?.id;
+
+    fetchProductsFiltered();
   }
 
-  final selectedCategories = 'all_categories'.obs;
-  final List<String> supermarketCategories = [
-    'all_categories',
-    'bakery',
-    'dairy',
-    'grains',
-    'fruits',
-    'vegetables',
-    'meat',
-    'drinks',
-    'detergents',
-  ];
 
-  // عند التغيير
-  void changeCategories(String newValue) {
-    selectedCategories.value = newValue;
+  void filterByStatus(String value) {
+    selectedValue.value = value;
+    fetchProductsFiltered();
   }
+
 }

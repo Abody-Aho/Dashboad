@@ -9,9 +9,12 @@ class OrdersController extends GetxController
     with OrderApi, OrderDialogs, OrderTable, OrderHelpers {
   var dataList = <Map<String, dynamic>>[].obs;
   var filteredDataList = <Map<String, dynamic>>[].obs;
+  var filteredCoupons = <Map<String, dynamic>>[].obs;
+  var couponsList = <Map<String, dynamic>>[].obs;
 
   RxList<bool> selectedRows = <bool>[].obs;
   RxBool isLoading = true.obs;
+  RxBool isCouponLoading = true.obs;
 
   RxInt sortColumnIndex = 0.obs;
   RxBool sortAscending = true.obs;

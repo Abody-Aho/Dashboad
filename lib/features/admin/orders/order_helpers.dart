@@ -187,4 +187,19 @@ mixin OrderHelpers on GetxController{
       ),
     );
   }
+
+  Widget input(TextEditingController c, String hint) {
+    return SizedBox(
+      width: 200,
+      child: TextField(
+        controller: c,
+        decoration: InputDecoration(
+          hintText: hint,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      ),
+    );
+  }
 }
