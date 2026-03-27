@@ -12,7 +12,6 @@ import '../../auth/auth_controller.dart';
 class ChatController extends GetxController {
 
   late int adminId;
-
   var markets = <SuperMarket>[].obs;
   var selectedMarket = 0.obs;
 
@@ -22,9 +21,11 @@ class ChatController extends GetxController {
 
   TextEditingController messageController = TextEditingController();
 
+  /// 🔥 سكروول
+  ScrollController scrollController = ScrollController();
+
   Timer? timer;
 
-  /// اللغة الحالية
   String get lang => Get.locale?.languageCode ?? "ar";
 
   @override
@@ -37,7 +38,6 @@ class ChatController extends GetxController {
     loadMarkets();
   }
 
-  /// 🔥 جلب السوبرماركت
   Future<void> loadMarkets() async {
 
     var res = await http.get(Uri.parse(AppLink.getSupermarkets));
@@ -56,7 +56,6 @@ class ChatController extends GetxController {
     }
   }
 
-  /// فتح الشات
   Future<void> initChat() async {
 
     int marketId = markets[selectedMarket.value].id;
@@ -69,7 +68,7 @@ class ChatController extends GetxController {
 
     roomId = data["room_id"];
 
-    loadMessages();
+    await loadMessages();
 
     timer?.cancel();
 
@@ -83,7 +82,7 @@ class ChatController extends GetxController {
     initChat();
   }
 
-  /// الرسائل
+  /// 🔥 تحميل الرسائل
   Future<void> loadMessages() async {
 
     var res = await http.get(Uri.parse(
@@ -97,7 +96,6 @@ class ChatController extends GetxController {
       messages.clear();
 
       for (var item in data["data"]) {
-
         messages.add(
           AdminChatMessage(
             text: item["message"],
@@ -106,10 +104,24 @@ class ChatController extends GetxController {
           ),
         );
       }
+
+
+      scrollToBottom();
     }
   }
 
-  /// إرسال
+  void scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (scrollController.hasClients) {
+        scrollController.animateTo(
+          scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
   Future<void> sendMessage() async {
 
     if (messageController.text.isEmpty) return;
@@ -125,12 +137,14 @@ class ChatController extends GetxController {
     );
 
     messageController.clear();
-    loadMessages();
+
+    await loadMessages();
   }
 
   @override
   void onClose() {
     timer?.cancel();
+    scrollController.dispose();
     super.onClose();
   }
 }

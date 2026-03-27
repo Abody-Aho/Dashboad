@@ -3,6 +3,7 @@ import 'package:dashbord2/features/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../widgets/app_logout_dialog.dart';
 
 class ButtonsInfo {
   String title;
@@ -108,7 +109,14 @@ class DrawerSupermarketPage extends StatelessWidget {
                   ),
                 ),
                 leading: Icon(Icons.logout, color: Colors.red),
-                onTap: () => ctrl.logout(),
+                onTap: () {
+                  AppDialogs.showLogoutDialog(
+                    onConfirm: () {
+                      ctrl.logout();
+                      print("Logout confirmed");
+                    },
+                  );
+                },
               ),
             ],
           ),

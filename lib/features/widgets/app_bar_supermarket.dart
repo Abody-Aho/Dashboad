@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/services/lang_service.dart';
 import '../../routes/app_routes.dart';
-import '../supermarket/supermarket_chat/supermarket_chat_page.dart';
 
 class AppBarSupermarket extends StatefulWidget {
   const AppBarSupermarket({super.key});

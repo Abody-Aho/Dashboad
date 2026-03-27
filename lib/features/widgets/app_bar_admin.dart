@@ -122,7 +122,6 @@ class _AppBarAdminState extends State<AppBarAdmin> {
                 color: Constants.primary,
                 iconSize: 28,
                 onPressed: () {
-                  Get.to(() => AdminChatPage());
                   Get.toNamed(AppRoutes.adminChat);
                 },
                 icon: const Icon(Icons.notifications_none_outlined),

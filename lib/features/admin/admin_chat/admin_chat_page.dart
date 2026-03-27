@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/constants/app_link.dart';
+import '../../../routes/app_routes.dart';
 import 'chat_controller.dart';
 
 class AdminChatPage extends StatelessWidget {
@@ -52,7 +53,7 @@ class AdminChatPage extends StatelessWidget {
     );
   }
 
-  /// 🔵 HEADER
+
   Widget _header(bool isMobile) {
 
     return Container(
@@ -72,7 +73,13 @@ class AdminChatPage extends StatelessWidget {
 
           IconButton(
             icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
-            onPressed: () => Get.back(),
+            onPressed: () {
+              if (Get.routing.previous != '') {
+                Get.back();
+              } else {
+                Get.offAllNamed(AppRoutes.dashboardAdmin);
+              }
+            },
           ),
 
           if (isMobile)
@@ -235,6 +242,7 @@ class AdminChatPage extends StatelessWidget {
   Widget _messages() {
 
     return Obx(() => ListView.builder(
+      controller: controller.scrollController,
 
       padding: const EdgeInsets.all(16),
 
@@ -315,8 +323,11 @@ class AdminChatPage extends StatelessWidget {
             child: TextField(
 
               controller: controller.messageController,
-
+              textInputAction: TextInputAction.send,
               style: const TextStyle(color: Constants.waText),
+              onSubmitted: (value) {
+                controller.sendMessage();
+              },
 
               decoration: InputDecoration(
 

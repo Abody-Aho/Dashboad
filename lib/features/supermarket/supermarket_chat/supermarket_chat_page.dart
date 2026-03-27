@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../routes/app_routes.dart';
 import 'supermarket_chat_controller.dart';
 
 class SupermarketChatPage extends StatelessWidget {
@@ -54,7 +55,13 @@ class SupermarketChatPage extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.arrow_back_ios_new,
                 color: Colors.white),
-            onPressed: () => Get.back(),
+            onPressed: () {
+              if (Get.routing.previous != '') {
+                Get.back();
+              } else {
+                Get.offAllNamed(AppRoutes.dashboardMarket);
+              }
+            },
           ),
 
           const CircleAvatar(
@@ -106,6 +113,9 @@ class SupermarketChatPage extends StatelessWidget {
   Widget _messages() {
 
     return Obx(() => ListView.builder(
+
+      controller: controller.scrollController, // 🔥 مهم
+
       padding: const EdgeInsets.all(16),
 
       itemCount: controller.messages.length,
@@ -155,7 +165,6 @@ class SupermarketChatPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
 
-                /// 🔥 اسم المرسل
                 Text(
                   msg.senderName,
                   style: const TextStyle(
@@ -167,7 +176,6 @@ class SupermarketChatPage extends StatelessWidget {
 
                 const SizedBox(height: 2),
 
-                /// الرسالة
                 Text(
                   msg.text,
                   style: const TextStyle(
@@ -183,7 +191,6 @@ class SupermarketChatPage extends StatelessWidget {
     ));
   }
 
-  /// 🟡 الإدخال
   Widget _input() {
 
     return Container(
@@ -210,7 +217,10 @@ class SupermarketChatPage extends StatelessWidget {
 
               style: const TextStyle(
                   color: Constants.waText),
-
+              textInputAction: TextInputAction.send,
+              onSubmitted: (value) {
+                controller.sendMessage();
+              },
               decoration: InputDecoration(
 
                 hintText: "اكتب رسالة",

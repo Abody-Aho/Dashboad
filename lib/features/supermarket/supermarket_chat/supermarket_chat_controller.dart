@@ -8,6 +8,7 @@ import '../../../data/models/supermarket_chat_message.dart';
 import '../../auth/auth_controller.dart';
 
 class SupermarketChatController extends GetxController {
+
   final ScrollController scrollController = ScrollController();
 
   late int supermarketId;
@@ -32,7 +33,7 @@ class SupermarketChatController extends GetxController {
     initChat();
   }
 
-  /// إنشاء / جلب الغرفة
+  /// 🔥 إنشاء / جلب الغرفة
   Future<void> initChat() async {
 
     var res = await http.get(Uri.parse(
@@ -43,19 +44,16 @@ class SupermarketChatController extends GetxController {
 
     roomId = data["room_id"];
 
-    loadMessages();
+    await loadMessages();
+
+    timer?.cancel();
 
     timer = Timer.periodic(const Duration(seconds: 2), (_) {
       loadMessages();
     });
   }
-  @override
-  void onClose() {
-    timer?.cancel();
-    super.onClose();
-  }
 
-  /// جلب الرسائل
+  /// 🔥 جلب الرسائل
   Future<void> loadMessages() async {
 
     var res = await http.get(Uri.parse(
@@ -80,19 +78,25 @@ class SupermarketChatController extends GetxController {
         );
       }
 
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (scrollController.hasClients) {
-          scrollController.animateTo(
-            scrollController.position.maxScrollExtent,
-            duration: Duration(milliseconds: 300),
-            curve: Curves.easeOut,
-          );
-        }
-      });
+      /// 🔥 نزول لآخر رسالة
+      scrollToBottom();
     }
   }
 
-  /// إرسال رسالة
+  /// 🔥 النزول لآخر رسالة (احترافي)
+  void scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (scrollController.hasClients) {
+        scrollController.animateTo(
+          scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
+  /// 🔥 إرسال رسالة
   Future<void> sendMessage() async {
 
     if (messageController.text.trim().isEmpty) return;
@@ -109,6 +113,13 @@ class SupermarketChatController extends GetxController {
 
     messageController.clear();
 
-    loadMessages();
+    await loadMessages();
+  }
+
+  @override
+  void onClose() {
+    timer?.cancel();
+    scrollController.dispose();
+    super.onClose();
   }
 }

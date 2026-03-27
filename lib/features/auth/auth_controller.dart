@@ -62,6 +62,21 @@ class AuthController extends GetxController {
     FirebaseMessaging.instance.getInitialMessage().then((message) {
       if (message != null) openChat(message.data);
     });
+    resetControllers();
+  }
+  void resetControllers() {
+    nameController.clear();
+    emailController.clear();
+    passwordController.clear();
+    confirmPasswordController.clear();
+    phoneController.clear();
+    locationController.clear();
+    timeOpenController.clear();
+    nameArController.clear();
+    webImageBytes.value = null;
+    webPdfBytes.value = null;
+    imageName.value = "";
+    pdfName.value = "";
   }
 
   @override
