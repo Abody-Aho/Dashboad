@@ -21,7 +21,7 @@ class ChatController extends GetxController {
 
   TextEditingController messageController = TextEditingController();
 
-  /// 🔥 سكروول
+  //  سكروول
   ScrollController scrollController = ScrollController();
 
   Timer? timer;
@@ -82,7 +82,7 @@ class ChatController extends GetxController {
     initChat();
   }
 
-  /// 🔥 تحميل الرسائل
+  // تحميل الرسائل
   Future<void> loadMessages() async {
 
     var res = await http.get(Uri.parse(

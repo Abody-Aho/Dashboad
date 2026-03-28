@@ -16,7 +16,7 @@ mixin ProductHelpers on GetxController {
             .any((e) => e.id == controller.selectedSuperId.value)
             ? controller.selectedSuperId.value
             : null,
-        decoration: greenDecoration("اختر السوبرماركت"),
+        decoration: greenDecoration("choose_supermarket".tr),
         items: controller.supers.map((s) {
           return DropdownMenuItem<int>(value: s.id, child: Text(s.nameAr));
         }).toList(),
@@ -29,7 +29,7 @@ mixin ProductHelpers on GetxController {
           }
         },
         validator: (value) =>
-            value == null ? "الرجاء اختيار السوبرماركت" : null,
+            value == null ? "choose_supermarket".tr : null,
       ),
     );
   }
@@ -46,7 +46,7 @@ mixin ProductHelpers on GetxController {
       maxLines: maxLines,
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return "هذا الحقل مطلوب";
+          return "all_fields_required".tr;
         }
         return null;
       },
@@ -59,7 +59,7 @@ mixin ProductHelpers on GetxController {
       () => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("صورة الفئة"),
+          Text("category_label".tr),
           const SizedBox(height: 10),
           GestureDetector(
             onTap: () async {
@@ -98,7 +98,7 @@ mixin ProductHelpers on GetxController {
                         width: double.infinity,
                       ),
                     )
-                  : const Center(child: Text("اضغط لاختيار صورة")),
+                  : Center(child: Text("choose_product_image".tr)),
             ),
           ),
         ],
@@ -113,14 +113,14 @@ mixin ProductHelpers on GetxController {
             .any((e) => e.id == controller.selectedCategoryId.value)
             ? controller.selectedCategoryId.value
             : null,
-        decoration: greenDecoration("الفئة الخاصة"),
+        decoration: greenDecoration("private_category".tr),
         items: controller.categories.map((c) {
           return DropdownMenuItem<int>(value: c.id, child: Text(c.nameAr));
         }).toList(),
         onChanged: (value) {
           controller.selectedCategoryId.value = value;
         },
-        validator: (value) => value == null ? "اختر الفئة الخاصة" : null,
+        validator: (value) => value == null ? "choose_private_category".tr : null,
       ),
     );
   }
@@ -132,14 +132,14 @@ mixin ProductHelpers on GetxController {
             .any((e) => e.id == controller.selectedCategoryAllId.value)
             ? controller.selectedCategoryAllId.value
             : null,
-        decoration: greenDecoration("الفئة العامة"),
+        decoration: greenDecoration("general_category".tr),
         items: controller.categoriesAll.map((c) {
           return DropdownMenuItem<int>(value: c.id, child: Text(c.nameAr));
         }).toList(),
         onChanged: (value) {
           controller.selectedCategoryAllId.value = value;
         },
-        validator: (value) => value == null ? "اختر الفئة العامة" : null,
+        validator: (value) => value == null ? "choose_general_category".tr : null,
       ),
     );
   }
@@ -149,9 +149,9 @@ mixin ProductHelpers on GetxController {
       () => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "صورة المنتج",
-            style: TextStyle(
+          Text(
+            "product_image".tr,
+            style: const TextStyle(
               fontWeight: FontWeight.bold,
               color: Constants.text,
             ),
@@ -200,17 +200,17 @@ mixin ProductHelpers on GetxController {
               )
 
               /// إذا لا توجد أي صورة
-                  : const Center(
+                  : Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.cloud_upload,
                       size: 40,
                       color: Constants.grey,
                     ),
-                    SizedBox(height: 8),
-                    Text("اضغط لاختيار صورة"),
+                    const SizedBox(height: 8),
+                    Text("choose_product_image".tr),
                   ],
                 ),
               ),

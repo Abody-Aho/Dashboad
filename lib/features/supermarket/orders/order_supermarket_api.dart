@@ -7,36 +7,28 @@ import 'package:http/http.dart' as http;
 import '../../../core/constants/app_link.dart';
 import 'orders_supermarket_controller.dart';
 
-mixin OrderSupermarketApi on GetxController{
+mixin OrderSupermarketApi on GetxController {
   OrdersSupermarketController get controller;
 
   Future<void> fetchOrders() async {
-
     try {
-
       controller.isLoading.value = true;
 
       final response = await http.post(
         Uri.parse(AppLink.ordersViewSupermarket),
-        body: {
-          "supermarket_id": controller.supermarketId.toString()
-        },
+        body: {"supermarket_id": controller.supermarketId.toString()},
       );
 
       final body = jsonDecode(response.body);
 
       if (body['status'] == 'success') {
-
         final List orders = body['data'];
 
         controller.dataList.assignAll(
           orders.map<Map<String, dynamic>>((order) {
-
             return {
-
               'id': order['id'].toString(),
               'status_raw': order['orders_status'],
-
               'Column1': order['id'].toString(),
               'Column2': order['user'] ?? '-',
               'Column4': order['driver'] ?? '-',
@@ -45,7 +37,6 @@ mixin OrderSupermarketApi on GetxController{
               'Column7': controller.mapStatus(order['orders_status']),
               'Column8': controller.formatDate(order['orders_datetime']),
             };
-
           }).toList(),
         );
 
@@ -55,22 +46,15 @@ mixin OrderSupermarketApi on GetxController{
           List.generate(controller.filteredDataList.length, (_) => false),
         );
       }
-
     } catch (e) {
-
-      Get.snackbar("Error", e.toString());
-
+      Get.snackbar("error".tr, e.toString());
     } finally {
-
       controller.isLoading.value = false;
-
     }
   }
 
   Future updateOrderStatus(int orderId, int status) async {
-
     try {
-
       final response = await http.post(
         Uri.parse(AppLink.updateStatusSuper),
         body: {
@@ -82,37 +66,29 @@ mixin OrderSupermarketApi on GetxController{
       final body = jsonDecode(response.body);
 
       if (body['status'] == "success") {
-
         Get.snackbar(
-          "Success",
-          "تم تحديث حالة الطلب",
+          "success".tr,
+          "order_status_updated".tr,
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
 
         controller.fetchOrders();
-
       } else {
-
         Get.snackbar(
-          "Error",
-          "فشل تحديث الحالة",
+          "error".tr,
+          "status_update_failed".tr,
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
-
       }
-
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      Get.snackbar("error".tr, e.toString());
     }
-
   }
 
   Future deleteOrder(int orderId) async {
-
     try {
-
       final response = await http.post(
         Uri.parse(AppLink.deleteSuperOrder),
         body: {
@@ -123,37 +99,30 @@ mixin OrderSupermarketApi on GetxController{
       final body = jsonDecode(response.body);
 
       if (body['status'] == "success") {
-
         Get.back();
 
         Get.snackbar(
-          "Success",
-          "تم حذف الطلب",
+          "success".tr,
+          "order_deleted".tr,
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
 
         controller.fetchOrders();
-
       } else {
-
         Get.snackbar(
-          "Error",
-          "فشل حذف الطلب",
+          "error".tr,
+          "order_delete_failed".tr,
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
-
       }
-
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      Get.snackbar("error".tr, e.toString());
     }
-
   }
 
   Future<List<Map<String, dynamic>>> getOrderItems(int orderId) async {
-
     final response = await http.post(
       Uri.parse(AppLink.ordersViewDetails),
       body: {

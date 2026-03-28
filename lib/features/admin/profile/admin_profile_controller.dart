@@ -8,7 +8,6 @@ import '../../../core/constants/app_link.dart';
 import '../../auth/auth_controller.dart';
 
 class AdminProfileController extends GetxController {
-
   final AuthController authController = Get.find();
 
   var isEdit = false.obs;
@@ -32,7 +31,6 @@ class AdminProfileController extends GetxController {
   }
 
   void _loadUser() {
-
     final user = authController.currentUser.value;
 
     if (user == null) return;
@@ -53,13 +51,11 @@ class AdminProfileController extends GetxController {
   }
 
   Future<void> saveProfile() async {
-
     final user = authController.currentUser.value;
 
-    if(user == null) return;
+    if (user == null) return;
 
-    try{
-
+    try {
       var request = http.MultipartRequest(
         "POST",
         Uri.parse(AppLink.updateProfile),
@@ -71,7 +67,6 @@ class AdminProfileController extends GetxController {
       request.fields["phone"] = phoneController.text;
 
       if (imageBytes.value != null) {
-
         request.files.add(
           http.MultipartFile.fromBytes(
             "image",
@@ -79,7 +74,6 @@ class AdminProfileController extends GetxController {
             filename: imageName,
           ),
         );
-
       }
 
       var response = await request.send();
@@ -88,60 +82,51 @@ class AdminProfileController extends GetxController {
 
       var data = jsonDecode(respStr);
 
-      if(data["status"] == "success"){
-
+      if (data["status"] == "success") {
         Get.snackbar(
-          "نجاح",
-          "تم تحديث البروفايل",
+          "success".tr,
+          "profile_updated".tr,
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
 
         isEdit.value = false;
-
-      }else{
-
+      } else {
         Get.snackbar(
-          "خطأ",
-          data["message"] ?? "فشل التحديث",
+          "error".tr,
+          data["message"] ?? "profile_update_failed".tr,
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
         print(data["message"]);
         print("USER ID = ${user.id}");
-
       }
-
-    }catch(e){
-
+    } catch (e) {
       Get.snackbar(
-        "خطأ",
+        "error".tr,
         e.toString(),
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
-
     }
     if (user.id == null) {
       Get.snackbar(
-        "خطأ",
-        "معرف المستخدم غير موجود",
+        "error".tr,
+        "user_id_not_found".tr,
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
       return;
     }
-
   }
-  void changeImage() async {
 
+  void changeImage() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.image,
       withData: true,
     );
 
     if (result != null) {
-
       imageBytes.value = result.files.single.bytes;
       imageName = result.files.single.name;
 

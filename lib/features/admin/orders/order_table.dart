@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import '../../../core/constants/app_link.dart';
 import 'orders_controller.dart';
 
-mixin OrderTable on GetxController{
+mixin OrderTable on GetxController {
   OrdersController get controller;
 
   List<DataCell> getDataCells(Map<String, dynamic> data) {
@@ -25,15 +25,15 @@ mixin OrderTable on GetxController{
   }
 
   List<DataColumn> get tableColumns => [
-    DataColumn(label: Text('رقم الطلب'), onSort: (i, a) => sortData(0, a)),
-    DataColumn(label: Text('العميل'), onSort: (i, a) => sortData(1, a)),
-    DataColumn(label: Text('السوبرماركت'), onSort: (i, a) => sortData(2, a)),
-    DataColumn(label: Text('المندوب'), onSort: (i, a) => sortData(3, a)),
-    DataColumn(label: Text('المبلغ'), onSort: (i, a) => sortData(4, a)),
-    DataColumn(label: Text('الدفع'), onSort: (i, a) => sortData(5, a)),
-    DataColumn(label: Text('الحالة'), onSort: (i, a) => sortData(6, a)),
-    DataColumn(label: Text('التاريخ'), onSort: (i, a) => sortData(7, a)),
-    const DataColumn(label: Text('الإجراءات')),
+    DataColumn(label: Text('order_no'.tr), onSort: (i, a) => sortData(0, a)),
+    DataColumn(label: Text('client'.tr), onSort: (i, a) => sortData(1, a)),
+    DataColumn(label: Text('supermarket_text'.tr), onSort: (i, a) => sortData(2, a)),
+    DataColumn(label: Text('driver_text'.tr), onSort: (i, a) => sortData(3, a)),
+    DataColumn(label: Text('order_amount'.tr), onSort: (i, a) => sortData(4, a)),
+    DataColumn(label: Text('payment_text'.tr), onSort: (i, a) => sortData(5, a)),
+    DataColumn(label: Text('status'.tr), onSort: (i, a) => sortData(6, a)),
+    DataColumn(label: Text('date_text'.tr), onSort: (i, a) => sortData(7, a)),
+    DataColumn(label: Text('actions'.tr)),
   ];
 
   // ======================= SORT =======================

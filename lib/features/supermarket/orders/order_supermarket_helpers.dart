@@ -3,33 +3,27 @@ import 'package:get/get.dart';
 import '../../widgets/app_delete_dialog.dart';
 import 'orders_supermarket_controller.dart';
 
-mixin OrderSupermarketHelpers on GetxController{
+mixin OrderSupermarketHelpers on GetxController {
   OrdersSupermarketController get controller;
 
   Widget infoRow(String title, String value) {
-
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
-
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
         children: [
-
           Text(
             title,
             style: const TextStyle(
               color: Colors.grey,
             ),
           ),
-
           Text(
             value,
             style: const TextStyle(
               fontWeight: FontWeight.bold,
             ),
           ),
-
         ],
       ),
     );
@@ -63,9 +57,9 @@ mixin OrderSupermarketHelpers on GetxController{
   String mapPayment(dynamic p) {
     switch (p.toString()) {
       case "0":
-        return "cash";
+        return "cash".tr;
       case "1":
-        return "card";
+        return "card".tr;
       default:
         return "-";
     }
@@ -123,7 +117,7 @@ mixin OrderSupermarketHelpers on GetxController{
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
-          status ?? '',
+          status?.tr ?? '',
           style: TextStyle(color: color, fontWeight: FontWeight.bold),
         ),
       ),
@@ -168,8 +162,8 @@ mixin OrderSupermarketHelpers on GetxController{
                 icon: const Icon(Icons.close, color: Colors.red),
                 onPressed: () {
                   AppDeleteDialog.show(
-                    title: "حذف الطلب",
-                    message: "هل أنت متأكد من حذف الطلب رقم",
+                    title: "delete_order".tr,
+                    message: "confirm_delete_order".tr,
                     itemName: "#${data['id']}",
                     icon: Icons.delete_outline,
                     color: Colors.red,

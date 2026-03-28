@@ -11,7 +11,6 @@ class AdminProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    // تحديد عرض المحتوى ليكون مريحاً للعين في الويب
     double contentWidth = width > 1200 ? 1100 : width;
 
     return Scaffold(
@@ -19,24 +18,24 @@ class AdminProfilePage extends StatelessWidget {
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
-          child: Container(
+          child: SizedBox(
             width: contentWidth,
             child: width < 850
                 ? Column(
-              children: [
-                profileImage(context),
-                const SizedBox(height: 24),
-                profileInfo(),
-              ],
-            )
+                    children: [
+                      profileImage(context),
+                      const SizedBox(height: 24),
+                      profileInfo(),
+                    ],
+                  )
                 : Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(flex: 3, child: profileImage(context)),
-                const SizedBox(width: 32),
-                Expanded(flex: 7, child: profileInfo()),
-              ],
-            ),
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(flex: 3, child: profileImage(context)),
+                      const SizedBox(width: 32),
+                      Expanded(flex: 7, child: profileInfo()),
+                    ],
+                  ),
           ),
         ),
       ),
@@ -55,7 +54,7 @@ class AdminProfilePage extends StatelessWidget {
             color: Colors.black.withOpacity(0.03),
             blurRadius: 20,
             offset: const Offset(0, 10),
-          )
+          ),
         ],
         border: Border.all(color: Colors.green.withOpacity(0.1)),
       ),
@@ -68,7 +67,10 @@ class AdminProfilePage extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: Colors.green.withOpacity(0.2), width: 4),
+                  border: Border.all(
+                    color: Colors.green.withOpacity(0.2),
+                    width: 4,
+                  ),
                 ),
                 child: Obx(() {
                   return CircleAvatar(
@@ -77,8 +79,9 @@ class AdminProfilePage extends StatelessWidget {
                     backgroundImage: controller.imageBytes.value != null
                         ? MemoryImage(controller.imageBytes.value!)
                         : (controller.imageUrl.value.isEmpty
-                        ? const AssetImage("assets/images/mapp.png")
-                        : NetworkImage(controller.imageUrl.value)) as ImageProvider,
+                                  ? const AssetImage("assets/images/mapp.png")
+                                  : NetworkImage(controller.imageUrl.value))
+                              as ImageProvider,
                   );
                 }),
               ),
@@ -89,19 +92,35 @@ class AdminProfilePage extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Constants.primary,
                     shape: BoxShape.circle,
-                    boxShadow: [BoxShadow(color: Colors.green.withOpacity(0.3), blurRadius: 10)],
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.green.withOpacity(0.3),
+                        blurRadius: 10,
+                      ),
+                    ],
                   ),
-                  child: const Icon(Icons.camera_alt_rounded, size: 20, color: Colors.white),
+                  child: const Icon(
+                    Icons.camera_alt_rounded,
+                    size: 20,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 24),
-          Obx(() => Text(
-            controller.authController.currentUser.value?.name ?? "Admin Name",
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: Color(0xFF2D312E)),
-          )),
+          Obx(
+            () => Text(
+              controller.authController.currentUser.value?.name ??
+                  "admin_name".tr,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w800,
+                color: Color(0xFF2D312E),
+              ),
+            ),
+          ),
           const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
@@ -110,8 +129,12 @@ class AdminProfilePage extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
-              "System Administrator",
-              style: TextStyle(color: Constants.primary, fontSize: 13, fontWeight: FontWeight.w600),
+              "system_admin".tr,
+              style: TextStyle(
+                color: Constants.primary,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ],
@@ -131,7 +154,7 @@ class AdminProfilePage extends StatelessWidget {
             color: Colors.black.withOpacity(0.03),
             blurRadius: 20,
             offset: const Offset(0, 10),
-          )
+          ),
         ],
       ),
       child: Column(
@@ -141,9 +164,13 @@ class AdminProfilePage extends StatelessWidget {
             children: [
               const Icon(Icons.badge_outlined, color: Colors.green, size: 28),
               const SizedBox(width: 12),
-              const Text(
-                "Personal Details",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFF2D312E)),
+              Text(
+                "personal_details".tr,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF2D312E),
+                ),
               ),
               const Spacer(),
               Obx(() => _buildAnimatedButton()),
@@ -151,7 +178,7 @@ class AdminProfilePage extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            "Manage your account information and preferences",
+            "profile_manage_desc".tr,
             style: TextStyle(color: Colors.grey.shade500, fontSize: 14),
           ),
           const Padding(
@@ -165,17 +192,31 @@ class AdminProfilePage extends StatelessWidget {
   }
 
   Widget _buildResponsiveFields() {
-    return LayoutBuilder(builder: (context, constraints) {
-      return Column(
-        children: [
-          buildField("Full Name", controller.nameController, Icons.person_outline),
-          const SizedBox(height: 24),
-          buildField("Phone Number", controller.phoneController, Icons.phone_android_outlined),
-          const SizedBox(height: 24),
-          buildField("Email Address", controller.emailController, Icons.alternate_email_rounded),
-        ],
-      );
-    });
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Column(
+          children: [
+            buildField(
+              "full_name".tr,
+              controller.nameController,
+              Icons.person_outline,
+            ),
+            const SizedBox(height: 24),
+            buildField(
+              "phone_number_label".tr,
+              controller.phoneController,
+              Icons.phone_android_outlined,
+            ),
+            const SizedBox(height: 24),
+            buildField(
+              "email_address".tr,
+              controller.emailController,
+              Icons.alternate_email_rounded,
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Widget _buildAnimatedButton() {
@@ -188,31 +229,48 @@ class AdminProfilePage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       ),
-      onPressed: () => isEdit ? controller.saveProfile() : controller.toggleEdit(),
+      onPressed: () =>
+          isEdit ? controller.saveProfile() : controller.toggleEdit(),
       icon: Icon(isEdit ? Icons.check_circle_outline : Icons.edit_note_rounded),
-      label: Text(isEdit ? "Save Changes" : "Edit Profile",
-          style: const TextStyle(fontWeight: FontWeight.bold, letterSpacing: 0.5)),
+      label: Text(
+        isEdit ? "save_changes".tr : "edit_profile".tr,
+        style: const TextStyle(fontWeight: FontWeight.bold, letterSpacing: 0.5),
+      ),
     );
   }
 
   // ===================== CUSTOM INPUT FIELD =====================
-  Widget buildField(String label, TextEditingController controllerField, IconData icon) {
+  Widget buildField(
+    String label,
+    TextEditingController controllerField,
+    IconData icon,
+  ) {
     return Obx(() {
       bool isEdit = controller.isEdit.value;
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF5F6368))),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF5F6368),
+            ),
+          ),
           const SizedBox(height: 8),
           TextField(
             controller: controllerField,
             readOnly: !isEdit,
             style: const TextStyle(fontWeight: FontWeight.w500),
             decoration: InputDecoration(
-              prefixIcon: Icon(icon, color: isEdit ? Constants.primary : Colors.grey),
+              prefixIcon: Icon(
+                icon,
+                color: isEdit ? Constants.primary : Colors.grey,
+              ),
               filled: true,
               fillColor: isEdit ? Colors.white : const Color(0xFFF1F3F4),
-              hintText: "Enter your $label",
+              hintText: "enter_your_hint".trParams({'label': label}),
               contentPadding: const EdgeInsets.all(20),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),

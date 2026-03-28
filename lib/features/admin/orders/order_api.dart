@@ -1,3 +1,5 @@
+// order_api
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -44,7 +46,7 @@ mixin OrderApi on GetxController{
         );
       }
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      Get.snackbar("error".tr, e.toString());
     } finally {
       controller.isLoading.value = false;
     }
@@ -82,7 +84,7 @@ mixin OrderApi on GetxController{
         controller.filteredCoupons.clear();
       }
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      Get.snackbar("error".tr, e.toString());
     } finally {
       controller.isCouponLoading.value = false;
     }
@@ -95,7 +97,7 @@ mixin OrderApi on GetxController{
           data['discount'].isEmpty ||
           data['expire'].isEmpty) {
 
-        Get.snackbar("تنبيه", "كل الحقول مطلوبة");
+        Get.snackbar("warning".tr, "all_fields_required".tr);
         return;
       }
 
@@ -110,8 +112,8 @@ mixin OrderApi on GetxController{
         Get.back();
 
         Get.snackbar(
-          "نجاح",
-          "تم إضافة الكوبون",
+          "success".tr,
+          "coupon_added".tr,
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
@@ -119,7 +121,7 @@ mixin OrderApi on GetxController{
         fetchCoupons();
       }
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      Get.snackbar("error".tr, e.toString());
     }
   }
 
@@ -137,8 +139,8 @@ mixin OrderApi on GetxController{
       if (body['status'] == "success") {
 
         Get.snackbar(
-          "نجاح",
-          "تم تعديل الكوبون",
+          "success".tr,
+          "coupon_updated".tr,
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
@@ -146,11 +148,11 @@ mixin OrderApi on GetxController{
         fetchCoupons();
 
       } else {
-        Get.snackbar("Error", "فشل التعديل");
+        Get.snackbar("error".tr, "update_failed".tr);
       }
 
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      Get.snackbar("error".tr, e.toString());
     }
   }
 
@@ -174,20 +176,19 @@ mixin OrderApi on GetxController{
         );
 
         Get.snackbar(
-          "نجاح",
-          "تم حذف الكوبون",
+          "success".tr,
+          "coupon_deleted".tr,
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
 
       } else {
-        Get.snackbar("Error", "فشل الحذف");
+        Get.snackbar("error".tr, "delete_failed".tr);
       }
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      Get.snackbar("error".tr, e.toString());
     }
   }
-
 
   Future updateOrderStatus(int orderId, int status) async {
 
@@ -206,8 +207,8 @@ mixin OrderApi on GetxController{
       if (body['status'] == "success") {
 
         Get.snackbar(
-          "Success",
-          "تم تحديث حالة الطلب",
+          "success".tr,
+          "order_status_updated".tr,
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
@@ -217,8 +218,8 @@ mixin OrderApi on GetxController{
       } else {
 
         Get.snackbar(
-          "Error",
-          "فشل تحديث الحالة",
+          "error".tr,
+          "status_update_failed".tr,
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
@@ -226,7 +227,7 @@ mixin OrderApi on GetxController{
       }
 
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      Get.snackbar("error".tr, e.toString());
     }
 
   }
@@ -249,8 +250,8 @@ mixin OrderApi on GetxController{
         Get.back();
 
         Get.snackbar(
-          "Success",
-          "تم حذف الطلب",
+          "success".tr,
+          "order_deleted".tr,
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
@@ -260,8 +261,8 @@ mixin OrderApi on GetxController{
       } else {
 
         Get.snackbar(
-          "Error",
-          "فشل حذف الطلب",
+          "error".tr,
+          "order_delete_failed".tr,
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
@@ -269,7 +270,7 @@ mixin OrderApi on GetxController{
       }
 
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      Get.snackbar("error".tr, e.toString());
     }
 
   }

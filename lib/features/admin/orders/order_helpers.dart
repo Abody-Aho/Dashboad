@@ -4,11 +4,10 @@ import 'package:get/get.dart';
 import '../../widgets/app_delete_dialog.dart';
 import 'orders_controller.dart';
 
-mixin OrderHelpers on GetxController{
+mixin OrderHelpers on GetxController {
   OrdersController get controller;
 
   Widget infoRow(String title, String value) {
-
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
 
@@ -16,21 +15,15 @@ mixin OrderHelpers on GetxController{
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
         children: [
-
           Text(
             title,
-            style: const TextStyle(
-              color: Colors.grey,
-            ),
+            style: const TextStyle(color: Colors.grey),
           ),
 
           Text(
             value,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
-
         ],
       ),
     );
@@ -64,9 +57,9 @@ mixin OrderHelpers on GetxController{
   String mapPayment(dynamic p) {
     switch (p.toString()) {
       case "0":
-        return "cash";
+        return "cash".tr;
       case "1":
-        return "card";
+        return "card".tr;
       default:
         return "-";
     }
@@ -124,7 +117,7 @@ mixin OrderHelpers on GetxController{
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
-          status ?? '',
+          status?.tr ?? '',
           style: TextStyle(color: color, fontWeight: FontWeight.bold),
         ),
       ),
@@ -169,8 +162,8 @@ mixin OrderHelpers on GetxController{
                 icon: const Icon(Icons.close, color: Colors.red),
                 onPressed: () {
                   AppDeleteDialog.show(
-                    title: "حذف الطلب",
-                    message: "هل أنت متأكد من حذف الطلب رقم",
+                    title: "delete_order".tr,
+                    message: "confirm_delete_order".tr,
                     itemName: "#${data['id']}",
                     icon: Icons.delete_outline,
                     color: Colors.red,
@@ -195,9 +188,7 @@ mixin OrderHelpers on GetxController{
         controller: c,
         decoration: InputDecoration(
           hintText: hint,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         ),
       ),
     );

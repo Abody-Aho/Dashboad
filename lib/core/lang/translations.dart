@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 class AppTranslations extends Translations {
   @override
   Map<String, Map<String, String>> get keys => {
-
     'ar': {
       // LoginPage
       'login_title': 'نظام إدارة السوبرماركت',
@@ -20,7 +19,7 @@ class AppTranslations extends Translations {
       'password_hint': '••••••••',
       'password_required': 'يرجى إدخال كلمة المرور',
       'password_short': 'كلمة المرور يجب أن تكون 6 أحرف على الأقل',
-      "dont_have_account" : "لا تملك حساب",
+      "dont_have_account": "لا تملك حساب",
 
       // SingInView
       "signup_title": "إنشاء حساب",
@@ -50,7 +49,7 @@ class AppTranslations extends Translations {
       "sales": "المبيعات",
       "control": "التحكم",
       "admin_panel": "مدير النظام",
-      "choose_language":"أختر اللغة",
+      "choose_language": "أختر اللغة",
 
       // DrawerPage
       "admin_menu": "قائمة الأدمن",
@@ -133,7 +132,7 @@ class AppTranslations extends Translations {
       'clients': 'العملاء',
       'driver': 'المناديب',
       'supermarkets': 'السوبرماركت',
-      'admin':'الأدمن',
+      'admin': 'الأدمن',
       'active': 'نشط',
       'inactive': 'غير نشط',
 
@@ -163,7 +162,7 @@ class AppTranslations extends Translations {
       "dhamar_street": "ذمار - شارع صنعاء",
       "mukalla_dis": "المكلا - الديس",
       "saada_city": "صعدة - المدينة",
-      "accept" : "قبول",
+      "accept": "قبول",
 
       // OrdersPage
       "total_orders": "إجمالي الطلبات",
@@ -267,6 +266,173 @@ class AppTranslations extends Translations {
       "all": "الجميع",
       "sent": "مرسل",
       "notification_number": "إشعار رقم",
+
+      // order_api
+      'error': 'خطأ',
+      'warning': 'تنبيه',
+      'success': 'نجاح',
+      'all_fields_required': 'كل الحقول مطلوبة',
+      'coupon_added': 'تم إضافة الكوبون',
+      'coupon_updated': 'تم تعديل الكوبون',
+      'coupon_deleted': 'تم حذف الكوبون',
+      'update_failed': 'فشل التعديل',
+      'delete_failed': 'فشل الحذف',
+      'order_status_updated': 'تم تحديث حالة الطلب',
+      'status_update_failed': 'فشل تحديث الحالة',
+      'order_deleted': 'تم حذف الطلب',
+      'order_delete_failed': 'فشل حذف الطلب',
+
+      // order_dialogs
+      'change_order_status': 'تغيير حالة الطلب',
+      'update_status': 'تحديث الحالة',
+      'order_details': 'تفاصيل الطلب',
+      'client': 'العميل',
+      'product': 'المنتج',
+      'quantity': 'الكمية',
+      'total': 'المجموع',
+      'total_amount': 'المجموع الكلي',
+      'payment_image': 'صورة الدفع',
+      'image_load_failed': 'تعذر تحميل الصورة',
+      'cash_payment': 'الدفع نقدي 💵',
+      'close': 'إغلاق',
+      'coupon_management': 'إدارة الكوبونات',
+      'coupon_name': 'اسم الكوبون',
+      'usage_count': 'عدد الاستخدام',
+      'discount': 'نسبة الخصم',
+      'expire_date': 'تاريخ الانتهاء',
+      'add': 'إضافة',
+      'no_coupons': 'لا يوجد كوبونات',
+      'discount_text': 'خصم @discount% | العدد @count',
+      'delete_coupon': 'حذف الكوبون',
+      'confirm_delete_coupon': 'هل أنت متأكد من حذف @name ؟',
+      'edit_coupon': 'تعديل الكوبون',
+      'save': 'حفظ',
+      'ready': 'جاهز',
+      'on_delivery': 'قيد التوصيل',
+      'delivered': 'تم التسليم',
+      'cancelled': 'ملغي',
+      'pending': 'قيد الانتظار',
+      'accepted': 'تم القبول',
+      'cancel_text': 'إلغاء',
+      'supermarket_text': 'السوبرماركت',
+      'driver_text': 'المندوب',
+      'payment_text': 'الدفع',
+      'date_text': 'التاريخ',
+      'price_text': 'السعر',
+      'currency_yr': 'ر.ي',
+      'delete_text': 'حذف',
+
+      // order_table
+      'order_no': 'رقم الطلب',
+      'order_amount': 'المبلغ',
+
+      // order_helpers
+      'delete_order': 'حذف الطلب',
+      'confirm_delete_order': 'هل أنت متأكد من حذف الطلب رقم',
+      'cash': 'كاش',
+      'card': 'بطاقة',
+      'add_coupon' : 'أضافة كوبون',
+
+      // notifications_api
+      'banner_deleted': 'تم حذف البانر',
+      'choose_image': 'يرجى اختيار صورة',
+      'banner_uploaded': 'تم رفع البانر بنجاح',
+      'upload_failed': 'فشل الرفع',
+      'server_error': 'فشل الاتصال بالسيرفر',
+      'enter_title_body': 'يرجى إدخال العنوان والرسالة',
+      'notification_sent': 'تم إرسال الإشعار بنجاح',
+      'something_wrong': 'حدث خطأ ما',
+
+      // notifications_dialogs
+      'banner_manager': 'إدارة البانرات',
+      'current_banners': 'البانرات الحالية',
+      'add_new_banner': 'إضافة بانر جديد',
+      'no_image_selected': 'لم يتم اختيار صورة',
+      'upload': 'رفع',
+      'message': 'الرسالة',
+      'send': 'إرسال',
+      'notification_details': 'تفاصيل الإشعار',
+      'read': 'مقروء',
+      'rate': 'المعدل',
+
+      // notifications_helpers
+      'no_banners': 'لا توجد بانرات',
+      'delete_banner': 'حذف البانر',
+      'confirm_delete_banner': 'هل تريد حذف هذا البانر؟',
+
+      // product_api
+      'choose_category_image': 'يرجى اختيار صورة للفئة',
+      'choose_supermarket': 'اختر السوبرماركت',
+      'operation_success': 'تمت العملية بنجاح',
+      'operation_failed': 'فشل العملية',
+      'send_error': 'حدث خطأ أثناء الإرسال',
+      'select_all_fields': 'يرجى اختيار جميع الحقول',
+      'choose_product_image': 'يرجى اختيار صورة للمنتج',
+      'product_added': 'تمت إضافة المنتج بنجاح',
+      'add_failed': 'فشل في الإضافة',
+      'category_added': 'تمت إضافة الفئة بنجاح',
+      'product_updated': 'تم تحديث المنتج بنجاح',
+      'update_product_failed': 'فشل تحديث المنتج',
+      'server_connect_error': 'حدث خطأ أثناء الاتصال بالسيرفر',
+      'deleted': 'تم الحذف',
+      'product_deleted': 'تم حذف المنتج بنجاح',
+      'delete_product_failed': 'لم يتم حذف المنتج',
+
+      // product_dialogs
+      'edit_category': 'تعديل الفئة',
+      'add_new_category': 'إضافة فئة جديدة',
+      'general_category': 'فئة عامة',
+      'private_category': 'فئة خاصة بسوبرماركت',
+      'choose_general_category': 'اختر فئة عامة للتعديل',
+      'choose_private_category': 'اختر فئة خاصة للتعديل',
+      'category_name_ar': 'اسم الفئة (عربي)',
+      'category_name_en': 'اسم الفئة (English)',
+      'add_new_product': 'إضافة منتج جديد',
+      'product_name_ar': 'اسم المنتج (عربي)',
+      'product_name_en': 'اسم المنتج (English)',
+      'description_ar': 'الوصف بالعربي',
+      'description_en': 'Description (English)',
+      'discount_percent': 'الخصم %',
+      'add_product': 'إضافة المنتج',
+      'edit_product': 'تعديل المنتج',
+      'update_product': 'تحديث المنتج',
+      'product_details': 'تفاصيل المنتج',
+      'name_ar_label': 'الاسم بالعربي : ',
+      'name_en_label': 'Name (English) : ',
+      'description_ar_label': 'الوصف بالعربي : ',
+      'description_en_label': 'Description : ',
+      'category_label': 'الفئة : ',
+      'supermarket_label': 'السوبرماركت : ',
+      'price_label': 'السعر : ',
+      'discount_label': ' الخصم : ',
+      'price_after_discount_label': 'السعر بعد الخصم : ',
+      'add_date_label': 'تاريخ الإضافة : ',
+
+      // product_table
+      'product_image': 'الصورة',
+      'delete_product': 'حذف المنتج',
+      'confirm_delete_product': 'هل تريد حذف المنتج التالي؟',
+      'low_stock': 'مخزون منخفض',
+
+      // admin_profile
+      'profile_updated': 'تم تحديث البروفايل',
+      'user_id_not_found': 'معرف المستخدم غير موجود',
+      'profile_update_failed': 'فشل تحديث البروفايل',
+      'system_admin': 'مدير النظام',
+      'personal_details': 'التفاصيل الشخصية',
+      'profile_manage_desc': 'إدارة معلومات حسابك وتفضيلاتك',
+      'full_name': 'الاسم الكامل',
+      'email_address': 'عنوان البريد الإلكتروني',
+      'save_changes': 'حفظ التغييرات',
+      'edit_profile': 'تعديل الملف الشخصي',
+      'enter_your_hint': 'أدخل @label',
+      'admin_name': 'اسم المدير',
+      'phone_number_label': 'رقم الهاتف',
+
+      // admin_chat
+      'chats': 'المحادثات',
+      'type_message_hint': 'اكتب رسالة...',
+      'profile': 'الملف الشخصي',
     },
 
     'en': {
@@ -285,7 +451,7 @@ class AppTranslations extends Translations {
       'password_hint': '••••••••',
       'password_required': 'Please enter password',
       'password_short': 'Password must be at least 6 characters',
-      "dont_have_account" : "Don't have account",
+      "dont_have_account": "Don't have account",
 
       // SingInView
       "signup_title": "Create Account",
@@ -307,14 +473,13 @@ class AppTranslations extends Translations {
       "role_required": "Role is required",
       "must_be_9_number": "Must be 9 numbers",
 
-
       // AppBarWidget
       "overview": "Overview",
       "revenue": "Revenue",
       "sales": "Sales",
       "control": "Control",
       "admin_panel": "Admin Panel",
-      "choose_language":"Choose language",
+      "choose_language": "Choose language",
 
       // DrawerPage
       "admin_menu": "Admin Menu",
@@ -375,6 +540,7 @@ class AppTranslations extends Translations {
       'compared_last_month': 'Compared to last month',
       'add_users': 'Add Users',
       'search': 'Search',
+      'cancel': 'Cancel',
 
       // UserController
       'user_email': 'Email',
@@ -396,6 +562,10 @@ class AppTranslations extends Translations {
       'clients': 'Clients',
       'agents': 'Agents',
       'supermarkets': 'Supermarkets',
+      'admin': 'Admin',
+      'active': 'Active',
+      'inactive': 'Inactive',
+      'driver': 'Driver',
 
       // ManagementSupermarketPage
       "total_supermarkets": "Total Supermarkets",
@@ -423,7 +593,7 @@ class AppTranslations extends Translations {
       "dhamar_street": "Dhamar - Sana'a Street",
       "mukalla_dis": "Mukalla - Dis",
       "saada_city": "Saada - City",
-      "accept" : "Accept",
+      "accept": "Accept",
 
       // OrdersPage
       "total_orders": "Total Orders",
@@ -527,6 +697,173 @@ class AppTranslations extends Translations {
       "all": "All",
       "sent": "Sent",
       "notification_number": "Notification No.",
+
+      // order_api
+      'error': 'Error',
+      'warning': 'Warning',
+      'success': 'Success',
+      'all_fields_required': 'All fields are required',
+      'coupon_added': 'Coupon added successfully',
+      'coupon_updated': 'Coupon updated successfully',
+      'coupon_deleted': 'Coupon deleted successfully',
+      'update_failed': 'Update failed',
+      'delete_failed': 'Delete failed',
+      'order_status_updated': 'Order status updated',
+      'status_update_failed': 'Failed to update status',
+      'order_deleted': 'Order deleted successfully',
+      'order_delete_failed': 'Failed to delete order',
+
+      // order_dialogs
+      'change_order_status': 'Change Order Status',
+      'update_status': 'Update Status',
+      'order_details': 'Order Details',
+      'client': 'Client',
+      'product': 'Product',
+      'quantity': 'Quantity',
+      'total': 'Total',
+      'total_amount': 'Total Amount',
+      'payment_image': 'Payment Image',
+      'image_load_failed': 'Failed to load image',
+      'cash_payment': 'Cash Payment 💵',
+      'close': 'Close',
+      'coupon_management': 'Coupon Management',
+      'coupon_name': 'Coupon Name',
+      'usage_count': 'Usage Count',
+      'discount': 'Discount',
+      'expire_date': 'Expire Date',
+      'add': 'Add',
+      'no_coupons': 'No coupons found',
+      'discount_text': 'Discount @discount% | Count @count',
+      'delete_coupon': 'Delete Coupon',
+      'confirm_delete_coupon': 'Are you sure to delete @name?',
+      'edit_coupon': 'Edit Coupon',
+      'save': 'Save',
+      'ready': 'Ready',
+      'on_delivery': 'On Delivery',
+      'delivered': 'Delivered',
+      'cancelled': 'Cancelled',
+      'pending': 'Pending',
+      'accepted': 'Accepted',
+      'cancel_text': 'Cancel',
+      'supermarket_text': 'Supermarket',
+      'driver_text': 'Driver',
+      'payment_text': 'Payment',
+      'date_text': 'Date',
+      'price_text': 'Price',
+      'currency_yr': 'YER',
+      'delete_text': 'Delete',
+
+      // order_table
+      'order_no': 'Order No.',
+      'order_amount': 'Amount',
+
+      // order_helpers
+      'delete_order': 'Delete Order',
+      'confirm_delete_order': 'Are you sure to delete order number',
+      'cash': 'Cash',
+      'card': 'Card',
+      'add_coupon' : 'Add Coupon',
+
+      // notifications_api
+      'banner_deleted': 'Banner deleted',
+      'choose_image': 'Please choose image',
+      'banner_uploaded': 'Banner uploaded successfully',
+      'upload_failed': 'Upload failed',
+      'server_error': 'Server connection failed',
+      'enter_title_body': 'Please enter title and message',
+      'notification_sent': 'Notification sent successfully',
+      'something_wrong': 'Something went wrong',
+
+      // notifications_dialogs
+      'banner_manager': 'Banner Manager',
+      'current_banners': 'Current Banners',
+      'add_new_banner': 'Add New Banner',
+      'no_image_selected': 'No image selected',
+      'upload': 'Upload',
+      'message': 'Message',
+      'send': 'Send',
+      'notification_details': 'Notification Details',
+      'read': 'Read',
+      'rate': 'Rate',
+
+      // notifications_helpers
+      'no_banners': 'No banners',
+      'delete_banner': 'Delete Banner',
+      'confirm_delete_banner': 'Do you want to delete this banner?',
+
+      // product_api
+      'choose_category_image': 'Please choose category image',
+      'choose_supermarket': 'Choose supermarket',
+      'operation_success': 'Operation successful',
+      'operation_failed': 'Operation failed',
+      'send_error': 'Error occurred while sending',
+      'select_all_fields': 'Please select all fields',
+      'choose_product_image': 'Please choose product image',
+      'product_added': 'Product added successfully',
+      'add_failed': 'Failed to add',
+      'category_added': 'Category added successfully',
+      'product_updated': 'Product updated successfully',
+      'update_product_failed': 'Failed to update product',
+      'server_connect_error': 'Error occurred while connecting to server',
+      'deleted': 'Deleted',
+      'product_deleted': 'Product deleted successfully',
+      'delete_product_failed': 'Failed to delete product',
+
+      // product_dialogs
+      'edit_category': 'Edit Category',
+      'add_new_category': 'Add New Category',
+      'general_category': 'General Category',
+      'private_category': 'Private Category (Supermarket)',
+      'choose_general_category': 'Choose general category to edit',
+      'choose_private_category': 'Choose private category to edit',
+      'category_name_ar': 'Category Name (Arabic)',
+      'category_name_en': 'Category Name (English)',
+      'add_new_product': 'Add New Product',
+      'product_name_ar': 'Product Name (Arabic)',
+      'product_name_en': 'Product Name (English)',
+      'description_ar': 'Description (Arabic)',
+      'description_en': 'Description (English)',
+      'discount_percent': 'Discount %',
+      'add_product': 'Add Product',
+      'edit_product': 'Edit Product',
+      'update_product': 'Update Product',
+      'product_details': 'Product Details',
+      'name_ar_label': 'Name (Arabic): ',
+      'name_en_label': 'Name (English): ',
+      'description_ar_label': 'Description (Arabic): ',
+      'description_en_label': 'Description (English): ',
+      'category_label': 'Category: ',
+      'supermarket_label': 'Supermarket: ',
+      'price_label': 'Price: ',
+      'discount_label': 'Discount: ',
+      'price_after_discount_label': 'Price after discount: ',
+      'add_date_label': 'Add Date: ',
+
+      // product_table
+      'product_image': 'Image',
+      'delete_product': 'Delete Product',
+      'confirm_delete_product': 'Do you want to delete this product?',
+      'low_stock': 'Low Stock',
+
+      // admin_profile
+      'profile_updated': 'Profile updated',
+      'user_id_not_found': 'User ID not found',
+      'profile_update_failed': 'Profile update failed',
+      'system_admin': 'System Administrator',
+      'personal_details': 'Personal Details',
+      'profile_manage_desc': 'Manage your account information and preferences',
+      'full_name': 'Full Name',
+      'email_address': 'Email Address',
+      'save_changes': 'Save Changes',
+      'edit_profile': 'Edit Profile',
+      'enter_your_hint': 'Enter your @label',
+      'admin_name': 'Admin Name',
+      'phone_number_label': 'Phone Number',
+
+      // admin_chat
+      'chats': 'Chats',
+      'type_message_hint': 'Type a message...',
+      'profile': 'Profile',
     },
   };
 }

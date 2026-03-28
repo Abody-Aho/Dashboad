@@ -114,13 +114,9 @@ mixin ProductSupermarketTable on GetxController {
                   onPressed: () {
                     controller.resetDialogState();
                     AppDeleteDialog.show(
-
-                      title: "حذف المنتج",
-
-                      message: "هل تريد حذف المنتج التالي؟",
-
-                      itemName: data.nameAr,
-
+                      title: "delete_product".tr,
+                      message: "confirm_delete_product".tr,
+                      itemName: isArabic ? data.nameAr : data.nameEn,
                       onConfirm: () {
                         controller.deleteProduct(data.id);
                       },
@@ -151,7 +147,7 @@ mixin ProductSupermarketTable on GetxController {
   // تعريف أعمدة الجدول مع دعم الفرز
   List<DataColumn> get tableColumns => [
     DataColumn(
-      label: Text('الصورة'.tr),
+      label: Text('product_image'.tr),
       onSort: (columnIndex, ascending) => sortData(0, ascending),
     ),
     DataColumn(
@@ -232,8 +228,8 @@ mixin ProductSupermarketTable on GetxController {
   }
 
   String _availability(int count) {
-    if (count == 0) return "غير متوفر";
-    if (count < 10) return "مخزون منخفض";
-    return "متوفر";
+    if (count == 0) return "not_available".tr;
+    if (count < 10) return "low_stock".tr;
+    return "available".tr;
   }
 }

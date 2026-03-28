@@ -59,7 +59,7 @@ mixin ProductSupermarketDialogs on GetxController {
                     ),
                     child: Center(
                       child: Text(
-                        isEdit ? "تعديل الفئة" : "إضافة فئة جديدة",
+                        isEdit ? "edit_category".tr : "add_new_category".tr,
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -94,15 +94,15 @@ mixin ProductSupermarketDialogs on GetxController {
                         }
                       },
                       child: Column(
-                        children: const [
+                        children: [
                           RadioListTile<String>(
                             activeColor: Constants.primary,
-                            title: Text("فئة عامة"),
+                            title: Text("general_category".tr),
                             value: "general",
                           ),
                           RadioListTile<String>(
                             activeColor: Constants.primary,
-                            title: Text("فئة خاصة بسوبرماركت"),
+                            title: Text("private_category".tr),
                             value: "private",
                           ),
                         ],
@@ -120,7 +120,7 @@ mixin ProductSupermarketDialogs on GetxController {
                             ? controller.editingCategoryId.value
                             : null,
                         decoration: controller.greenDecoration(
-                          "اختر فئة عامة للتعديل",
+                          "choose_general_category".tr,
                         ),
                         items: controller.categoriesAll.map((c) {
                           return DropdownMenuItem(
@@ -154,7 +154,7 @@ mixin ProductSupermarketDialogs on GetxController {
                             ? controller.editingCategoryId.value
                             : null,
                         decoration: controller.greenDecoration(
-                          "اختر فئة خاصة للتعديل",
+                          "choose_private_category".tr,
                         ),
                         items: controller.categories.map((c) {
                           return DropdownMenuItem(
@@ -187,14 +187,14 @@ mixin ProductSupermarketDialogs on GetxController {
 
                   controller.buildTextField(
                     controller: controller.catNameArController,
-                    label: "اسم الفئة (عربي)",
+                    label: "category_name_ar".tr,
                   ),
 
                   const SizedBox(height: 15),
 
                   controller.buildTextField(
                     controller: controller.catNameEnController,
-                    label: "اسم الفئة (English)",
+                    label: "category_name_en".tr,
                   ),
 
                   const SizedBox(height: 20),
@@ -208,7 +208,7 @@ mixin ProductSupermarketDialogs on GetxController {
                     children: [
                       TextButton(
                         onPressed: () => Get.back(),
-                        child: const Text("إلغاء"),
+                        child: Text("cancel".tr),
                       ),
                       const SizedBox(width: 15),
                       Obx(
@@ -236,7 +236,7 @@ mixin ProductSupermarketDialogs on GetxController {
                                   ),
                                 )
                               : Text(
-                                  isEdit ? "تحديث" : "حفظ",
+                                  isEdit ? "update".tr : "save".tr,
                                   style: const TextStyle(color: Colors.white),
                                 ),
                         ),
@@ -280,10 +280,10 @@ mixin ProductSupermarketDialogs on GetxController {
                       gradient: Constants.greenGradientlight,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Center(
+                    child: Center(
                       child: Text(
-                        "إضافة منتج جديد",
-                        style: TextStyle(
+                        "add_new_product".tr,
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Constants.text,
@@ -300,14 +300,14 @@ mixin ProductSupermarketDialogs on GetxController {
                       Expanded(
                         child: controller.buildTextField(
                           controller: controller.nameArController,
-                          label: "اسم المنتج (عربي)",
+                          label: "product_name_ar".tr,
                         ),
                       ),
                       const SizedBox(width: 15),
                       Expanded(
                         child: controller.buildTextField(
                           controller: controller.nameEnController,
-                          label: "اسم المنتج (English)",
+                          label: "product_name_en".tr,
                         ),
                       ),
                     ],
@@ -318,7 +318,7 @@ mixin ProductSupermarketDialogs on GetxController {
                   /// ROW 2 (وصف)
                   controller.buildTextField(
                     controller: controller.descArController,
-                    label: "الوصف بالعربي",
+                    label: "description_ar".tr,
                     maxLines: 2,
                   ),
 
@@ -326,7 +326,7 @@ mixin ProductSupermarketDialogs on GetxController {
 
                   controller.buildTextField(
                     controller: controller.descEnController,
-                    label: "Description (English)",
+                    label: "description_en".tr,
                     maxLines: 2,
                   ),
 
@@ -338,7 +338,7 @@ mixin ProductSupermarketDialogs on GetxController {
                       Expanded(
                         child: controller.buildTextField(
                           controller: controller.priceController,
-                          label: "السعر",
+                          label: "price_text".tr,
                           keyboard: TextInputType.number,
                         ),
                       ),
@@ -346,7 +346,7 @@ mixin ProductSupermarketDialogs on GetxController {
                       Expanded(
                         child: controller.buildTextField(
                           controller: controller.countController,
-                          label: "الكمية",
+                          label: "quantity".tr,
                           keyboard: TextInputType.number,
                         ),
                       ),
@@ -354,7 +354,7 @@ mixin ProductSupermarketDialogs on GetxController {
                       Expanded(
                         child: controller.buildTextField(
                           controller: controller.discountController,
-                          label: "الخصم %",
+                          label: "discount_percent".tr,
                           keyboard: TextInputType.number,
                         ),
                       ),
@@ -378,9 +378,9 @@ mixin ProductSupermarketDialogs on GetxController {
                     children: [
                       TextButton(
                         onPressed: () => Get.back(),
-                        child: const Text(
-                          "إلغاء",
-                          style: TextStyle(color: Constants.greyDark),
+                        child: Text(
+                          "cancel".tr,
+                          style: const TextStyle(color: Constants.greyDark),
                         ),
                       ),
                       const SizedBox(width: 15),
@@ -408,9 +408,9 @@ mixin ProductSupermarketDialogs on GetxController {
                                     strokeWidth: 2,
                                   ),
                                 )
-                              : const Text(
-                                  "إضافة المنتج",
-                                  style: TextStyle(color: Constants.white),
+                              : Text(
+                                  "add_product".tr,
+                                  style: const TextStyle(color: Colors.white),
                                 ),
                         ),
                       ),
@@ -483,10 +483,10 @@ mixin ProductSupermarketDialogs on GetxController {
                       gradient: Constants.greenGradientlight,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Center(
+                    child: Center(
                       child: Text(
-                        "تعديل المنتج",
-                        style: TextStyle(
+                        "edit_product".tr,
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Constants.text,
@@ -503,14 +503,14 @@ mixin ProductSupermarketDialogs on GetxController {
                       Expanded(
                         child: controller.buildTextField(
                           controller: controller.nameArController,
-                          label: "اسم المنتج (عربي)",
+                          label: "product_name_ar".tr,
                         ),
                       ),
                       const SizedBox(width: 15),
                       Expanded(
                         child: controller.buildTextField(
                           controller: controller.nameEnController,
-                          label: "اسم المنتج (English)",
+                          label: "product_name_en".tr,
                         ),
                       ),
                     ],
@@ -521,7 +521,7 @@ mixin ProductSupermarketDialogs on GetxController {
                   /// الوصف
                   controller.buildTextField(
                     controller: controller.descArController,
-                    label: "الوصف بالعربي",
+                    label: "description_ar".tr,
                     maxLines: 2,
                   ),
 
@@ -529,7 +529,7 @@ mixin ProductSupermarketDialogs on GetxController {
 
                   controller.buildTextField(
                     controller: controller.descEnController,
-                    label: "Description (English)",
+                    label: "description_en".tr,
                     maxLines: 2,
                   ),
 
@@ -541,7 +541,7 @@ mixin ProductSupermarketDialogs on GetxController {
                       Expanded(
                         child: controller.buildTextField(
                           controller: controller.priceController,
-                          label: "السعر",
+                          label: "price_text".tr,
                           keyboard: TextInputType.number,
                         ),
                       ),
@@ -549,7 +549,7 @@ mixin ProductSupermarketDialogs on GetxController {
                       Expanded(
                         child: controller.buildTextField(
                           controller: controller.countController,
-                          label: "الكمية",
+                          label: "quantity".tr,
                           keyboard: TextInputType.number,
                         ),
                       ),
@@ -557,7 +557,7 @@ mixin ProductSupermarketDialogs on GetxController {
                       Expanded(
                         child: controller.buildTextField(
                           controller: controller.discountController,
-                          label: "الخصم %",
+                          label: "discount_percent".tr,
                           keyboard: TextInputType.number,
                         ),
                       ),
@@ -584,7 +584,7 @@ mixin ProductSupermarketDialogs on GetxController {
 
                       TextButton(
                         onPressed: () => Get.back(),
-                        child: const Text("إلغاء"),
+                        child: Text("cancel".tr),
                       ),
 
                       const SizedBox(width: 15),
@@ -613,9 +613,9 @@ mixin ProductSupermarketDialogs on GetxController {
                               strokeWidth: 2,
                             ),
                           )
-                              : const Text(
-                            "تحديث المنتج",
-                            style: TextStyle(color: Constants.white),
+                              : Text(
+                            "update_product".tr,
+                            style: const TextStyle(color: Colors.white),
                           ),
                         ),
                       ),
@@ -663,10 +663,10 @@ mixin ProductSupermarketDialogs on GetxController {
                     borderRadius: BorderRadius.circular(12),
                   ),
 
-                  child: const Center(
+                  child: Center(
                     child: Text(
-                      "تفاصيل المنتج",
-                      style: TextStyle(
+                      "product_details".tr,
+                      style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Constants.text,
@@ -692,19 +692,19 @@ mixin ProductSupermarketDialogs on GetxController {
                 const SizedBox(height: 25),
 
                 /// NAME
-                controller.buildInfo("الاسم بالعربي : ", product.nameAr),
-                controller.buildInfo("Name (English) : ", product.nameEn),
+                controller.buildInfo("name_ar_label".tr, product.nameAr),
+                controller.buildInfo("name_en_label".tr, product.nameEn),
 
                 const SizedBox(height: 10),
 
                 /// DESCRIPTION
-                controller.buildInfo("الوصف بالعربي : ", product.descAr),
-                controller.buildInfo("Description : ", product.descEn),
+                controller.buildInfo("description_ar_label".tr, product.descAr),
+                controller.buildInfo("description_en_label".tr, product.descEn),
 
                 const SizedBox(height: 10),
 
                 /// CATEGORY
-                controller.buildInfo("الفئة : ", product.catAllAr),
+                controller.buildInfo("category_label".tr, product.catAllAr),
 
                 const SizedBox(height: 10),
 
@@ -714,21 +714,21 @@ mixin ProductSupermarketDialogs on GetxController {
 
                     Expanded(
                       child: controller.buildInfo(
-                        "السعر : ",
+                        "price_label".tr,
                         "${(product.price / (1 - product.discount / 100)).round()}",
                       ),
                     ),
 
                     Expanded(
                       child: controller.buildInfo(
-                        " الخصم : ",
+                        "discount_label".tr,
                         "${product.discount} %",
                       ),
                     ),
 
                     Expanded(
                       child: controller.buildInfo(
-                        "السعر بعد الخصم : ",
+                        "price_after_discount_label".tr,
                         "${(product.price).round()}",
                       ),
                     ),
@@ -739,10 +739,10 @@ mixin ProductSupermarketDialogs on GetxController {
                 const SizedBox(height: 10),
 
                 /// COUNT
-                controller.buildInfo("الكمية : ", product.count.toString()),
+                controller.buildInfo("quantity".tr, product.count.toString()),
 
                 /// DATE
-                controller.buildInfo("تاريخ الإضافة : ", product.date),
+                controller.buildInfo("add_date_label".tr, product.date),
 
                 const SizedBox(height: 30),
 
@@ -758,9 +758,9 @@ mixin ProductSupermarketDialogs on GetxController {
                       ),
                     ),
                     onPressed: () => Get.back(),
-                    child: const Text(
-                      "إغلاق",
-                      style: TextStyle(color: Colors.white),
+                    child: Text(
+                      "close".tr,
+                      style: const TextStyle(color: Colors.white),
                     ),
                   ),
                 ),

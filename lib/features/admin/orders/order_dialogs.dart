@@ -17,32 +17,32 @@ mixin OrderDialogs on GetxController {
     final statuses = [
       {
         "id": 0,
-        "title": "Pending",
+        "title": "pending".tr,
         "color": Colors.orange,
         "icon": Icons.schedule,
       },
       {
         "id": 1,
-        "title": "Accepted",
+        "title": "accepted".tr,
         "color": Colors.blue,
         "icon": Icons.check_circle,
       },
-      {"id": 2, "title": "Ready", "color": Colors.teal, "icon": Icons.store},
+      {"id": 2, "title": "ready".tr, "color": Colors.teal, "icon": Icons.store},
       {
         "id": 3,
-        "title": "On Delivery",
+        "title": "on_delivery".tr,
         "color": Colors.deepPurple,
         "icon": Icons.delivery_dining,
       },
       {
         "id": 4,
-        "title": "Delivered",
+        "title": "delivered".tr,
         "color": Colors.green,
         "icon": Icons.task_alt,
       },
       {
         "id": 5,
-        "title": "Cancelled",
+        "title": "cancelled".tr,
         "color": Colors.red,
         "icon": Icons.cancel,
       },
@@ -64,9 +64,9 @@ mixin OrderDialogs on GetxController {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text(
-                        "تغيير حالة الطلب",
-                        style: TextStyle(
+                      Text(
+                        "change_order_status".tr,
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
@@ -141,9 +141,9 @@ mixin OrderDialogs on GetxController {
                           Expanded(
                             child: OutlinedButton(
                               onPressed: () => Get.back(),
-                              child: const Text(
-                                "إلغاء",
-                                style: TextStyle(color: Constants.text),
+                              child: Text(
+                                "cancel".tr,
+                                style: const TextStyle(color: Constants.text),
                               ),
                             ),
                           ),
@@ -165,9 +165,9 @@ mixin OrderDialogs on GetxController {
                                 Get.back();
                               },
 
-                              child: const Text(
-                                "تحديث الحالة",
-                                style: TextStyle(color: Colors.white),
+                              child: Text(
+                                "update_status".tr,
+                                style: const TextStyle(color: Colors.white),
                               ),
                             ),
                           ),
@@ -226,7 +226,7 @@ mixin OrderDialogs on GetxController {
                             ),
                             const SizedBox(width: 10),
                             Text(
-                              "تفاصيل الطلب #${order['id']}",
+                              "${"order_details".tr} #${order['id']}",
                               style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -252,11 +252,20 @@ mixin OrderDialogs on GetxController {
                       ),
                       child: Column(
                         children: [
-                          controller.infoRow("العميل", order['Column2']),
-                          controller.infoRow("السوبرماركت", order['Column3']),
-                          controller.infoRow("المندوب", order['Column4']),
-                          controller.infoRow("الدفع", order['Column6']),
-                          controller.infoRow("التاريخ", order['Column8']),
+                          controller.infoRow("client".tr, order['Column2']),
+                          controller.infoRow(
+                            "supermarket_text".tr,
+                            order['Column3'],
+                          ),
+                          controller.infoRow(
+                            "driver_text".tr,
+                            order['Column4'],
+                          ),
+                          controller.infoRow(
+                            "payment_text".tr,
+                            order['Column6'],
+                          ),
+                          controller.infoRow("date_text".tr, order['Column8']),
                         ],
                       ),
                     ),
@@ -270,11 +279,11 @@ mixin OrderDialogs on GetxController {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: DataTable(
-                        columns: const [
-                          DataColumn(label: Text("المنتج")),
-                          DataColumn(label: Text("الكمية")),
-                          DataColumn(label: Text("السعر")),
-                          DataColumn(label: Text("المجموع")),
+                        columns: [
+                          DataColumn(label: Text("product".tr)),
+                          DataColumn(label: Text("quantity".tr)),
+                          DataColumn(label: Text("price_text".tr)),
+                          DataColumn(label: Text("total".tr)),
                         ],
                         rows: items.map<DataRow>((item) {
                           return DataRow(
@@ -312,12 +321,12 @@ mixin OrderDialogs on GetxController {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            "المجموع الكلي",
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                          Text(
+                            "total_amount".tr,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            "${order['Column5']} ر.ي",
+                            "${order['Column5']} ${"currency_yr".tr}",
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -335,9 +344,9 @@ mixin OrderDialogs on GetxController {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "صورة الدفع",
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                          Text(
+                            "payment_image".tr,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 10),
 
@@ -357,9 +366,9 @@ mixin OrderDialogs on GetxController {
                                     color: Colors.grey.shade100,
                                     borderRadius: BorderRadius.circular(12),
                                   ),
-                                  child: const Text(
-                                    "تعذر تحميل الصورة",
-                                    style: TextStyle(color: Colors.grey),
+                                  child: Text(
+                                    "image_load_failed".tr,
+                                    style: const TextStyle(color: Colors.grey),
                                   ),
                                 );
                               },
@@ -390,9 +399,9 @@ mixin OrderDialogs on GetxController {
                           color: Colors.orange.withValues(alpha: .1),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: const Text(
-                          "الدفع نقدي 💵",
-                          style: TextStyle(
+                        child: Text(
+                          "cash_payment".tr,
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.orange,
                           ),
@@ -410,9 +419,9 @@ mixin OrderDialogs on GetxController {
                           backgroundColor: Colors.green,
                         ),
                         onPressed: () => Get.back(),
-                        label: const Text(
-                          "إغلاق",
-                          style: TextStyle(color: Colors.white),
+                        label: Text(
+                          "close".tr,
+                          style: const TextStyle(color: Colors.white),
                         ),
                       ),
                     ),
@@ -452,9 +461,9 @@ mixin OrderDialogs on GetxController {
               children: [
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: const Text(
-                    "إدارة الكوبونات",
-                    style: TextStyle(
+                  child: Text(
+                    "coupon_management".tr,
+                    style: const TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                       color: Colors.green,
@@ -470,9 +479,9 @@ mixin OrderDialogs on GetxController {
                   runSpacing: 10,
                   alignment: WrapAlignment.center,
                   children: [
-                    controller.input(name, "اسم الكوبون"),
-                    controller.input(count, "عدد الاستخدام"),
-                    controller.input(discount, "نسبة الخصم"),
+                    controller.input(name, "coupon_name".tr),
+                    controller.input(count, "usage_count".tr),
+                    controller.input(discount, "discount".tr),
 
                     /// DatePicker
                     SizedBox(
@@ -481,7 +490,7 @@ mixin OrderDialogs on GetxController {
                         controller: expire,
                         readOnly: true,
                         decoration: InputDecoration(
-                          hintText: "تاريخ الانتهاء",
+                          hintText: "expire_date".tr,
                           filled: true,
                           fillColor: Colors.green.shade50,
                           suffixIcon: const Icon(
@@ -530,7 +539,7 @@ mixin OrderDialogs on GetxController {
                           count.text.isEmpty ||
                           discount.text.isEmpty ||
                           expire.text.isEmpty) {
-                        Get.snackbar("تنبيه", "كل الحقول مطلوبة");
+                        Get.snackbar("warning".tr, "all_fields_required".tr);
                         return;
                       }
 
@@ -546,9 +555,9 @@ mixin OrderDialogs on GetxController {
                       discount.clear();
                       expire.clear();
                     },
-                    child: const Text(
-                      "إضافة",
-                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    child: Text(
+                      "add".tr,
+                      style: const TextStyle(fontSize: 16, color: Colors.white),
                     ),
                   ),
                 ),
@@ -567,11 +576,11 @@ mixin OrderDialogs on GetxController {
                   }
 
                   if (controller.couponsList.isEmpty) {
-                    return const Padding(
-                      padding: EdgeInsets.all(20),
+                    return Padding(
+                      padding: const EdgeInsets.all(20),
                       child: Text(
-                        "لا يوجد كوبونات",
-                        style: TextStyle(color: Colors.grey),
+                        "no_coupons".tr,
+                        style: const TextStyle(color: Colors.grey),
                       ),
                     );
                   }
@@ -597,7 +606,10 @@ mixin OrderDialogs on GetxController {
                               ),
                             ),
                             subtitle: Text(
-                              "خصم ${item['Column2']}% | العدد ${item['Column3']}",
+                              "discount_text".trParams({
+                                'discount': item['Column2'] ?? '0',
+                                'count': item['Column3'] ?? '0',
+                              }),
                             ),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
@@ -625,14 +637,16 @@ mixin OrderDialogs on GetxController {
                                             15,
                                           ),
                                         ),
-                                        title: const Text("حذف الكوبون"),
+                                        title: Text("delete_coupon".tr),
                                         content: Text(
-                                          "هل أنت متأكد من حذف ${item['Column1']} ؟",
+                                          "confirm_delete_coupon".trParams({
+                                            'name': item['Column1'] ?? '',
+                                          }),
                                         ),
                                         actions: [
                                           TextButton(
                                             onPressed: () => Get.back(),
-                                            child: const Text("إلغاء"),
+                                            child: Text("cancel".tr),
                                           ),
 
                                           ElevatedButton(
@@ -645,7 +659,7 @@ mixin OrderDialogs on GetxController {
                                               );
                                               Get.back();
                                             },
-                                            child: const Text("حذف"),
+                                            child: Text("delete_text".tr),
                                           ),
                                         ],
                                       ),
@@ -689,9 +703,9 @@ mixin OrderDialogs on GetxController {
               mainAxisSize: MainAxisSize.min,
               children: [
                 /// 🔥 العنوان
-                const Text(
-                  "تعديل الكوبون",
-                  style: TextStyle(
+                Text(
+                  "edit_coupon".tr,
+                  style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                     color: Colors.green,
@@ -701,15 +715,15 @@ mixin OrderDialogs on GetxController {
                 const SizedBox(height: 20),
 
                 /// الاسم
-                controller.input(name, "اسم الكوبون"),
+                controller.input(name, "coupon_name".tr),
                 const SizedBox(height: 12),
 
                 /// العدد
-                controller.input(count, "عدد الاستخدام"),
+                controller.input(count, "usage_count".tr),
                 const SizedBox(height: 12),
 
                 /// الخصم
-                controller.input(discount, "نسبة الخصم"),
+                controller.input(discount, "discount".tr),
                 const SizedBox(height: 12),
 
                 /// DatePicker
@@ -719,7 +733,7 @@ mixin OrderDialogs on GetxController {
                     controller: expire,
                     readOnly: true,
                     decoration: InputDecoration(
-                      hintText: "تاريخ الانتهاء",
+                      hintText: "expire_date".tr,
                       filled: true,
                       fillColor: Colors.green.shade50,
                       suffixIcon: const Icon(
@@ -771,7 +785,7 @@ mixin OrderDialogs on GetxController {
                           ),
                         ),
                         onPressed: () => Get.back(),
-                        child: const Text("إلغاء"),
+                        child: Text("cancel".tr),
                       ),
                     ),
 
@@ -793,7 +807,10 @@ mixin OrderDialogs on GetxController {
                               count.text.isEmpty ||
                               discount.text.isEmpty ||
                               expire.text.isEmpty) {
-                            Get.snackbar("تنبيه", "جميع الحقول مطلوبة");
+                            Get.snackbar(
+                              "warning".tr,
+                              "all_fields_required".tr,
+                            );
                             return;
                           }
 
@@ -806,9 +823,9 @@ mixin OrderDialogs on GetxController {
 
                           Get.back();
                         },
-                        child: const Text(
-                          "حفظ",
-                          style: TextStyle(color: Colors.white),
+                        child: Text(
+                          "save".tr,
+                          style: const TextStyle(color: Colors.white),
                         ),
                       ),
                     ),

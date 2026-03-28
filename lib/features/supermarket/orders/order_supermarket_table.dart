@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 
 import 'orders_supermarket_controller.dart';
 
-mixin OrderSupermarketTable on GetxController{
+mixin OrderSupermarketTable on GetxController {
   OrdersSupermarketController get controller;
 
   List<DataCell> getDataCells(Map<String, dynamic> data) {
@@ -20,14 +20,14 @@ mixin OrderSupermarketTable on GetxController{
   }
 
   List<DataColumn> get tableColumns => [
-    DataColumn(label: Text('رقم الطلب'), onSort: (i, a) => sortData(0, a)),
-    DataColumn(label: Text('العميل'), onSort: (i, a) => sortData(1, a)),
-    DataColumn(label: Text('المندوب'), onSort: (i, a) => sortData(3, a)),
-    DataColumn(label: Text('المبلغ'), onSort: (i, a) => sortData(4, a)),
-    DataColumn(label: Text('الدفع'), onSort: (i, a) => sortData(5, a)),
-    DataColumn(label: Text('الحالة'), onSort: (i, a) => sortData(6, a)),
-    DataColumn(label: Text('التاريخ'), onSort: (i, a) => sortData(7, a)),
-    const DataColumn(label: Text('الإجراءات')),
+    DataColumn(label: Text('order_no'.tr), onSort: (i, a) => sortData(0, a)),
+    DataColumn(label: Text('client'.tr), onSort: (i, a) => sortData(1, a)),
+    DataColumn(label: Text('driver_text'.tr), onSort: (i, a) => sortData(3, a)),
+    DataColumn(label: Text('order_amount'.tr), onSort: (i, a) => sortData(4, a)),
+    DataColumn(label: Text('payment_text'.tr), onSort: (i, a) => sortData(5, a)),
+    DataColumn(label: Text('status'.tr), onSort: (i, a) => sortData(6, a)),
+    DataColumn(label: Text('date_text'.tr), onSort: (i, a) => sortData(7, a)),
+    DataColumn(label: Text('actions'.tr)),
   ];
 
   // ======================= SORT =======================
@@ -58,7 +58,7 @@ mixin OrderSupermarketTable on GetxController{
       controller.filteredDataList.assignAll(
         controller.dataList.where((item) {
           return item.values.any(
-                (v) => v.toLowerCase().contains(query.toLowerCase()),
+            (v) => v.toLowerCase().contains(query.toLowerCase()),
           );
         }).toList(),
       );

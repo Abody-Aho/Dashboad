@@ -16,20 +16,20 @@ mixin OrderSupermarketDialogs on GetxController {
     final statuses = [
       {
         "id": 0,
-        "title": "Pending",
+        "title": "pending".tr,
         "color": Colors.orange,
         "icon": Icons.schedule,
       },
       {
         "id": 1,
-        "title": "Accepted",
+        "title": "accepted".tr,
         "color": Colors.blue,
         "icon": Icons.check_circle,
       },
-      {"id": 2, "title": "Ready", "color": Colors.teal, "icon": Icons.store},
+      {"id": 2, "title": "ready".tr, "color": Colors.teal, "icon": Icons.store},
       {
         "id": 5,
-        "title": "Cancelled",
+        "title": "cancelled".tr,
         "color": Colors.red,
         "icon": Icons.cancel,
       },
@@ -51,9 +51,9 @@ mixin OrderSupermarketDialogs on GetxController {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text(
-                        "تغيير حالة الطلب",
-                        style: TextStyle(
+                      Text(
+                        "change_order_status".tr,
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
@@ -128,7 +128,10 @@ mixin OrderSupermarketDialogs on GetxController {
                           Expanded(
                             child: OutlinedButton(
                               onPressed: () => Get.back(),
-                              child: const Text("إلغاء",style: TextStyle(color: Constants.text),),
+                              child: Text(
+                                "cancel_text".tr,
+                                style: const TextStyle(color: Constants.text),
+                              ),
                             ),
                           ),
 
@@ -149,9 +152,9 @@ mixin OrderSupermarketDialogs on GetxController {
                                 Get.back();
                               },
 
-                              child: const Text(
-                                "تحديث الحالة",
-                                style: TextStyle(color: Colors.white),
+                              child: Text(
+                                "update_status".tr,
+                                style: const TextStyle(color: Colors.white),
                               ),
                             ),
                           ),
@@ -206,7 +209,7 @@ mixin OrderSupermarketDialogs on GetxController {
                           const SizedBox(width: 10),
 
                           Text(
-                            "تفاصيل الطلب #${order['id']}",
+                            "${"order_details".tr} #${order['id']}",
                             style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -235,10 +238,10 @@ mixin OrderSupermarketDialogs on GetxController {
 
                     child: Column(
                       children: [
-                        controller.infoRow("العميل", order['Column2']),
-                        controller.infoRow("المندوب", order['Column4']),
-                        controller.infoRow("الدفع", order['Column6']),
-                        controller.infoRow("التاريخ", order['Column8']),
+                        controller.infoRow("client".tr, order['Column2']),
+                        controller.infoRow("driver_text".tr, order['Column4']),
+                        controller.infoRow("payment_text".tr, order['Column6']),
+                        controller.infoRow("date_text".tr, order['Column8']),
                       ],
                     ),
                   ),
@@ -253,11 +256,11 @@ mixin OrderSupermarketDialogs on GetxController {
                     ),
 
                     child: DataTable(
-                      columns: const [
-                        DataColumn(label: Text("المنتج")),
-                        DataColumn(label: Text("الكمية")),
-                        DataColumn(label: Text("السعر")),
-                        DataColumn(label: Text("المجموع")),
+                      columns: [
+                        DataColumn(label: Text("product".tr)),
+                        DataColumn(label: Text("quantity".tr)),
+                        DataColumn(label: Text("price_text".tr)),
+                        DataColumn(label: Text("total".tr)),
                       ],
 
                       rows: items.map<DataRow>((item) {
@@ -297,13 +300,13 @@ mixin OrderSupermarketDialogs on GetxController {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          "المجموع الكلي",
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                        Text(
+                          "total_amount".tr,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
 
                         Text(
-                          "${order['Column5']} ر.ي",
+                          "${order['Column5']} ${"currency_yr".tr}",
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -329,9 +332,9 @@ mixin OrderSupermarketDialogs on GetxController {
 
                       onPressed: () => Get.back(),
 
-                      label: const Text(
-                        "إغلاق",
-                        style: TextStyle(color: Colors.white),
+                      label: Text(
+                        "close".tr,
+                        style: const TextStyle(color: Colors.white),
                       ),
                     ),
                   ),

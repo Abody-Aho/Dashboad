@@ -112,14 +112,14 @@ mixin ProductSupermarketApi on GetxController {
   Future<void> submitCategory() async {
     if (!controller.isEditCategory.value &&
         controller.categoryImageBytes.value == null) {
-      Get.snackbar("تنبيه", "يرجى اختيار صورة للفئة");
+      Get.snackbar("warning".tr, "choose_category_image".tr);
       return;
     }
     if (!controller.categoryFormKey.currentState!.validate()) return;
 
     if (controller.categoryType.value == "private" &&
         controller.selectedSuperId.value == null) {
-      Get.snackbar("تنبيه", "اختر السوبرماركت");
+      Get.snackbar("warning".tr, "choose_supermarket".tr);
       return;
     }
 
@@ -163,12 +163,12 @@ mixin ProductSupermarketApi on GetxController {
         Get.back();
         controller.resetCategoryForm();
         await fetchCategoriesAll();
-        Get.snackbar("نجاح", "تمت العملية بنجاح");
+        Get.snackbar("success".tr, "operation_success".tr);
       } else {
-        Get.snackbar("خطأ", body["message"] ?? "فشل العملية");
+        Get.snackbar("error".tr, body["message"] ?? "operation_failed".tr);
       }
     } catch (e) {
-      Get.snackbar("خطأ", "حدث خطأ أثناء الإرسال");
+      Get.snackbar("error".tr, "send_error".tr);
     } finally {
       controller.isAddingCategory.value = false;
     }
@@ -195,8 +195,8 @@ mixin ProductSupermarketApi on GetxController {
 
     if (controller.selectedCategoryAllId.value == null) {
       Get.snackbar(
-        "تنبيه",
-        "يرجى اختيار جميع الحقول",
+        "warning".tr,
+        "select_all_fields".tr,
         backgroundColor: Constants.warning,
         colorText: Colors.white,
       );
@@ -205,8 +205,8 @@ mixin ProductSupermarketApi on GetxController {
 
     if (controller.imageBytes.value == null) {
       Get.snackbar(
-        "تنبيه",
-        "يرجى اختيار صورة للمنتج",
+        "warning".tr,
+        "choose_product_image".tr,
         backgroundColor: Constants.warning,
         colorText: Colors.white,
       );
@@ -270,8 +270,8 @@ mixin ProductSupermarketApi on GetxController {
         Get.back();
 
         Get.snackbar(
-          "نجاح",
-          "تمت إضافة المنتج بنجاح",
+          "success".tr,
+          "product_added".tr,
           backgroundColor: Constants.success,
           colorText: Colors.white,
           borderRadius: 12,
@@ -279,8 +279,8 @@ mixin ProductSupermarketApi on GetxController {
         );
       } else {
         Get.snackbar(
-          "خط",
-          body["status"] ?? "فشل في الإضافة",
+          "error".tr,
+          body["status"] ?? "add_failed".tr,
           backgroundColor: Constants.error,
           colorText: Colors.white,
         );
@@ -289,8 +289,8 @@ mixin ProductSupermarketApi on GetxController {
       print("ERROR:");
       print(e);
       Get.snackbar(
-        "خطأ",
-        "حدث خطأ أثناء الإرسال",
+        "error".tr,
+        "send_error".tr,
         backgroundColor: Constants.error,
         colorText: Colors.white,
       );
@@ -322,8 +322,8 @@ mixin ProductSupermarketApi on GetxController {
     if (controller.categoryType.value == "private" &&
         controller.selectedSuperId.value == null) {
       Get.snackbar(
-        "تنبيه",
-        "يرجى اختيار السوبرماركت",
+        "warning".tr,
+        "choose_supermarket".tr,
         backgroundColor: Constants.warning,
         colorText: Colors.white,
       );
@@ -354,23 +354,23 @@ mixin ProductSupermarketApi on GetxController {
         controller.resetCategoryForm();
 
         Get.snackbar(
-          "نجاح",
-          "تمت إضافة الفئة بنجاح",
+          "success".tr,
+          "category_added".tr,
           backgroundColor: Constants.success,
           colorText: Colors.white,
         );
       } else {
         Get.snackbar(
-          "خطأ",
-          "فشل في الإضافة",
+          "error".tr,
+          "add_failed".tr,
           backgroundColor: Constants.error,
           colorText: Colors.white,
         );
       }
     } catch (e) {
       Get.snackbar(
-        "خطأ",
-        "حدث خطأ أثناء الإرسال",
+        "error".tr,
+        "send_error".tr,
         backgroundColor: Constants.error,
         colorText: Colors.white,
       );
@@ -426,8 +426,8 @@ mixin ProductSupermarketApi on GetxController {
         Get.back();
 
         Get.snackbar(
-          "نجاح",
-          "تم تحديث المنتج بنجاح",
+          "success".tr,
+          "product_updated".tr,
           backgroundColor: Constants.success,
           colorText: Colors.white,
         );
@@ -435,8 +435,8 @@ mixin ProductSupermarketApi on GetxController {
       } else {
 
         Get.snackbar(
-          "خطأ",
-          "فشل تحديث المنتج",
+          "error".tr,
+          "update_product_failed".tr,
           backgroundColor: Constants.error,
           colorText: Colors.white,
         );
@@ -445,8 +445,8 @@ mixin ProductSupermarketApi on GetxController {
     } catch (e) {
 
       Get.snackbar(
-        "خطأ",
-        "حدث خطأ أثناء الاتصال بالسيرفر",
+        "error".tr,
+        "server_connect_error".tr,
         backgroundColor: Constants.error,
         colorText: Colors.white,
       );
@@ -468,8 +468,8 @@ mixin ProductSupermarketApi on GetxController {
 
       if (response.statusCode != 200) {
         Get.snackbar(
-          "خطأ",
-          "فشل الاتصال بالسيرفر",
+          "error".tr,
+          "server_connect_error".tr,
           backgroundColor: Constants.error,
           colorText: Colors.white,
         );
@@ -484,8 +484,8 @@ mixin ProductSupermarketApi on GetxController {
         await controller.fetchProducts();
 
         Get.snackbar(
-          "تم الحذف",
-          "تم حذف المنتج بنجاح",
+          "deleted".tr,
+          "product_deleted".tr,
           backgroundColor: Constants.success,
           colorText: Colors.white,
           icon: const Icon(Icons.check_circle, color: Colors.white),
@@ -499,8 +499,8 @@ mixin ProductSupermarketApi on GetxController {
       else {
 
         Get.snackbar(
-          "فشل الحذف",
-          body["message"] ?? "لم يتم حذف المنتج",
+          "operation_failed".tr,
+          body["message"] ?? "delete_product_failed".tr,
           backgroundColor: Constants.error,
           colorText: Colors.white,
           icon: const Icon(Icons.error, color: Colors.white),
@@ -515,8 +515,8 @@ mixin ProductSupermarketApi on GetxController {
     catch (e) {
 
       Get.snackbar(
-        "خطأ",
-        "حدث خطأ أثناء الاتصال بالسيرفر",
+        "error".tr,
+        "server_connect_error".tr,
         backgroundColor: Colors.orange,
         colorText: Colors.white,
         icon: const Icon(Icons.wifi_off, color: Colors.white),
