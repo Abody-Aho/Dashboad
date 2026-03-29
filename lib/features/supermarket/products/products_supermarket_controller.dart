@@ -65,12 +65,22 @@ class ProductsSupermarketController extends GetxController with ProductSupermark
   String categoryImageName = "";
   RxString categoryOldImage = "".obs;
   RxString itemsOldImage = "".obs;
+  var totalProducts = 0.obs;
+  var activeProducts = 0.obs;
+  var newProducts = 0.obs;
+  var unavailableProducts = 0.obs;
+
+  var isLoadingStats = false.obs;
+  int? supermarketId;
   // عند إنشاء الكنترولر يتم تحميل البيانات مباشرة
   @override
   void onInit() {
     super.onInit();
+    final auth = Get.find<AuthController>();
+    supermarketId = auth.currentUser.value?.id;
     fetchProducts();
     fetchCategoriesAll();
+    fetchStats(supermarketId: supermarketId);
   }
 
   void resetCategoryForm() {

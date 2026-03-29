@@ -17,7 +17,6 @@ final List<ButtonsInfo> buttonsInfo = [
   ButtonsInfo(title: "users_management", icon: Icons.people),
   ButtonsInfo(title: "orders_management", icon: Icons.shopping_bag),
   ButtonsInfo(title: "products_management", icon: Icons.inventory_2),
-  ButtonsInfo(title: "payment_management", icon: Icons.payment),
   ButtonsInfo(title: "notifications", icon: Icons.notifications),
   ButtonsInfo(title: "profile", icon: Icons.person),
 ];

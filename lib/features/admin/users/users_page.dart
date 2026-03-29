@@ -21,24 +21,26 @@ class UsersPage extends StatelessWidget {
 
     // بطاقات الإحصائيات / Statistics Cards
     List<Widget> statCards = [
-      StatCard(
-        title: 'total_users'.tr, // مترجم
-        value: '1,245',
+      Obx(() => StatCard(
+        title: 'total_users'.tr,
+        value: controller.totalUsers.value.toString(),
         percent: '8%',
         subtitle: 'compared_last_month'.tr,
-      ),
-      StatCard(
+      )),
+
+      Obx(() => StatCard(
         title: 'active_users'.tr,
-        value: '984',
+        value: controller.activeUsers.value.toString(),
         percent: '5%',
         subtitle: 'compared_last_month'.tr,
-      ),
-      StatCard(
+      )),
+
+      Obx(() => StatCard(
         title: 'new_signups'.tr,
-        value: '124',
+        value: controller.newUsers.value.toString(),
         percent: '12%',
         subtitle: 'compared_last_month'.tr,
-      ),
+      )),
       StatCard(
         title: 'banned_users'.tr,
         value: '15',

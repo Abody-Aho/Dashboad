@@ -16,6 +16,13 @@ class OrdersSupermarketController extends GetxController
   RxInt sortColumnIndex = 0.obs;
   RxBool sortAscending = true.obs;
 
+  var totalOrders = 0.obs;
+  var runningOrders = 0.obs;
+  var completedOrders = 0.obs;
+  var cancelledOrders = 0.obs;
+
+  var isLoadingStats = false.obs;
+
   final searchTextController = TextEditingController();
   final box = GetStorage();
   int supermarketId = 0;
@@ -32,6 +39,7 @@ class OrdersSupermarketController extends GetxController
     }
 
     fetchOrders();
+    fetchStats(supermarketId: supermarketId);
   }
 
   final selectedValue = 'all_types'.obs;

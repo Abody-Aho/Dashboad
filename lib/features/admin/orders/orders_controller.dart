@@ -18,6 +18,12 @@ class OrdersController extends GetxController
 
   RxInt sortColumnIndex = 0.obs;
   RxBool sortAscending = true.obs;
+  var totalOrders = 0.obs;
+  var runningOrders = 0.obs;
+  var completedOrders = 0.obs;
+  var cancelledOrders = 0.obs;
+
+  var isLoadingStats = false.obs;
 
   final searchTextController = TextEditingController();
 
@@ -25,6 +31,7 @@ class OrdersController extends GetxController
   void onInit() {
     super.onInit();
     fetchOrders();
+    fetchStats();
   }
 
   final selectedValue = 'all_types'.obs;

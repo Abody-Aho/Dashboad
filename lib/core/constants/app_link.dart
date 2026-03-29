@@ -48,6 +48,15 @@ class AppLink {
   static const bannerView = "${server}admin/notification/banner_view.php";
   static const imageBanner = "http://46.101.225.45/flymarket/app/customer/upload/banners/";
   static const updateProfile = "${server}admin/profile/update_profile.php";
+  static const getSoldPercentage = "${server}admin/items/get_sold_percentage.php";
+  static const getSalesChart = "${server}admin/items/get_curved_chart.php";
+  static const getTopProducts = "${server}admin/items/get_top_products.php";
+  static const getProductsStats = "${server}admin/items/products_available.php";
+  static const ordersChart = "${server}admin/items/orders_chart.php";
+  static const usersStats = "${server}admin/user_management/get_users_status.php";
+  static const ordersStats = "${server}admin/orders/get_order_statusl.php";
+  static const productsStats = "${server}admin/items/get_products_stats.php";
+  static const notificationsStats = "${server}admin/notification/get_notifications_stats.php";
 
 
   //======================= SuperMarket =======================

@@ -36,11 +36,18 @@ class NotificationsController extends GetxController
   var isLoading = false.obs;
   var banners = [].obs;
   var bannerIndex = 0.obs;
+  var total = 0.obs;
+  var read = 0.obs;
+  var unread = 0.obs;
+  var deleted = 0.obs;
+
+  var isLoadingStats = false.obs;
 
   @override
   void onInit() {
     super.onInit();
     fetchNotifications();
+    fetchStats();
   }
 
   final selectedValue = 'all_types'.obs;

@@ -1,5 +1,7 @@
+import 'package:dashbord2/features/admin/panel_lift/panel_controller.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class PieChartSample2 extends StatefulWidget {
   const PieChartSample2({super.key});
@@ -11,11 +13,13 @@ class PieChartSample2 extends StatefulWidget {
 class PieChart2State extends State<PieChartSample2> {
   int touchedIndex = -1;
 
+  final controller = Get.find<PanelController>(); // ✅
+
   final List<Color> sectionColors = const [
-    Color(0xFF42A5F5), // أزرق
-    Color(0xFFAB47BC), // بنفسجي
-    Color(0xFFFFA726), // برتقالي
-    Color(0xFFEF5350), // أحمر
+    Color(0xFF42A5F5),
+    Color(0xFFAB47BC),
+    Color(0xFFFFA726),
+    Color(0xFFEF5350),
   ];
 
   @override
@@ -24,22 +28,23 @@ class PieChart2State extends State<PieChartSample2> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       elevation: 3,
       color: Colors.green[50],
-      child: Row(
+      child: Obx(() => Row(
         children: <Widget>[
           const SizedBox(height: 18),
+
+          // 🔥 الشارت
           Expanded(
             child: AspectRatio(
               aspectRatio: 1.3,
               child: Row(
                 children: <Widget>[
-                  const SizedBox(height: 18),
                   Expanded(
                     child: AspectRatio(
                       aspectRatio: 1,
                       child: PieChart(
                         PieChartData(
                           pieTouchData: PieTouchData(
-                            touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                            touchCallback: (event, pieTouchResponse) {
                               setState(() {
                                 if (!event.isInterestedForInteractions ||
                                     pieTouchResponse == null ||
@@ -60,55 +65,78 @@ class PieChart2State extends State<PieChartSample2> {
                       ),
                     ),
                   ),
-                  // 🟦 المؤشرات الجانبية (Legend)
+
+                  // 🟦 Legend (ديناميك)
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Indicator(color: Color(0xFF42A5F5), text: 'الأولى', isSquare: true, textColor: Colors.black87),
-                      SizedBox(height: 6),
-                      Indicator(color: Color(0xFFAB47BC), text: 'الثانية', isSquare: true, textColor: Colors.black87),
-                      SizedBox(height: 6),
-                      Indicator(color: Color(0xFFFFA726), text: 'الثالثة', isSquare: true, textColor: Colors.black87),
-                      SizedBox(height: 6),
-                      Indicator(color: Color(0xFFEF5350), text: 'الرابعة', isSquare: true, textColor: Colors.black87),
-                      SizedBox(height: 12),
-                    ],
+                    children: List.generate(
+                      controller.topProducts.length,
+                          (i) => Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        child: Indicator(
+                          color: sectionColors[i % sectionColors.length],
+                          text: controller.topProducts[i]['name'],
+                          isSquare: true,
+                        ),
+                      ),
+                    ),
                   ),
-                  const SizedBox(width: 24),
+
+                  const SizedBox(width: 12),
                 ],
               ),
             ),
           ),
         ],
-      ),
+      )),
     );
   }
 
+  // ============================
+  // 🔥 Pie Sections (ديناميك)
+  // ============================
   List<PieChartSectionData> showingSections() {
-    return List.generate(4, (i) {
+    if (controller.topProducts.isEmpty) {
+      return [
+        PieChartSectionData(
+          color: Colors.grey,
+          value: 1,
+          title: 'No Data',
+        )
+      ];
+    }
+
+    double total = controller.topProducts
+        .map((e) => e['sold'] as double)
+        .reduce((a, b) => a + b);
+
+    return List.generate(controller.topProducts.length, (i) {
       final isTouched = i == touchedIndex;
-      final double fontSize = isTouched ? 22.0 : 16.0;
-      final double radius = isTouched ? 65.0 : 55.0;
-      const shadows = [Shadow(color: Colors.black26, blurRadius: 3)];
+      final double fontSize = isTouched ? 20 : 14;
+      final double radius = isTouched ? 65 : 55;
+
+      double percent =
+          (controller.topProducts[i]['sold'] / total) * 100;
 
       return PieChartSectionData(
-        color: sectionColors[i],
-        value: [40, 30, 20, 10][i].toDouble(),
-        title: '${[40, 30, 20, 10][i]}%',
+        color: sectionColors[i % sectionColors.length],
+        value: controller.topProducts[i]['sold'],
+        title: "${percent.toStringAsFixed(1)}%",
         radius: radius,
         titleStyle: TextStyle(
           fontSize: fontSize,
           fontWeight: FontWeight.bold,
-          color: Colors.white, // أرقام بيضاء واضحة
-          shadows: shadows,
+          color: Colors.white,
         ),
       );
     });
   }
 }
 
-// 🟦 ويدجت المؤشر الجانبي
+// ============================
+// 🟦 Indicator Widget
+// ============================
 class Indicator extends StatelessWidget {
   const Indicator({
     super.key,
@@ -136,16 +164,13 @@ class Indicator extends StatelessWidget {
             shape: isSquare ? BoxShape.rectangle : BoxShape.circle,
             color: color,
             borderRadius: BorderRadius.circular(4),
-            boxShadow: const [
-              BoxShadow(color: Colors.black12, blurRadius: 2),
-            ],
           ),
         ),
         const SizedBox(width: 6),
         Text(
           text,
           style: TextStyle(
-            fontSize: 15,
+            fontSize: 13,
             fontWeight: FontWeight.w600,
             color: textColor ?? Colors.black87,
           ),

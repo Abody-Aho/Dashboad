@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../widgets/custom_bottom.dart';
 import '../../widgets/custom_card.dart';
-import '../../widgets/custom_dropdown_button.dart';
 import '../../widgets/custom_search_bar.dart';
 import '../../widgets/responsive_grid.dart';
 import 'orders_controller.dart';
@@ -18,32 +17,35 @@ class OrdersPage extends StatelessWidget {
 
     // بطاقات الإحصائيات
     List<Widget> statCards = [
-      StatCard(
+      Obx(() => StatCard(
         title: 'total_orders'.tr,
-        value: '2,540',
+        value: controller.totalOrders.value.toString(),
         percent: '7%',
         subtitle: 'compared_last_month'.tr,
-      ),
-      StatCard(
+      )),
+
+      Obx(() => StatCard(
         title: 'running_orders'.tr,
-        value: '320',
+        value: controller.runningOrders.value.toString(),
         percent: '5%',
         subtitle: 'increase_this_week'.tr,
-      ),
-      StatCard(
+      )),
+
+      Obx(() => StatCard(
         title: 'completed_orders'.tr,
-        value: '1,950',
+        value: controller.completedOrders.value.toString(),
         percent: '12%',
         subtitle: 'compared_last_month'.tr,
-      ),
-      StatCard(
+      )),
+
+      Obx(() => StatCard(
         title: 'cancelled_orders'.tr,
-        value: '78',
+        value: controller.cancelledOrders.value.toString(),
         percent: '-4%',
         subtitle: 'decrease_this_week'.tr,
         percentColor: Colors.red,
         percentIcon: Icons.arrow_downward,
-      ),
+      )),
     ];
 
     return Scaffold(

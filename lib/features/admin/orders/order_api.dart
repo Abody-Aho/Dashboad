@@ -12,6 +12,30 @@ import 'orders_controller.dart';
 mixin OrderApi on GetxController{
   OrdersController get controller;
 
+  Future<void> fetchStats() async {
+    try {
+      controller.isLoadingStats.value = true;
+
+      String url = AppLink.ordersStats;
+
+
+      final res = await http.get(Uri.parse(url));
+      final data = jsonDecode(res.body);
+
+      if (data['status'] == 'success') {
+        controller.totalOrders.value = data['data']['total_orders'];
+        controller.runningOrders.value = data['data']['running_orders'];
+        controller.completedOrders.value = data['data']['completed_orders'];
+        controller.cancelledOrders.value = data['data']['cancelled_orders'];
+      }
+
+    } catch (e) {
+      print(e);
+    } finally {
+      controller.isLoadingStats.value = false;
+    }
+  }
+
   Future<void> fetchOrders() async {
     try {
       controller.isLoading.value = true;

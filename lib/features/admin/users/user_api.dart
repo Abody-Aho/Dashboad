@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'package:dashbord2/features/admin/users/user_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import '../../../core/constants/app_link.dart';
 
 mixin UserApi on GetxController {
+  UserController get controller;
 
   var dataList = <Map<String,String>>[].obs;
   var filteredDataList = <Map<String,String>>[].obs;
@@ -67,6 +69,33 @@ mixin UserApi on GetxController {
       }
     } catch (e) {
       print("Search Error: $e");
+    }
+  }
+
+  Future<void> fetchStats() async {
+    try {
+      controller.isStatusLoading.value = true;
+
+      final response = await http.get(Uri.parse(AppLink.usersStats));
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        if (data['status'] == 'success') {
+          controller.totalUsers.value = data['data']['total_users'];
+          controller.activeUsers.value = data['data']['active_users'];
+          controller.newUsers.value = data['data']['new_users'];
+        } else {
+          print("API Error: ${data}");
+        }
+      } else {
+        print("Server Error: ${response.statusCode}");
+      }
+
+    } catch (e) {
+      print("Exception: $e");
+    } finally {
+      controller.isStatusLoading.value = false;
     }
   }
 

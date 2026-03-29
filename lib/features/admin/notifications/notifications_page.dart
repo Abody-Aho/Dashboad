@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../widgets/custom_bottom.dart';
 import '../../widgets/custom_card.dart';
-import '../../widgets/custom_dropdown_button.dart';
 import '../../widgets/custom_search_bar.dart';
 import '../../widgets/responsive_grid.dart';
 import 'notifications_controller.dart';
 import 'package:dashbord2/core/constants/app_constants.dart';
 import 'package:dashbord2/features/widgets/custom_data_table.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 class NotificationsPage extends StatelessWidget {
   const NotificationsPage({super.key});
 
@@ -18,32 +17,35 @@ class NotificationsPage extends StatelessWidget {
 
     // بطاقات الإحصائيات
     List<Widget> statCards = [
-      StatCard(
+      Obx(() => StatCard(
         title: 'total_notifications'.tr,
-        value: '12,450',
+        value: controller.total.value.toString(),
         percent: '15%',
         subtitle: 'increase_last_week'.tr,
-      ),
-      StatCard(
+      )),
+
+      Obx(() => StatCard(
         title: 'read_notifications'.tr,
-        value: '9,320',
+        value: controller.read.value.toString(),
         percent: '10%',
         subtitle: 'improvement_engagement'.tr,
-      ),
-      StatCard(
+      )),
+
+      Obx(() => StatCard(
         title: 'unread_notifications'.tr,
-        value: '3,130',
+        value: controller.unread.value.toString(),
         percent: '5%',
         subtitle: 'awaiting_review'.tr,
-      ),
-      StatCard(
+      )),
+
+      Obx(() => StatCard(
         title: 'deleted_notifications'.tr,
-        value: '720',
+        value: controller.deleted.value.toString(),
         percent: '-6%',
         subtitle: 'decrease_deletion'.tr,
         percentColor: Colors.red,
         percentIcon: Icons.arrow_downward,
-      ),
+      )),
     ];
 
     return Scaffold(
@@ -99,24 +101,6 @@ class NotificationsPage extends StatelessWidget {
                                 CustomSearchBar(controller: controller, hintText: 'search'.tr),
                                 const SizedBox(height: 20),
                                 Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 10),
-                                  child: CustomDropdownButton(
-                                    selectedValue: controller.selectedWay,
-                                    options: controller.paymentWay,
-                                    onChanged: controller.changeWay,
-                                  ),
-                                ),
-                                const SizedBox(height: 20),
-                                Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 10),
-                                  child: CustomDropdownButton(
-                                    selectedValue: controller.selectedValue,
-                                    options: controller.options,
-                                    onChanged: controller.changeValue,
-                                  ),
-                                ),
-                                const SizedBox(height: 20),
-                                Container(
                                   margin: EdgeInsets.symmetric(horizontal: 11),
                                   child: CustomBottom(
                                     controller: controller,
@@ -163,22 +147,6 @@ class NotificationsPage extends StatelessWidget {
                                       },
                                     ),
                                   ],
-                                ),
-                                Container(
-                                  margin: EdgeInsets.only(left: 5.w),
-                                  child: CustomDropdownButton(
-                                    selectedValue: controller.selectedWay,
-                                    options: controller.paymentWay,
-                                    onChanged: controller.changeWay,
-                                  ),
-                                ),
-                                Container(
-                                  margin: EdgeInsets.only(left: 5.w),
-                                  child: CustomDropdownButton(
-                                    selectedValue: controller.selectedValue,
-                                    options: controller.options,
-                                    onChanged: controller.changeValue,
-                                  ),
                                 ),
                                 Expanded(
                                   child: CustomSearchBar(

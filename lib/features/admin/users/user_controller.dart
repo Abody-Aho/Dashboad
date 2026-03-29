@@ -13,6 +13,11 @@ import 'package:http/http.dart' as http;
 class UserController extends GetxController with UserApi, UserForm, UserTable, UserDialogs {
 
   final searchTextController = TextEditingController();
+  var totalUsers = 0.obs;
+  var activeUsers = 0.obs;
+  var newUsers = 0.obs;
+
+  var isStatusLoading = false.obs;
   @override
   UserController get controller => this;
 
@@ -21,6 +26,7 @@ class UserController extends GetxController with UserApi, UserForm, UserTable, U
   void onInit() {
     super.onInit();
     fetchUsers();
+    fetchStats();
   }
 
   // ======================= API =======================

@@ -10,6 +10,27 @@ import 'notifications_controller.dart';
 mixin NotificationsApi on GetxController {
   NotificationsController get controller;
 
+  Future<void> fetchStats() async {
+    try {
+      controller.isLoadingStats.value = true;
+
+      final res = await http.get(Uri.parse(AppLink.notificationsStats));
+      final data = jsonDecode(res.body);
+
+      if (data['status'] == 'success') {
+        controller.total.value = data['data']['total_notifications'];
+        controller.read.value = data['data']['read_notifications'];
+        controller.unread.value = data['data']['unread_notifications'];
+        controller.deleted.value = data['data']['deleted_notifications'];
+      }
+
+    } catch (e) {
+      print(e);
+    } finally {
+      controller.isLoadingStats.value = false;
+    }
+  }
+
   Future fetchBanners() async {
     try {
       var response = await http.get(Uri.parse(AppLink.bannerView));

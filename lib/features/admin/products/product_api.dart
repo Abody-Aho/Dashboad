@@ -13,6 +13,29 @@ import '../../../data/models/super_model.dart';
 mixin ProductApi on GetxController {
   ProductsController get controller;
 
+  Future<void> fetchStats() async {
+    try {
+      controller.isLoadingStats.value = true;
+
+      String url = AppLink.productsStats;
+
+      final res = await http.get(Uri.parse(url));
+      final data = jsonDecode(res.body);
+
+      if (data['status'] == 'success') {
+        controller.totalProducts.value = data['data']['total_products'];
+        controller.activeProducts.value = data['data']['active_products'];
+        controller.newProducts.value = data['data']['new_products'];
+        controller.unavailableProducts.value = data['data']['unavailable_products'];
+      }
+
+    } catch (e) {
+      print(e);
+    } finally {
+      controller.isLoadingStats.value = false;
+    }
+  }
+
   // تنفيذ البحث في الجدول
   Future<void> searchQuery(String query) async {
     if (query.isEmpty) {

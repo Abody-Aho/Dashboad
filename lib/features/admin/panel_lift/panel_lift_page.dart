@@ -1,3 +1,4 @@
+import 'package:dashbord2/features/admin/panel_lift/panel_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/constants/app_constants.dart';
@@ -19,6 +20,7 @@ class PanelLiftPage extends StatefulWidget {
 }
 
 class _PanelLeftPageState extends State<PanelLiftPage> {
+  final controller = Get.put(PanelController());
   final List<Todo> _todos = [
     Todo(name: "purchase_paper".tr, enable: true),
     Todo(name: "refill_speakers".tr, enable: true),
@@ -75,23 +77,49 @@ class _PanelLeftPageState extends State<PanelLiftPage> {
                           fontSize: 16,
                         ),
                       ),
-                      subtitle: Text(
-                        "products_sold_percent".tr,
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontSize: 13,
-                        ),
-                      ),
-                      trailing: Chip(
-                        backgroundColor: Colors.white24,
-                        label: Text(
-                          "4500_value".tr,
-                          style: const TextStyle(
-                            color: Constants.accent,
-                            fontWeight: FontWeight.bold,
+                      subtitle: Obx(() {
+                        if (controller.isLoading.value) {
+                          return const Text(
+                            "...",
+                            style: TextStyle(color: Colors.white70),
+                          );
+                        }
+
+                        return Row(
+                          children: [
+                            Text(
+                              "${controller.percentage.value.toStringAsFixed(1)}%",
+                              style: const TextStyle(
+                                color: Colors.white70,
+                                fontSize: 13,
+                              ),
+                            ),
+                            Text(
+                              "products_sold_percent".tr,
+                              style: const TextStyle(
+                                color: Colors.white70,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ],
+                        );
+                      }),
+                      trailing: Obx(() {
+                        if (controller.isLoading.value) {
+                          return const CircularProgressIndicator(color: Colors.white);
+                        }
+
+                        return Chip(
+                          backgroundColor: Colors.white24,
+                          label: Text(
+                            "${controller.totalSold.value}",
+                            style: const TextStyle(
+                              color: Constants.accent,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                      ),
+                        );
+                      }),
                     ),
                   ),
                 ),

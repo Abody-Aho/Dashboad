@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import '../notifications/notifications_page.dart';
 import '../orders/orders_page.dart';
-import '../payment/payment_page.dart';
 import '../products/products_page.dart';
 import '../profile/admin_profile_page.dart';
 import '../users/users_page.dart';
@@ -18,7 +17,6 @@ class SidebarAdminController extends GetxController {
     UsersPage(),
     OrdersPage(),
     ProductsPage(),
-    PaymentPage(),
     NotificationsPage(),
     AdminProfilePage()
   ];

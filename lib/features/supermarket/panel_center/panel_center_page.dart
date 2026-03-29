@@ -1,3 +1,4 @@
+import 'package:dashbord2/features/supermarket/panel_center/panel_center_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/constants/app_constants.dart';
@@ -18,6 +19,9 @@ class PanelCenterPage extends StatefulWidget {
 }
 
 class _PanelCenterPageState extends State<PanelCenterPage> {
+
+  final controller = Get.put(PanelCenterController());
+
   final List<Person> _persons = [
     Person(name: "person1".tr, color: Colors.red),
     Person(name: "person2".tr, color: Colors.pink),
@@ -34,59 +38,81 @@ class _PanelCenterPageState extends State<PanelCenterPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // --- بطاقة المنتجات ---
+
+            /// 🔥 بطاقة المنتجات
             Padding(
               padding: const EdgeInsets.all(Constants.kPadding),
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: Constants.greenGradient,
-                  borderRadius: BorderRadius.circular(30),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Constants.shadow,
-                      blurRadius: 8,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: ListTile(
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 25,
-                    vertical: 15,
+              child: Obx(() {
+                if (controller.isLoading.value) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                return Container(
+                  decoration: BoxDecoration(
+                    gradient: Constants.greenGradient,
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Constants.shadow,
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
-                  title: Text(
-                    "products_available".tr,
-                    style: const TextStyle(
-                      color: Constants.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 25,
+                      vertical: 15,
                     ),
-                  ),
-                  subtitle: Text(
-                    "products_available_percent".tr,
-                    style: const TextStyle(
-                      color: Colors.white70,
-                      fontSize: 13,
-                    ),
-                  ),
-                  trailing: Chip(
-                    backgroundColor: Colors.white24,
-                    label: Text(
-                      "20500_value".tr,
+                    title: Text(
+                      "products_available".tr,
                       style: const TextStyle(
-                        color: Constants.accent,
+                        color: Constants.white,
                         fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+
+                    /// 🔥 النسبة
+                    subtitle: Row(
+                      children: [
+                        Text(
+                          "${controller.percentage.value.toStringAsFixed(1)}%",
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 13,
+                          ),
+                        ),
+                        Text(
+                          "products_available_percent".tr,
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    /// 🔥 العدد
+                    trailing: Chip(
+                      backgroundColor: Colors.white24,
+                      label: Text(
+                        "${controller.availableProducts.value}",
+                        style: const TextStyle(
+                          color: Constants.accent,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
+                );
+              }),
             ),
 
-            // --- الرسم البياني ---
-            BarChartSample2(),
+            /// 🔥 الرسم البياني (نخليه حالياً كما هو)
+            const BarChartSample2(),
 
-            // --- قائمة الأشخاص ---
+            /// 🔥 قائمة الأشخاص
             Padding(
               padding: const EdgeInsets.only(
                 left: Constants.kPadding / 2,

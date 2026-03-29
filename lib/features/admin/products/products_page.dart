@@ -19,32 +19,35 @@ class ProductsPage extends StatelessWidget {
     final controller = Get.find<ProductsController>();
 
     List<Widget> statCards = [
-      StatCard(
+      Obx(() => StatCard(
         title: 'total_products'.tr,
-        value: '1,245',
+        value: controller.totalProducts.value.toString(),
         percent: '8%',
         subtitle: 'compared_to_last_month'.tr,
-      ),
-      StatCard(
+      )),
+
+      Obx(() => StatCard(
         title: 'active_products'.tr,
-        value: '984',
+        value: controller.activeProducts.value.toString(),
         percent: '5%',
         subtitle: 'compared_to_last_month'.tr,
-      ),
-      StatCard(
+      )),
+
+      Obx(() => StatCard(
         title: 'new_products'.tr,
-        value: '124',
+        value: controller.newProducts.value.toString(),
         percent: '12%',
         subtitle: 'compared_to_last_month'.tr,
-      ),
-      StatCard(
+      )),
+
+      Obx(() => StatCard(
         title: 'unavailable_products'.tr,
-        value: '15',
+        value: controller.unavailableProducts.value.toString(),
         percent: '-3%',
         subtitle: 'compared_to_last_month'.tr,
         percentColor: Colors.red,
         percentIcon: Icons.arrow_downward,
-      ),
+      )),
     ];
 
     return Scaffold(

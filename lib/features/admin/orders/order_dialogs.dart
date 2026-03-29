@@ -203,7 +203,6 @@ mixin OrderDialogs on GetxController {
             child: Padding(
               padding: const EdgeInsets.all(24),
               child: SingleChildScrollView(
-                // 🔥 مهم عشان ما يكسر التصميم
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [

@@ -65,12 +65,20 @@ class ProductsController extends GetxController with ProductApi, ProductDialogs,
   RxString categoryOldImage = "".obs;
   RxString itemsOldImage = "".obs;
 
+  var totalProducts = 0.obs;
+  var activeProducts = 0.obs;
+  var newProducts = 0.obs;
+  var unavailableProducts = 0.obs;
+
+  var isLoadingStats = false.obs;
+
   // عند إنشاء الكنترولر يتم تحميل البيانات مباشرة
   @override
   void onInit() {
     super.onInit();
     fetchProducts();
     fetchCategoriesAll();
+    fetchStats();
   }
 
   void resetCategoryForm() {

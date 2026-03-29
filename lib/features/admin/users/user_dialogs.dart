@@ -1,7 +1,6 @@
 import 'package:dashbord2/features/admin/users/user_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/constants/app_link.dart';
 import '../../../data/models/user_model.dart';

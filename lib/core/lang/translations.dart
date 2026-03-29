@@ -71,12 +71,12 @@ class AppTranslations extends Translations {
       "finish_disclosure": "إكمال التقرير",
 
       "products_sold": "المنتجات المباعة",
-      "products_sold_percent": "18% من المنتجات المباعة",
+      "products_sold_percent": " من المنتجات المباعة",
       "4500_value": "4,500",
 
       // PanelCenterPage
       "products_available": "المنتجات المتوفرة",
-      "products_available_percent": "82% من المنتجات متوفرة",
+      "products_available_percent": " من المنتجات متوفرة",
       "20500_value": "20,500",
 
       "person1": "الشخص 1",
@@ -501,12 +501,12 @@ class AppTranslations extends Translations {
       "finish_disclosure": "Finish the disclosure",
 
       "products_sold": "Products Sold",
-      "products_sold_percent": "18% of Products Sold",
+      "products_sold_percent": " of Products Sold",
       "4500_value": "4,500",
 
       // PanelCenterPage
       "products_available": "Products Available",
-      "products_available_percent": "82% of the Products are Available",
+      "products_available_percent": " of the Products are Available",
       "20500_value": "20,500",
 
       "person1": "Person 1",
