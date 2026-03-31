@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/constants/app_link.dart';
 import 'orders_controller.dart';
+import 'dart:ui' as ui;
+import 'dart:html' as html;
 
 mixin OrderDialogs on GetxController {
   OrdersController get controller;
@@ -193,6 +195,19 @@ mixin OrderDialogs on GetxController {
     if (items.isNotEmpty && items[0]['orders_image_pay'] != null) {
       image = items[0]['orders_image_pay'];
     }
+    bool isImage(String file) {
+      final f = file.toLowerCase();
+      return f.endsWith(".jpg") ||
+          f.endsWith(".png") ||
+          f.endsWith(".jpeg") ||
+          f.endsWith(".webp");
+    }
+
+    bool isPdf(String file) {
+      return file.toLowerCase().endsWith(".pdf");
+    }
+
+    final fileUrl = "${AppLink.imageOrders}$image";
 
     Get.dialog(
       Center(
@@ -351,44 +366,45 @@ mixin OrderDialogs on GetxController {
 
                           ClipRRect(
                             borderRadius: BorderRadius.circular(12),
-                            child: Image.network(
-                              "${AppLink.imageOrders}$image",
-                              height: 500,
-                              width: double.infinity,
-                              fit: BoxFit.contain,
+                            child: isImage(image)
 
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  height: 120,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.shade100,
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Text(
-                                    "image_load_failed".tr,
-                                    style: const TextStyle(color: Colors.grey),
-                                  ),
-                                );
-                              },
+                            /// 🖼️ صورة
+                                ? InteractiveViewer(
+                              child: Image.network(
+                                fileUrl,
+                                height: 500,
+                                width: double.infinity,
+                                fit: BoxFit.contain,
+                              ),
+                            )
 
-                              loadingBuilder: (context, child, progress) {
-                                if (progress == null) return child;
-                                return SizedBox(
-                                  height: 120,
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                      value: progress.expectedTotalBytes != null
-                                          ? progress.cumulativeBytesLoaded /
-                                                (progress.expectedTotalBytes ??
-                                                    1)
-                                          : null,
-                                    ),
-                                  ),
-                                );
-                              },
+
+                                : isPdf(image)
+                                ? Column(
+                              children: [
+                                const Icon(Icons.picture_as_pdf, size: 80, color: Colors.red),
+                                const SizedBox(height: 10),
+
+                                ElevatedButton(
+                                  onPressed: () {
+                                    html.window.open(fileUrl, "_blank");
+                                  },
+                                  child: const Text("فتح ملف PDF"),
+                                ),
+                              ],
+                            )
+
+                            ///  غير مدعوم
+                                : Container(
+                              height: 120,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade100,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: const Text("نوع الملف غير مدعوم"),
                             ),
-                          ),
+                          )
                         ],
                       )
                     else

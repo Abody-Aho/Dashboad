@@ -9,14 +9,12 @@ import 'core/lang/translations.dart';
 import 'core/services/lang_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'core/services/socket_service.dart';
 import 'features/auth/auth_binding.dart';
 import 'features/auth/auth_controller.dart';
 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Get.putAsync<SocketService>(() async => SocketService());
 
   await Firebase.initializeApp(
     options: const FirebaseOptions(

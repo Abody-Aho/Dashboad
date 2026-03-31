@@ -33,7 +33,6 @@ class SupermarketChatController extends GetxController {
     initChat();
   }
 
-  /// 🔥 إنشاء / جلب الغرفة
   Future<void> initChat() async {
 
     var res = await http.get(Uri.parse(
@@ -78,12 +77,10 @@ class SupermarketChatController extends GetxController {
         );
       }
 
-      /// 🔥 نزول لآخر رسالة
       scrollToBottom();
     }
   }
 
-  /// 🔥 النزول لآخر رسالة (احترافي)
   void scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (scrollController.hasClients) {
@@ -96,7 +93,6 @@ class SupermarketChatController extends GetxController {
     });
   }
 
-  /// 🔥 إرسال رسالة
   Future<void> sendMessage() async {
 
     if (messageController.text.trim().isEmpty) return;

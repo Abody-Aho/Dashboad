@@ -104,6 +104,22 @@ class _LineChartSample2State extends State<LineChartSample2> {
         .map((e) => e['total_sold'] as double)
         .reduce((a, b) => a > b ? a : b);
 
+// حماية إضافية
+    if (maxYValue <= 0) {
+      maxYValue = 10;
+    }
+    double interval = maxYValue / 4;
+
+    if (interval <= 0 || interval.isNaN || interval.isInfinite) {
+      interval = 1;
+    }
+
+    double leftInterval = (maxYValue / 4);
+
+    if (leftInterval <= 0 || leftInterval.isNaN || leftInterval.isInfinite) {
+      leftInterval = 1;
+    }
+
     return LineChartData(
       lineTouchData: const LineTouchData(enabled: true),
 
@@ -111,10 +127,10 @@ class _LineChartSample2State extends State<LineChartSample2> {
         show: true,
         drawHorizontalLine: true,
         drawVerticalLine: false,
-        horizontalInterval: maxYValue / 4,
+        horizontalInterval: interval,
         getDrawingHorizontalLine: (value) {
           return FlLine(
-            color: Colors.green.withOpacity(0.15),
+            color: Colors.green.withValues(alpha: 0.15),
             strokeWidth: 1,
           );
         },
@@ -136,7 +152,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
           sideTitles: SideTitles(
             showTitles: true,
             reservedSize: 40,
-            interval: (maxYValue / 4).ceilToDouble(),
+            interval: leftInterval.ceilToDouble(),
             getTitlesWidget: leftTitleWidgets,
           ),
         ),
@@ -189,7 +205,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
             show: true,
             gradient: LinearGradient(
               colors: gradientColors
-                  .map((color) => color.withOpacity(0.15))
+                  .map((color) => color.withValues(alpha: 0.15))
                   .toList(),
             ),
           ),

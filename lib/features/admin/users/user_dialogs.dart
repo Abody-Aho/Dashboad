@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/constants/app_link.dart';
 import '../../../data/models/user_model.dart';
-import '../../../routes/app_routes.dart';
 
 mixin UserDialogs on GetxController {
   UserController get controller;

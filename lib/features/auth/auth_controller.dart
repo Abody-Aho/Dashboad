@@ -131,11 +131,33 @@ class AuthController extends GetxController {
       );
       final uid = credential.user!.uid;
       final apiResponse = await ApiServices.getUserData(uid);
+
       if (apiResponse['status'] == 'success') {
         final user = UserModel.fromJson(apiResponse['data']);
+
+        // 👇 هنا فحص التنشيط
+        // ملاحظة: تأكد من اسم الحقل في الـ Model لديك (قد يكون active أو status أو approve)
+        // لقد افترضت هنا أن الحساب غير المنشط يحمل القيمة "0" أو false
+        if (user.role == 'supermarket' &&  user.status == 0) {
+          // تسجيل الخروج من Firebase لأننا لا نريد بقاء الجلسة مفتوحة لحساب غير منشط
+          await _auth.signOut();
+
+          Get.snackbar(
+            "تنبيه",
+            "حسابك غير منشط حالياً. يرجى التواصل مع الإدارة لتنشيط الحساب.",
+            backgroundColor: Colors.orangeAccent,
+            colorText: Colors.white,
+            duration: const Duration(seconds: 5), // إعطاء المستخدم وقت كافٍ للقراءة
+            icon: const Icon(Icons.warning_amber_rounded, color: Colors.white),
+          );
+          return; // إيقاف الدالة هنا لكي لا يكمل ويدخل للتطبيق
+        }
+
+        // إذا كان الحساب منشطاً أو كان الأدمن نفسه، نكمل الدخول الطبيعي 👇
         currentUser.value = user;
         box.write("user", apiResponse['data']);
         await saveTokenToServer(user);
+
         if (user.role == 'admin') {
           Get.offAllNamed(AppRoutes.dashboardAdmin);
         } else if (user.role == 'supermarket') {

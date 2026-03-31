@@ -18,30 +18,90 @@ class _AppBarAdminState extends State<AppBarAdmin> {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: Text("choose_language".tr),
+        // تحسين شكل الزوايا
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          children: [
+            const Icon(Icons.language, color: Colors.green),
+            const SizedBox(width: 10),
+            Text(
+              "choose_language".tr,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            ),
+          ],
+        ),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ListTile(
-                title: Text("العربية"),
-                onTap: () async {
-                  Get.updateLocale(const Locale("ar"));
-                  await LangService.saveLang("ar");
-                  Navigator.pop(context);
-                },
+              const Divider(color: Colors.greenAccent), // خط فاصل أنيق
+
+              // خيار اللغة العربية
+              _buildLanguageOption(
+                context: context,
+                title: "العربية",
+                localeCode: "ar",
+                icon: Icons.translate_rounded,
+                isSelected: Get.locale?.languageCode == "ar",
               ),
-              ListTile(
-                title: Text("English"),
-                onTap: () async {
-                  Get.updateLocale(const Locale("en"));
-                  await LangService.saveLang("en");
-                  Navigator.pop(context);
-                },
+
+              const SizedBox(height: 8),
+
+              // خيار اللغة الإنجليزية
+              _buildLanguageOption(
+                context: context,
+                title: "English",
+                localeCode: "en",
+                icon: Icons.abc_rounded,
+                isSelected: Get.locale?.languageCode == "en",
               ),
             ],
           ),
         ),
+        // إضافة زر إغلاق بسيط
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text("close".tr, style: const TextStyle(color: Colors.grey)),
+          ),
+        ],
+      ),
+    );
+  }
+
+// دالة مساعدة لبناء العناصر بتصميم موحد (Clean Code)
+  Widget _buildLanguageOption({
+    required BuildContext context,
+    required String title,
+    required String localeCode,
+    required IconData icon,
+    required bool isSelected,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: isSelected ? Colors.green.withOpacity(0.1) : Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isSelected ? Colors.green : Colors.grey.withOpacity(0.2),
+        ),
+      ),
+      child: ListTile(
+        leading: Icon(icon, color: isSelected ? Colors.green : Colors.grey),
+        title: Text(
+          title,
+          style: TextStyle(
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            color: isSelected ? Colors.green[800] : Colors.black87,
+          ),
+        ),
+        trailing: isSelected
+            ? const Icon(Icons.check_circle, color: Colors.green)
+            : null,
+        onTap: () async {
+          Get.updateLocale(Locale(localeCode));
+          await LangService.saveLang(localeCode);
+          Navigator.pop(context);
+        },
       ),
     );
   }

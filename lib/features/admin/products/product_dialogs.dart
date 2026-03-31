@@ -8,41 +8,24 @@ import '../../../data/models/product_model.dart';
 mixin ProductDialogs on GetxController {
   ProductsController get controller;
 
-  void showCategoryDialog({
-    bool isEdit = false,
-    int? id,
-    String? nameAr,
-    String? nameEn,
-    String? type, // general | private
-    int? superId,
-  }) async {
+  void showCategoryDialog() async {
     await controller.fetchSupers();
     await controller.fetchCategoriesAll();
-    if (type == "private" && superId != null) {
-      await controller.fetchCategoriesBySuper(superId);
-    }
-    controller.isEditCategory.value = isEdit;
-    controller.editingCategoryId.value = id;
 
-    if (isEdit) {
-      controller.catNameArController.text = nameAr ?? "";
-      controller.catNameEnController.text = nameEn ?? "";
-      controller.categoryType.value = type ?? "general";
-      controller.selectedSuperId.value = superId;
-    } else {
-      controller.resetCategoryForm();
-    }
+    controller.isEditCategory.value = false;
+    controller.resetCategoryForm();
 
     Get.dialog(
       Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        elevation: 5,
         child: Container(
-          width: Get.width < 600 ? Get.width * 0.95 : 550,
-          constraints: BoxConstraints(maxHeight: Get.height * 0.9),
-          padding: const EdgeInsets.all(25),
+          width: Get.width < 600 ? Get.width * 0.95 : 500,
+          constraints: BoxConstraints(maxHeight: Get.height * 0.85),
+          padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
             color: Constants.backgroundLight,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(16),
           ),
           child: Form(
             key: controller.categoryFormKey,
@@ -51,140 +34,66 @@ mixin ProductDialogs on GetxController {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   /// HEADER
-                  Container(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    decoration: BoxDecoration(
-                      gradient: Constants.greenGradientlight,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Center(
-                      child: Text(
-                        isEdit ? "edit_category".tr : "add_new_category".tr,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Constants.text,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 25),
-
-                  // نوع الفئة
-                  Obx(
-                    () => RadioGroup<String>(
-                      groupValue: controller.categoryType.value,
-                      onChanged: (value) async {
-                        controller.categoryType.value = value!;
-
-                        controller.editingCategoryId.value = null;
-                        controller.selectedSuperId.value = null;
-                        controller.categories.clear();
-                        controller.categoryImageName = "";
-                        controller.categoryOldImage.value = "";
-
-                        controller.catNameArController.clear();
-                        controller.catNameEnController.clear();
-
-                        if (value == "general") {
-                          await controller.fetchCategoriesAll();
-                        } else {
-                          await controller.fetchSupers();
-                        }
-                      },
-                      child: Column(
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
                         children: [
-                          RadioListTile<String>(
-                            activeColor: Constants.primary,
-                            title: Text("general_category".tr),
-                            value: "general",
-                          ),
-                          RadioListTile<String>(
-                            activeColor: Constants.primary,
-                            title: Text("private_category".tr),
-                            value: "private",
+                          const Icon(Icons.category_rounded, color: Constants.primary, size: 28),
+                          const SizedBox(width: 10),
+                          Text(
+                            "add_new_category".tr,
+                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Constants.text),
                           ),
                         ],
                       ),
+                      // زر الانتقال لـ Dialog التعديل
+                      TextButton.icon(
+                        onPressed: () {
+                          Get.back(); // إغلاق نافذة الإضافة
+                          showEditCategoryDialog(); // فتح نافذة التعديل
+                        },
+                        icon: const Icon(Icons.edit, size: 18, color: Constants.primary),
+                        label: const Text("تعديل فئة", style: TextStyle(color: Constants.primary)),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  const Divider(),
+                  const SizedBox(height: 15),
+
+                  /// نوع الفئة
+                  const Text("نوع الفئة", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                  const SizedBox(height: 8),
+                  Obx(
+                        () => Row(
+                      children: [
+                        Expanded(
+                          child: RadioListTile<String>(
+                            contentPadding: EdgeInsets.zero,
+                            activeColor: Constants.primary,
+                            title: Text("general_category".tr, style: const TextStyle(fontSize: 14)),
+                            value: "general",
+                            groupValue: controller.categoryType.value,
+                            onChanged: (value) => _handleTypeChange(value!),
+                          ),
+                        ),
+                        Expanded(
+                          child: RadioListTile<String>(
+                            contentPadding: EdgeInsets.zero,
+                            activeColor: Constants.primary,
+                            title: Text("private_category".tr, style: const TextStyle(fontSize: 14)),
+                            value: "private",
+                            groupValue: controller.categoryType.value,
+                            onChanged: (value) => _handleTypeChange(value!),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-
-                  const SizedBox(height: 10),
-                  Obx(() {
-                    if (controller.categoryType.value == "general") {
-                      return DropdownButtonFormField<int>(
-                        initialValue:
-                        controller.categoriesAll
-                            .any((c) => c.id == controller.editingCategoryId.value)
-                            ? controller.editingCategoryId.value
-                            : null,
-                        decoration: controller.greenDecoration(
-                          "choose_general_category".tr,
-                        ),
-                        items: controller.categoriesAll.map((c) {
-                          return DropdownMenuItem(
-                            value: c.id,
-                            child: Text(c.nameAr),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          if (value != null) {
-                            final cat = controller.categoriesAll.firstWhere(
-                              (c) => c.id == value,
-                            );
-
-                            controller.editingCategoryId.value = cat.id;
-                            controller.isEditCategory.value = true;
-
-                            controller.catNameArController.text = cat.nameAr;
-                            controller.catNameEnController.text = cat.name;
-
-                            controller.categoryOldImage.value = cat.image;
-                            controller.categoryImageBytes.value = null;
-                          }
-                        },
-                      );
-                    } else {
-                      return DropdownButtonFormField<int>(
-                        initialValue:
-                            controller.categories.any(
-                              (c) => c.id == controller.editingCategoryId.value,
-                            )
-                            ? controller.editingCategoryId.value
-                            : null,
-                        decoration: controller.greenDecoration(
-                          "choose_private_category".tr,
-                        ),
-                        items: controller.categories.map((c) {
-                          return DropdownMenuItem(
-                            value: c.id,
-                            child: Text(c.nameAr),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          if (value != null) {
-                            final cat = controller.categories.firstWhere(
-                              (c) => c.id == value,
-                            );
-
-                            controller.isEditCategory.value = true;
-                            controller.editingCategoryId.value = cat.id;
-
-                            controller.catNameArController.text = cat.nameAr;
-                            controller.catNameEnController.text = cat.name;
-
-                            controller.categoryOldImage.value = cat.image;
-                            controller.categoryImageBytes.value = null;
-                          }
-                        },
-                      );
-                    }
-                  }),
                   const SizedBox(height: 15),
-                  const SizedBox(height: 10),
 
-                  // سوبرماركت إذا خاصة
+                  /// سوبرماركت إذا كانت الفئة خاصة
                   Obx(() {
                     if (controller.categoryType.value == "private") {
                       return Column(
@@ -197,60 +106,50 @@ mixin ProductDialogs on GetxController {
                     return const SizedBox();
                   }),
 
+                  /// الحقول النصية
                   controller.buildTextField(
                     controller: controller.catNameArController,
                     label: "category_name_ar".tr,
                   ),
-
                   const SizedBox(height: 15),
-
                   controller.buildTextField(
                     controller: controller.catNameEnController,
                     label: "category_name_en".tr,
                   ),
-
                   const SizedBox(height: 20),
 
+                  /// أداة التقاط الصور
                   controller.buildCategoryImagePicker(),
+                  const SizedBox(height: 25),
 
-                  const SizedBox(height: 30),
-
+                  /// أزرار الحفظ والإلغاء
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      TextButton(
+                      OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        ),
                         onPressed: () => Get.back(),
-                        child: Text("cancel".tr),
+                        child: Text("cancel".tr, style: const TextStyle(color: Colors.grey)),
                       ),
-                      const SizedBox(width: 15),
+                      const SizedBox(width: 12),
                       Obx(
-                        () => ElevatedButton(
+                            () => ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Constants.primary,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 30,
-                              vertical: 14,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                           ),
-                          onPressed: controller.isAddingCategory.value
-                              ? null
-                              : controller.submitCategory,
+                          onPressed: controller.isAddingCategory.value ? null : controller.submitCategory,
                           child: controller.isAddingCategory.value
                               ? const SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                    strokeWidth: 2,
-                                  ),
-                                )
-                              : Text(
-                                  isEdit ? "update".tr : "save".tr,
-                                  style: const TextStyle(color: Colors.white),
-                                ),
+                            height: 20, width: 20,
+                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                          )
+                              : Text("save".tr, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                         ),
                       ),
                     ],
@@ -262,6 +161,214 @@ mixin ProductDialogs on GetxController {
         ),
       ),
     );
+  }
+
+  void showEditCategoryDialog() async {
+    await controller.fetchSupers();
+    await controller.fetchCategoriesAll();
+
+    controller.isEditCategory.value = true;
+    controller.resetCategoryForm(); // تصفير الحقول للبدء باختيار جديد
+
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        elevation: 5,
+        child: Container(
+          width: Get.width < 600 ? Get.width * 0.95 : 500,
+          constraints: BoxConstraints(maxHeight: Get.height * 0.85),
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Constants.backgroundLight,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Form(
+            key: controller.categoryFormKey,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  /// HEADER
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(Icons.edit_note_rounded, color: Constants.primary, size: 28),
+                          const SizedBox(width: 10),
+                          Text(
+                            "edit_category".tr,
+                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Constants.text),
+                          ),
+                        ],
+                      ),
+                      // زر العودة للإضافة
+                      TextButton.icon(
+                        onPressed: () {
+                          Get.back();
+                          showCategoryDialog();
+                        },
+                        icon: const Icon(Icons.add, size: 18, color: Constants.primary),
+                        label: Text("add_new_category".tr, style: const TextStyle(color: Constants.primary)),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  const Divider(),
+                  const SizedBox(height: 15),
+
+                  /// نوع الفئة المراد تعديلها
+                  const Text("نوع الفئة للتعديل", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                  const SizedBox(height: 8),
+                  Obx(
+                        () => Row(
+                      children: [
+                        Expanded(
+                          child: RadioListTile<String>(
+                            contentPadding: EdgeInsets.zero,
+                            activeColor: Constants.primary,
+                            title: Text("general_category".tr, style: const TextStyle(fontSize: 14)),
+                            value: "general",
+                            groupValue: controller.categoryType.value,
+                            onChanged: (value) => _handleTypeChange(value!),
+                          ),
+                        ),
+                        Expanded(
+                          child: RadioListTile<String>(
+                            contentPadding: EdgeInsets.zero,
+                            activeColor: Constants.primary,
+                            title: Text("private_category".tr, style: const TextStyle(fontSize: 14)),
+                            value: "private",
+                            groupValue: controller.categoryType.value,
+                            onChanged: (value) => _handleTypeChange(value!),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+
+                  /// Dropdown لاختيار الفئة المراد تعديلها
+                  Obx(() {
+                    bool isGeneral = controller.categoryType.value == "general";
+                    List<dynamic> list = isGeneral ? controller.categoriesAll : controller.categories;
+
+                    return DropdownButtonFormField<int>(
+                      isExpanded: true,
+                      value: list.any((dynamic c) => c.id == controller.editingCategoryId.value)
+                          ? controller.editingCategoryId.value
+                          : null,
+                      decoration: controller.greenDecoration(
+                        isGeneral ? "choose_general_category".tr : "choose_private_category".tr,
+                      ).copyWith(
+                        prefixIcon: const Icon(Icons.search, color: Constants.primary),
+                      ),
+                      items: list.map((dynamic c) {
+                        return DropdownMenuItem<int>(
+                          value: c.id,
+                          child: Text(c.nameAr),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        if (value != null) {
+                          final dynamic cat = list.firstWhere((dynamic c) => c.id == value);
+                          controller.isEditCategory.value = true;
+                          controller.editingCategoryId.value = cat.id;
+                          controller.catNameArController.text = cat.nameAr;
+                          controller.catNameEnController.text = cat.name;
+                          controller.categoryOldImage.value = cat.image;
+                          controller.categoryImageBytes.value = null;
+                        }
+                      },
+                    );
+                  }),
+                  const SizedBox(height: 15),
+
+                  /// سوبرماركت إذا كانت الفئة خاصة
+                  Obx(() {
+                    if (controller.categoryType.value == "private") {
+                      return Column(
+                        children: [
+                          controller.buildSuperDropdown(),
+                          const SizedBox(height: 15),
+                        ],
+                      );
+                    }
+                    return const SizedBox();
+                  }),
+
+                  /// الحقول النصية للتعديل
+                  controller.buildTextField(
+                    controller: controller.catNameArController,
+                    label: "category_name_ar".tr,
+                  ),
+                  const SizedBox(height: 15),
+                  controller.buildTextField(
+                    controller: controller.catNameEnController,
+                    label: "category_name_en".tr,
+                  ),
+                  const SizedBox(height: 20),
+
+                  /// أداة التقاط الصور
+                  controller.buildCategoryImagePicker(),
+                  const SizedBox(height: 25),
+
+                  /// أزرار الحفظ والإلغاء
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        ),
+                        onPressed: () => Get.back(),
+                        child: Text("cancel".tr, style: const TextStyle(color: Colors.grey)),
+                      ),
+                      const SizedBox(width: 12),
+                      Obx(
+                            () => ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Constants.primary,
+                            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          ),
+                          onPressed: controller.isAddingCategory.value ? null : controller.submitCategory,
+                          child: controller.isAddingCategory.value
+                              ? const SizedBox(
+                            height: 20, width: 20,
+                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                          )
+                              : Text("update".tr, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  /// دالة مساعدة لتنظيف الكود ومعالجة تغيير النوع داخل الـ Dialog
+  void _handleTypeChange(String value) async {
+    controller.categoryType.value = value;
+    controller.editingCategoryId.value = null;
+    controller.selectedSuperId.value = null;
+    controller.categories.clear();
+    controller.categoryImageName = "";
+    controller.categoryOldImage.value = "";
+    controller.catNameArController.clear();
+    controller.catNameEnController.clear();
+
+    if (value == "general") {
+      await controller.fetchCategoriesAll();
+    } else {
+      await controller.fetchSupers();
+    }
   }
 
   void showAddProductDialog() async {

@@ -124,8 +124,7 @@ mixin ProductApi on GetxController {
   }
 
   Future<void> submitCategory() async {
-    if (!controller.isEditCategory.value &&
-        controller.categoryImageBytes.value == null) {
+    if (controller.isEditCategory.value == false && controller.categoryImageBytes.value == null) {
       Get.snackbar("warning".tr, "choose_category_image".tr);
       return;
     }
@@ -201,7 +200,6 @@ mixin ProductApi on GetxController {
               .toList(),
         );
 
-        /// ✅ هنا تحط التعديل
         controller.selectedCategoryOptions.assignAll([
           null,
           ...controller.categoriesAll.map((e) => e.id),

@@ -50,7 +50,7 @@ dependencies:
   geocoding: ^4.0.0
   image_picker: ^1.2.1
   syncfusion_flutter_pdfviewer: ^33.1.45
-  web_socket_channel: ^3.0.3
+  web: ^1.1.1
 
 
   # The following adds the Cupertino Icons font to your application.

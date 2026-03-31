@@ -20,6 +20,8 @@ class AppTranslations extends Translations {
       'password_required': 'يرجى إدخال كلمة المرور',
       'password_short': 'كلمة المرور يجب أن تكون 6 أحرف على الأقل',
       "dont_have_account": "لا تملك حساب",
+      'support_title': 'الدعم الفني',
+      'support_desc': "يمكنك التواصل مع الإدارة عبر البيانات التالية",
 
       // SingInView
       "signup_title": "إنشاء حساب",
@@ -433,6 +435,12 @@ class AppTranslations extends Translations {
       'chats': 'المحادثات',
       'type_message_hint': 'اكتب رسالة...',
       'profile': 'الملف الشخصي',
+
+      'password_min_length': 'يجب أن تكون كلمة المرور 8 أحرف على الأقل',
+      'password_uppercase': 'يجب أن تحتوي على حرف كبير واحد على الأقل',
+      'password_lowercase': 'يجب أن تحتوي على حرف صغير واحد على الأقل',
+      'password_number': 'يجب أن تحتوي على رقم واحد على الأقل',
+      'password_special': 'يجب أن تحتوي على رمز خاص واحد على الأقل',
     },
 
     'en': {
@@ -452,6 +460,8 @@ class AppTranslations extends Translations {
       'password_required': 'Please enter password',
       'password_short': 'Password must be at least 6 characters',
       "dont_have_account": "Don't have account",
+      'support_title': 'The Support Admin',
+      'support_desc': 'The Information and Support Team',
 
       // SingInView
       "signup_title": "Create Account",
@@ -864,6 +874,12 @@ class AppTranslations extends Translations {
       'chats': 'Chats',
       'type_message_hint': 'Type a message...',
       'profile': 'Profile',
+
+      'password_min_length': 'Password must be at least 8 characters',
+      'password_uppercase': 'Must include at least one uppercase letter',
+      'password_lowercase': 'Must include at least one lowercase letter',
+      'password_number': 'Must include at least one number',
+      'password_special': 'Must include at least one special character',
     },
   };
 }

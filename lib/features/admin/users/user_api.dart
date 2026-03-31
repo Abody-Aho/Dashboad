@@ -121,6 +121,7 @@ mixin UserApi on GetxController {
       }
     } catch (e) {
       Get.snackbar("خطأ", "مشكلة في الاتصال", backgroundColor: Colors.red, colorText: Colors.white);
+      print(e);
     } finally {
       isLoading.value = false;
     }
