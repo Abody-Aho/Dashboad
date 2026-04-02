@@ -350,8 +350,10 @@ class _SignInViewState extends State<SignInView> {
                                       style: TextStyle(color: Colors.green[800]),
                                     ),
                                     TextButton(
-                                      onPressed: () =>
-                                          Get.offNamed(AppRoutes.login),
+                                      onPressed: () {
+                                          Get.offNamed(AppRoutes.login);
+                                          controller.resetControllers();
+                                      },
                                       child: Text(
                                         "login".tr,
                                         style: TextStyle(

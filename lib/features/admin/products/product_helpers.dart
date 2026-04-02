@@ -10,28 +10,30 @@ mixin ProductHelpers on GetxController {
   ProductsController get controller;
 
   Widget buildSuperDropdown() {
-    return Obx(
-      () => DropdownButtonFormField<int>(
-        initialValue: controller.supers
-            .any((e) => e.id == controller.selectedSuperId.value)
-            ? controller.selectedSuperId.value
-            : null,
-        decoration: greenDecoration("choose_supermarket".tr),
-        items: controller.supers.map((s) {
-          return DropdownMenuItem<int>(value: s.id, child: Text(s.nameAr));
-        }).toList(),
-        onChanged: (value) {
-          controller.selectedSuperId.value = value;
-          controller.selectedCategoryId.value = null;
-          controller.categories.clear();
-          if (value != null) {
-            controller.fetchCategoriesBySuper(value);
-          }
-        },
-        validator: (value) =>
-            value == null ? "choose_supermarket".tr : null,
-      ),
-    );
+    return Obx(() {
+      final selected = controller.supers.firstWhereOrNull(
+            (e) => e.id == controller.selectedSuperId.value,
+      );
+
+      return InkWell(
+        onTap: controller.showSuperSearchDialog,
+        child: InputDecorator(
+          decoration: greenDecoration("choose_supermarket".tr),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                selected?.nameAr ?? "choose_supermarket".tr,
+                style: TextStyle(
+                  color: selected == null ? Colors.grey : Colors.black,
+                ),
+              ),
+              const Icon(Icons.arrow_drop_down),
+            ],
+          ),
+        ),
+      );
+    });
   }
 
   Widget buildTextField({

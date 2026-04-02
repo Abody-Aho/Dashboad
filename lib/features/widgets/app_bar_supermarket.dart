@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/services/lang_service.dart';
 import '../../routes/app_routes.dart';
+import '../supermarket/profile/supermarket_profile_controller.dart';
 
 class AppBarSupermarket extends StatefulWidget {
   const AppBarSupermarket({super.key});
@@ -13,6 +14,7 @@ class AppBarSupermarket extends StatefulWidget {
 }
 
 class AppBarSupermarketState extends State<AppBarSupermarket> {
+  final SupermarketProfileController controller = Get.put(SupermarketProfileController());
   void changeLanguageDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -155,10 +157,15 @@ class AppBarSupermarketState extends State<AppBarSupermarket> {
                   ),
                 ],
               ),
-              child: const CircleAvatar(
-                backgroundColor: Constants.background,
+              child: CircleAvatar(
                 radius: 30,
-                backgroundImage: AssetImage("images/profile.png"),
+                backgroundColor: Colors.grey.shade100,
+                backgroundImage: controller.imageBytes.value != null
+                    ? MemoryImage(controller.imageBytes.value!)
+                    : (controller.imageUrl.value.isEmpty
+                    ? const AssetImage("images/profile.png")
+                    : NetworkImage(controller.imageUrl.value))
+                as ImageProvider,
               ),
             ),
         ],

@@ -444,6 +444,7 @@ mixin ProductSupermarketDialogs on GetxController {
     controller.descEnController.text = product.descEn;
 
     controller.priceController.text = product.price.toString();
+    controller.priceAfterController.text = product.priceAfterDiscount.toString();
     controller.countController.text = product.count.toString();
     controller.discountController.text = product.discount.toString();
 
@@ -715,7 +716,7 @@ mixin ProductSupermarketDialogs on GetxController {
                     Expanded(
                       child: controller.buildInfo(
                         "price_label".tr,
-                        "${(product.price / (1 - product.discount / 100)).round()}",
+                        "${(product.price).round()}",
                       ),
                     ),
 
@@ -729,7 +730,7 @@ mixin ProductSupermarketDialogs on GetxController {
                     Expanded(
                       child: controller.buildInfo(
                         "price_after_discount_label".tr,
-                        "${(product.price).round()}",
+                        "${(product.priceAfterDiscount).round()}",
                       ),
                     ),
 

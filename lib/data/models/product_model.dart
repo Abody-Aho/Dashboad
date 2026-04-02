@@ -23,6 +23,7 @@ class ProductModel {
   final int superId;
 
   final double price;
+  final double priceAfterDiscount;
   final int count;
   final int discount;
   final int sales;
@@ -44,6 +45,7 @@ class ProductModel {
     required this.superEn,
     required this.superId,
     required this.price,
+    required this.priceAfterDiscount,
     required this.count,
     required this.discount,
     required this.sales,
@@ -78,7 +80,9 @@ class ProductModel {
       superId: int.tryParse(json["itmes_super"].toString()) ?? 0,
 
       price: double.tryParse(
-          (json["itemspricedisount"] ?? json["itmes_price"]).toString()) ?? 0,
+          (json["itmes_price"]).toString()) ?? 0,
+      
+      priceAfterDiscount: double.tryParse((json["itemspricediscount"] ?? json["itemspricedisount"] ?? "0").toString()) ?? 0,
 
       count: int.tryParse(json["itmes_count"].toString()) ?? 0,
 

@@ -569,6 +569,7 @@ mixin ProductDialogs on GetxController {
     controller.descEnController.text = product.descEn;
 
     controller.priceController.text = product.price.toString();
+    controller.priceAfterController.text = product.priceAfterDiscount.toString();
     controller.countController.text = product.count.toString();
     controller.discountController.text = product.discount.toString();
 
@@ -852,7 +853,7 @@ mixin ProductDialogs on GetxController {
                     Expanded(
                       child: controller.buildInfo(
                         "price_label".tr,
-                        "${(product.price / (1 - product.discount / 100)).round()}",
+                        "${(product.price).round()}",
                       ),
                     ),
 
@@ -866,7 +867,7 @@ mixin ProductDialogs on GetxController {
                     Expanded(
                       child: controller.buildInfo(
                         "price_after_discount_label".tr,
-                        "${(product.price).round()}",
+                        "${(product.priceAfterDiscount).round()}",
                       ),
                     ),
 
@@ -903,6 +904,133 @@ mixin ProductDialogs on GetxController {
                 ),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void showSuperSearchDialog() {
+    TextEditingController search = TextEditingController();
+    RxList filtered = controller.supers.toList().obs;
+
+    Get.dialog(
+      Dialog(
+        // جعل خلفية الدايلوج شفافة لنتمكن من التحكم بالحواف والظلال في الـ Container
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        child: Container(
+          height: 450, // زيادة طفيفة لراحة بصرية أكبر
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(24), // حواف دائرية عصرية
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // عنوان للنافذة يضفي لمسة احترافية
+              const Padding(
+                padding: EdgeInsets.only(bottom: 12.0, right: 4.0),
+                child: Text(
+                  "اختيار السوبرماركت",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+              ),
+
+              // حقل البحث المطور
+              TextField(
+                controller: search,
+                decoration: InputDecoration(
+                  hintText: "ابحث عن سوبرماركت",
+                  hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 14),
+                  prefixIcon: const Icon(Icons.search, color: Colors.green),
+                  filled: true,
+                  fillColor: Colors.green.withOpacity(0.05), // خلفية خفيفة ناعمة
+                  contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide.none, // إخفاء الحدود التقليدية
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: const BorderSide(color: Colors.green, width: 1.5),
+                  ),
+                ),
+                onChanged: (val) {
+                  filtered.value = controller.supers.where((s) {
+                    return s.nameAr
+                        .toLowerCase()
+                        .contains(val.toLowerCase());
+                  }).toList();
+                },
+              ),
+              const SizedBox(height: 16),
+
+              // قائمة النتائج
+              Expanded(
+                child: Obx(() => ListView.builder(
+                  physics: const BouncingScrollPhysics(), // حركة ارتدادية ناعمة
+                  itemCount: filtered.length,
+                  itemBuilder: (context, i) {
+                    final item = filtered[i];
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade50,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.grey.shade100),
+                      ),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                        leading: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.green.withOpacity(0.1),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.storefront, color: Colors.green, size: 20),
+                        ),
+                        title: Text(
+                          item.nameAr,
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        trailing: const Icon(Icons.arrow_forward_ios, color: Colors.green, size: 14),
+                        onTap: () {
+                          controller.selectedSuperId.value = item.id;
+
+                          /// نفس منطقك 👇
+                          controller.selectedCategoryId.value = null;
+                          controller.categories.clear();
+                          controller.fetchCategoriesBySuper(item.id);
+
+                          Get.back();
+                        },
+                      ),
+                    );
+                  },
+                )),
+              )
+            ],
           ),
         ),
       ),

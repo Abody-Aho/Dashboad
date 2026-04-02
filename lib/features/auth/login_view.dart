@@ -14,7 +14,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final AuthController authController = Get.find();
+  final AuthController controller = Get.find();
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -137,7 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 const SizedBox(height: 10),
                                 TextFormField(
-                                  controller: authController.emailController,
+                                  controller: controller.emailController,
                                   keyboardType: TextInputType.emailAddress,
                                   decoration: inputDecoration(
                                       hint: "email_hint".tr, icon: Icons.email),
@@ -157,18 +157,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                 const SizedBox(height: 10),
                                 Obx(
                                       () => TextFormField(
-                                    controller: authController.passwordController,
-                                    obscureText: !authController.isPasswordVisible.value,
+                                    controller: controller.passwordController,
+                                    obscureText: !controller.isPasswordVisible.value,
                                     decoration: inputDecoration(
                                       hint: "password_hint".tr,
                                       icon: Icons.lock,
                                       suffix: IconButton(
-                                        icon: Icon(authController.isPasswordVisible.value
+                                        icon: Icon(controller.isPasswordVisible.value
                                             ? Icons.visibility
                                             : Icons.visibility_off,
                                             color: Colors.green),
                                         onPressed: () {
-                                          authController.isPasswordVisible.value = !authController.isPasswordVisible.value;
+                                          controller.isPasswordVisible.value = !controller.isPasswordVisible.value;
                                         },
                                       ),
                                     ),
@@ -188,12 +188,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                       minimumSize: const Size(double.infinity, 50),
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                                     ),
-                                    onPressed: authController.isLoading.value ? null : () {
+                                    onPressed: controller.isLoading.value ? null : () {
                                       if (_formKey.currentState!.validate()) {
-                                        authController.login();
+                                        controller.login();
                                       }
                                     },
-                                    child: authController.isLoading.value
+                                    child: controller.isLoading.value
                                         ? const CircularProgressIndicator(color: Colors.white)
                                         : Text("login".tr, style: const TextStyle(fontSize: 18, color: Colors.white)),
                                   ),
@@ -207,7 +207,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                   children: [
                                     Text("dont_have_account".tr, style: TextStyle(color: Colors.green[800]),),
                                     TextButton(
-                                      onPressed: () => Get.toNamed(AppRoutes.signIn),
+                                      onPressed: () {
+                                        Get.toNamed(AppRoutes.signIn);
+                                        controller.resetControllers();
+                                      },
                                       child: Text(
                                         "create_account".tr,
                                         style: TextStyle(

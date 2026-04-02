@@ -17,7 +17,6 @@ class _BarChartSample2State extends State<BarChartSample2> {
   final Color avgColor = Colors.orange;
   final double barWidth = 7;
 
-  // متغير لتخزين اندكس العمود الملموس
   int touchedGroupIndex = -1;
 
   @override
@@ -31,7 +30,6 @@ class _BarChartSample2State extends State<BarChartSample2> {
         return const Center(child: CircularProgressIndicator());
       }
 
-      // 1. تجهيز البيانات الخام
       final groupsRaw = List.generate(data.length > 7 ? 7 : data.length, (index) {
         final day = data[index];
         return {
@@ -40,22 +38,24 @@ class _BarChartSample2State extends State<BarChartSample2> {
         };
       });
 
-      // 2. حساب الـ Scale الديناميكي
-      double maxValue = 0;
+      // فصلنا الـ Scale لكل عمود عشان الرسمة تطلع متناسقة وموزونة
+      double maxOrders = 0;
+      double maxSales = 0;
       for (var e in groupsRaw) {
-        if (e['orders']! > maxValue) maxValue = e['orders']!;
-        if (e['sales']! > maxValue) maxValue = e['sales']!;
+        if (e['orders']! > maxOrders) maxOrders = e['orders']!;
+        if (e['sales']! > maxSales) maxSales = e['sales']!;
       }
-      double scale = maxValue > 0 ? maxValue / 20 : 1;
 
-      // 3. بناء مجموعات الأعمدة مع منطق التفاعل
+      double scaleOrders = maxOrders > 0 ? maxOrders / 20 : 1;
+      double scaleSales = maxSales > 0 ? maxSales / 20 : 1;
+
       List<BarChartGroupData> chartGroups = List.generate(groupsRaw.length, (index) {
         final day = groupsRaw[index];
-
-        // إذا كان هذا العمود هو الملموس، نحسب المتوسط
         bool isTouched = index == touchedGroupIndex;
-        double ordersY = day['orders']! / scale;
-        double salesY = day['sales']! / scale;
+
+        // تطبيق الـ Scale المنفصل
+        double ordersY = day['orders']! / scaleOrders;
+        double salesY = day['sales']! / scaleSales;
 
         if (isTouched) {
           double avg = (ordersY + salesY) / 2;
@@ -95,13 +95,15 @@ class _BarChartSample2State extends State<BarChartSample2> {
                         barTouchData: BarTouchData(
                           touchTooltipData: BarTouchTooltipData(
                             getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                              // إظهار القيم الحقيقية (قبل الـ scale) في التولتيب
                               final isOrders = rodIndex == 0;
                               final val = isOrders
                                   ? groupsRaw[groupIndex]['orders']
                                   : groupsRaw[groupIndex]['sales'];
+
+                              final title = isOrders ? "Orders: " : "Sales: ";
+
                               return BarTooltipItem(
-                                val.toString(),
+                                "$title$val",
                                 const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                               );
                             },
@@ -131,14 +133,7 @@ class _BarChartSample2State extends State<BarChartSample2> {
                               reservedSize: 42,
                             ),
                           ),
-                          leftTitles: AxisTitles(
-                            sideTitles: SideTitles(
-                              showTitles: true,
-                              reservedSize: 40,
-                              interval: 5,
-                              getTitlesWidget: leftTitles,
-                            ),
-                          ),
+                          leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)), // تم إخفاء الأرقام الجانبية لأننا نملك 2 scales مختلفين
                         ),
                         borderData: FlBorderData(show: false),
                         gridData: const FlGridData(show: false),
@@ -155,7 +150,6 @@ class _BarChartSample2State extends State<BarChartSample2> {
     });
   }
 
-  // دالة مساعدة لإنشاء بيانات العمود
   BarChartGroupData makeGroupData(int x, double y1, double y2, {required bool isTouched}) {
     return BarChartGroupData(
       x: x,
@@ -177,15 +171,9 @@ class _BarChartSample2State extends State<BarChartSample2> {
     );
   }
 
-  Widget leftTitles(double value, TitleMeta meta) {
-    const style = TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 13);
-    if (value % 5 != 0) return Container();
-    return SideTitleWidget(meta: meta, space: 4, child: Text(value.toInt().toString(), style: style));
-  }
-
   Widget bottomTitles(double value, TitleMeta meta) {
     final titles = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    if (value.toInt() >= titles.length) return Container();
+    if (value.toInt() >= titles.length || value.toInt() < 0) return Container();
     return SideTitleWidget(
       meta: meta,
       space: 12,

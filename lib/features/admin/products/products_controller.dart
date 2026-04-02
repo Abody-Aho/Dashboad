@@ -21,6 +21,7 @@ class ProductsController extends GetxController with ProductApi, ProductDialogs,
   final descArController = TextEditingController();
   final descEnController = TextEditingController();
   final priceController = TextEditingController();
+  final priceAfterController = TextEditingController();
   final countController = TextEditingController();
   final discountController = TextEditingController();
 

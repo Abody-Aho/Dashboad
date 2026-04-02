@@ -79,7 +79,7 @@ class AdminProfilePage extends StatelessWidget {
                     backgroundImage: controller.imageBytes.value != null
                         ? MemoryImage(controller.imageBytes.value!)
                         : (controller.imageUrl.value.isEmpty
-                                  ? const AssetImage("assets/images/mapp.png")
+                                  ? const AssetImage("assets/images/profile.png")
                                   : NetworkImage(controller.imageUrl.value))
                               as ImageProvider,
                   );
@@ -94,7 +94,7 @@ class AdminProfilePage extends StatelessWidget {
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.green.withOpacity(0.3),
+                        color: Colors.green.withValues(alpha: 0.3),
                         blurRadius: 10,
                       ),
                     ],

@@ -5,6 +5,7 @@ import '../../core/constants/app_constants.dart';
 import '../../core/services/lang_service.dart';
 import '../../routes/app_routes.dart';
 import '../admin/admin_chat/admin_chat_page.dart';
+import '../admin/profile/admin_profile_controller.dart';
 
 class AppBarAdmin extends StatefulWidget {
   const AppBarAdmin({super.key});
@@ -14,6 +15,7 @@ class AppBarAdmin extends StatefulWidget {
 }
 
 class _AppBarAdminState extends State<AppBarAdmin> {
+  final AdminProfileController controller = Get.put(AdminProfileController());
   void changeLanguageDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -130,7 +132,6 @@ class _AppBarAdminState extends State<AppBarAdmin> {
                 ],
               ),
               child: CircleAvatar(
-                backgroundColor: Constants.backgroundDark,
                 radius: 30,
                 child: Image.asset("images/mapp.png"),
               ),
@@ -216,10 +217,15 @@ class _AppBarAdminState extends State<AppBarAdmin> {
                   ),
                 ],
               ),
-              child: const CircleAvatar(
-                backgroundColor: Constants.background,
+              child:  CircleAvatar(
                 radius: 30,
-                backgroundImage: AssetImage("images/profile.png"),
+                backgroundColor: Colors.grey.shade100,
+                backgroundImage: controller.imageBytes.value != null
+                    ? MemoryImage(controller.imageBytes.value!)
+                    : (controller.imageUrl.value.isEmpty
+                    ? const AssetImage("images/profile.png")
+                    : NetworkImage(controller.imageUrl.value))
+                as ImageProvider,
               ),
             ),
         ],
