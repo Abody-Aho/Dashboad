@@ -2,7 +2,7 @@ import 'package:dashbord2/features/supermarket/panel_lift/panel_controller.dart'
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+// for supermarket
 class LineChartSample2 extends StatefulWidget {
   const LineChartSample2({super.key});
 
@@ -113,19 +113,19 @@ class _LineChartSample2State extends State<LineChartSample2> {
       interval = 1;
     }
 
-    double leftInterval = (maxYValue / 4);
+    double leftInterval = (maxYValue / 5).ceilToDouble();
 
     if (leftInterval <= 0 || leftInterval.isNaN || leftInterval.isInfinite) {
       leftInterval = 1;
     }
     return LineChartData(
       lineTouchData: const LineTouchData(enabled: true),
-
+      clipData: FlClipData.all(),
       gridData: FlGridData(
         show: true,
         drawHorizontalLine: true,
         drawVerticalLine: false,
-        horizontalInterval: interval / 4,
+        horizontalInterval: interval,
         getDrawingHorizontalLine: (value) {
           return FlLine(
             color: Colors.green.withValues(alpha: 0.15),
@@ -176,14 +176,13 @@ class _LineChartSample2State extends State<LineChartSample2> {
 
       lineBarsData: [
         LineChartBarData(
-          spots: controller.chartData.isEmpty
-              ? [const FlSpot(1, 0)]
-              : controller.chartData.map((e) {
-            return FlSpot(
-              e['month'] as double,
-              e['total_sold'] as double,
-            );
-          }).toList(),
+          spots: controller.chartData
+              .where((e) => (e['total_sold'] as double) > 0)
+              .map((e) => FlSpot(
+            e['month'] as double,
+            e['total_sold'] as double,
+          ))
+              .toList(),
 
           isCurved: true,
 

@@ -3,7 +3,7 @@ import 'package:dashbord2/core/constants/app_link.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import '../../auth/auth_controller.dart';
-
+// for supermarket
 class PanelController extends GetxController {
   var totalSold = 0.obs;
   var percentage = 0.0.obs;
@@ -85,14 +85,31 @@ class PanelController extends GetxController {
         var data = jsonDecode(response.body);
 
         if (data['status'] == "success") {
-          chartData.value =
-              List<Map<String, dynamic>>.from(data['data'])
-                  .map((e) => {
-                "month": double.parse(e['month'].toString()),
-                "total_sold":
-                double.parse(e['total_sold'].toString()),
-              })
-                  .toList();
+
+          // 🔥 1. البيانات من السيرفر
+          List rawData = data['data'];
+
+          // 🔥 2. نخزن القيم الحقيقية
+          Map<int, double> monthMap = {};
+
+          for (var e in rawData) {
+            int month = int.parse(e['month'].toString());
+            double total = double.parse(e['total_sold'].toString());
+            monthMap[month] = total;
+          }
+
+          // 🔥 3. نكمل كل الشهور (1 → 12)
+          List<Map<String, dynamic>> fullData = [];
+
+          for (int i = 1; i <= 12; i++) {
+            fullData.add({
+              "month": i.toDouble(),
+              "total_sold": monthMap[i] ?? 0.0,
+            });
+          }
+
+          // ✅ 4. نحفظ البيانات
+          chartData.value = fullData;
         }
       }
     } catch (e) {

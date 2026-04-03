@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:dashbord2/data/models/user_model.dart';
@@ -125,13 +126,14 @@ class AuthController extends GetxController {
       return;
     }
     try {
-      isLoading.value = true;
+      showLoadingDialog();
       final credential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
       final uid = credential.user!.uid;
       final apiResponse = await ApiServices.getUserData(uid);
+      Get.back();
 
       if (apiResponse['status'] == 'success') {
         final user = UserModel.fromJson(apiResponse['data']);
@@ -175,6 +177,7 @@ class AuthController extends GetxController {
       );
       print(e.code);
     } catch (e) {
+      Get.back();
       Get.snackbar(
         "خطأ",
         e.toString(),
@@ -184,6 +187,106 @@ class AuthController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  void showLoadingDialog() {
+    Get.dialog(
+      Center(
+        child: SizedBox(
+          width: 280, // 👈 قمنا بتقييد العرض هنا لكي لا يكون طويلاً بزيادة
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 20,
+                  spreadRadius: 5,
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // أيقونة لوحة التحكم
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      width: 65,
+                      height: 65,
+                      decoration: BoxDecoration(
+                        color: Colors.blueGrey[50],
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    Icon(
+                      Icons.analytics_outlined,
+                      size: 32,
+                      color: Colors.blueGrey[700],
+                    ),
+                    Positioned(
+                      right: 10,
+                      bottom: 10,
+                      child: Container(
+                        padding: const EdgeInsets.all(3),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.settings_suggest,
+                          size: 16,
+                          color: Colors.green[600],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 15),
+
+                // مؤشر التحميل
+                SpinKitWave(
+                  color: Colors.green[600]!,
+                  size: 25.0,
+                  type: SpinKitWaveType.center,
+                ),
+
+                const SizedBox(height: 20),
+
+                // نصوص تناسب الأدمين
+                Text(
+                  "جاري تحميل لوحة التحكم...",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.blueGrey[900],
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.none,
+                  ),
+                ),
+
+                const SizedBox(height: 6),
+
+                Text(
+                  "يتم تهيئة البيانات وتأمين الاتصال",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.blueGrey[400],
+                    fontSize: 11,
+                    decoration: TextDecoration.none,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+      barrierDismissible: false,
+    );
   }
 
   Future<void> saveTokenToServer(UserModel user) async {
@@ -245,7 +348,6 @@ class AuthController extends GetxController {
 
       final uid = credential.user!.uid;
 
-      // استخدام MultipartRequest لرفع الملفات والبيانات
       var request = http.MultipartRequest("POST", Uri.parse(AppLink.signup));
       request.fields['firebase_uid'] = uid;
       request.fields['name'] = nameController.text.trim();
@@ -255,8 +357,8 @@ class AuthController extends GetxController {
       request.fields['role'] = selectedRole.value!;
       request.fields['location'] = locationController.text.trim();
       request.fields['time_open'] = timeOpenController.text.trim();
-      request.fields['lat'] = "0.0";
-      request.fields['long'] = "0.0";
+      request.fields['lat'] = "15.375622041597655";
+      request.fields['long'] = "44.173400382850155";
 
       // إضافة ملف الرخصة (Bytes)
       if (webPdfBytes.value != null) {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/services/lang_service.dart';
+import '../../core/utils/helpers/language_helper.dart';
 import '../../routes/app_routes.dart';
 import '../supermarket/profile/supermarket_profile_controller.dart';
 
@@ -15,40 +16,6 @@ class AppBarSupermarket extends StatefulWidget {
 
 class AppBarSupermarketState extends State<AppBarSupermarket> {
   final SupermarketProfileController controller = Get.put(SupermarketProfileController());
-  void changeLanguageDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: Text("choose_language".tr),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                title: Text("العربية"),
-                onTap: () async {
-                  Get.updateLocale(const Locale("ar"));
-                  await LangService.saveLang("ar");
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                title: Text("English"),
-                onTap: () async {
-                  Get.updateLocale(const Locale("en"));
-                  await LangService.saveLang("en");
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -114,11 +81,9 @@ class AppBarSupermarketState extends State<AppBarSupermarket> {
           ),
           IconButton(
             icon: Icon(Icons.language, color: Constants.primary, size: 28),
-            onPressed: () => changeLanguageDialog(context),
+            onPressed: () => LanguageHelper.changeLanguageDialog(),
           ),
 
-          Stack(
-            children: [
               IconButton(
                 color: Constants.primary,
                 iconSize: 28,
@@ -127,20 +92,7 @@ class AppBarSupermarketState extends State<AppBarSupermarket> {
                 },
                 icon: const Icon(Icons.notifications_none_outlined),
               ),
-              Positioned(
-                right: 6,
-                top: 6,
-                child: CircleAvatar(
-                  backgroundColor: Constants.error,
-                  radius: 8,
-                  child: const Text(
-                    "3",
-                    style: TextStyle(fontSize: 10, color: Colors.white),
-                  ),
-                ),
-              ),
-            ],
-          ),
+
 
           if (!ResponsiveLayout.isPhone(context))
             Container(

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import '../../../core/constants/app_link.dart';
 import '../../auth/auth_controller.dart'; // 🔥 مهم
-
+// spuer
 class PanelCenterController extends GetxController {
 
   // 🔥 البيانات

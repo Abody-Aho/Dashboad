@@ -75,6 +75,7 @@ class AppLink {
   static const getMessage = "${server}supermarket/supermarket_chat/get_messages.php";
   static const getSupermarkets = "${server}supermarket/supermarket_chat/get_supermarkets.php";
   static const itemsFilterSupermarket = "${server}supermarket/items/items_filter_supermarket.php";
+  static const deleteMessage = "${server}supermarket/supermarket_chat/delete_message.php";
   static const saveToken = "${server}save_token.php";
 
 

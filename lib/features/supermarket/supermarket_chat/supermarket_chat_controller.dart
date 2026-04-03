@@ -69,6 +69,7 @@ class SupermarketChatController extends GetxController {
 
         messages.add(
           SupermarketChatMessage(
+            id: item["message_id"],
             text: item["message"],
             senderName: item["sender_name"],
             isAdmin: item["sender_role"] == "supermarket",
@@ -79,6 +80,18 @@ class SupermarketChatController extends GetxController {
 
       scrollToBottom();
     }
+  }
+
+  Future<void> deleteMessage(int messageId) async {
+    await http.post(
+      Uri.parse(AppLink.deleteMessage),
+      body: {
+        "message_id": messageId.toString(),
+        "sender_role": "supermarket",
+      },
+    );
+
+    await loadMessages();
   }
 
   void scrollToBottom() {

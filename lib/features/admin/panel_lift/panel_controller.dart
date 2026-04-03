@@ -2,26 +2,22 @@ import 'dart:convert';
 import 'package:dashbord2/core/constants/app_link.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-
+// admin
 class PanelController extends GetxController {
   var totalSold = 0.obs;
   var percentage = 0.0.obs;
   var isLoading = false.obs;
 
-  // 🔥 Top Products
   var topProducts = <Map<String, dynamic>>[].obs;
 
-  // 📊 Chart Data
   var chartData = <Map<String, dynamic>>[].obs;
 
-  // ✅ (اختياري) رقم السوبرماركت
   int? supermarketId;
 
   @override
   void onInit() {
     fetchAllData();
 
-    // تحديث كل 60 ثانية
     Future.doWhile(() async {
       await Future.delayed(const Duration(seconds: 60));
       await fetchAllData();
@@ -31,7 +27,7 @@ class PanelController extends GetxController {
     super.onInit();
   }
 
-  // 🔥 جلب كل البيانات مرة واحدة
+  //  جلب كل البيانات مرة واحدة
   Future<void> fetchAllData() async {
     await Future.wait([
       getData(),
@@ -40,9 +36,8 @@ class PanelController extends GetxController {
     ]);
   }
 
-  // ============================
-  // 📦 إجمالي المبيعات + النسبة
-  // ============================
+
+  //  إجمالي المبيعات + النسبة
   Future<void> getData() async {
     try {
       isLoading.value = true;
@@ -71,9 +66,8 @@ class PanelController extends GetxController {
     }
   }
 
-  // ============================
-  // 📊 بيانات الشارت
-  // ============================
+
+  //  بيانات الشارت
   Future<void> getChartData() async {
     try {
       String url = AppLink.getSalesChart;
@@ -88,15 +82,27 @@ class PanelController extends GetxController {
         var data = jsonDecode(response.body);
 
         if (data['status'] == "success") {
-          chartData.value =
-              List<Map<String, dynamic>>.from(data['data'])
-                  .map((e) => {
-                "month":
-                double.parse(e['month'].toString()),
-                "total_sold":
-                double.parse(e['total_sold'].toString()),
-              })
-                  .toList();
+
+          List rawData = data['data'];
+
+          Map<int, double> monthMap = {};
+
+          for (var e in rawData) {
+            int month = int.parse(e['month'].toString());
+            double total = double.parse(e['total_sold'].toString());
+            monthMap[month] = total;
+          }
+
+          List<Map<String, dynamic>> fullData = [];
+
+          for (int i = 1; i <= 12; i++) {
+            fullData.add({
+              "month": i.toDouble(),
+              "total_sold": monthMap[i] ?? 0.0,
+            });
+          }
+
+          chartData.value = fullData;
         }
       }
     } catch (e) {
@@ -104,9 +110,6 @@ class PanelController extends GetxController {
     }
   }
 
-  // ============================
-  // 🏆 Top 4 Products
-  // ============================
   Future<void> getTopProducts() async {
     try {
       String url = AppLink.getTopProducts;

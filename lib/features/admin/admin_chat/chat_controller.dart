@@ -16,6 +16,8 @@ class ChatController extends GetxController {
   var selectedMarket = 0.obs;
 
   var messages = <AdminChatMessage>[].obs;
+  var filteredMarkets = <SuperMarket>[].obs;
+  TextEditingController searchController = TextEditingController();
 
   int roomId = 0;
 
@@ -40,6 +42,12 @@ class ChatController extends GetxController {
 
   Future<void> loadMarkets() async {
 
+    int? currentMarketId;
+
+    if (markets.isNotEmpty) {
+      currentMarketId = markets[selectedMarket.value].id;
+    }
+
     var res = await http.get(Uri.parse(AppLink.getSupermarkets));
     var data = jsonDecode(res.body);
 
@@ -50,9 +58,29 @@ class ChatController extends GetxController {
             (i) => SuperMarket.fromJson(data["data"][i]),
       );
 
-      if (markets.isNotEmpty) {
+      filteredMarkets.value = markets;
+
+      if (currentMarketId != null) {
+        int index = markets.indexWhere((m) => m.id == currentMarketId);
+
+        if (index != -1) {
+          selectedMarket.value = index;
+        }
+      }
+
+      if (roomId == 0 && markets.isNotEmpty) {
         initChat();
       }
+    }
+  }
+
+  void searchMarkets(String query) {
+    if (query.isEmpty) {
+      filteredMarkets.value = markets;
+    } else {
+      filteredMarkets.value = markets.where((m) {
+        return m.getName(lang).toLowerCase().contains(query.toLowerCase());
+      }).toList();
     }
   }
 
@@ -86,7 +114,7 @@ class ChatController extends GetxController {
   Future<void> loadMessages() async {
 
     var res = await http.get(Uri.parse(
-        "${AppLink.getMessage}?room_id=$roomId"
+        "${AppLink.getMessage}?room_id=$roomId&role=admin"
     ));
 
     var data = jsonDecode(res.body);
@@ -98,6 +126,7 @@ class ChatController extends GetxController {
       for (var item in data["data"]) {
         messages.add(
           AdminChatMessage(
+            id: item["message_id"],
             text: item["message"],
             isAdmin: item["sender_role"] == "admin",
             time: DateTime.parse(item["created_at"]),
@@ -108,6 +137,20 @@ class ChatController extends GetxController {
 
       scrollToBottom();
     }
+  }
+
+
+
+  Future<void> deleteMessage(int messageId, String role) async {
+    await http.post(
+      Uri.parse(AppLink.deleteMessage),
+      body: {
+        "message_id": messageId.toString(),
+        "sender_role": role,
+      },
+    );
+
+    await loadMessages();
   }
 
   void scrollToBottom() {

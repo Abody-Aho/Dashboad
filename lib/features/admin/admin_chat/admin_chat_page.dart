@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/constants/app_link.dart';
 import '../../../routes/app_routes.dart';
+import '../../widgets/app_delete_dialog.dart';
 import 'chat_controller.dart';
 
 class AdminChatPage extends StatelessWidget {
@@ -57,11 +58,7 @@ class AdminChatPage extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
             onPressed: () {
-              if (Get.routing.previous != '') {
-                Get.back();
-              } else {
                 Get.offAllNamed(AppRoutes.dashboardAdmin);
-              }
             },
           ),
           if (isMobile)
@@ -73,7 +70,6 @@ class AdminChatPage extends StatelessWidget {
             ),
           const SizedBox(width: 4),
 
-          /// 🖼️ صورة السوبرماركت
           Obx(() {
             if (controller.markets.isEmpty) {
               return const CircleAvatar(
@@ -99,7 +95,6 @@ class AdminChatPage extends StatelessWidget {
 
           const SizedBox(width: 10),
 
-          /// 🟢 الاسم حسب اللغة
           Expanded(
             child: Obx(() {
               if (controller.markets.isEmpty) {
@@ -161,14 +156,73 @@ class AdminChatPage extends StatelessWidget {
             ),
           ),
           const Divider(color: Constants.waBorder),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: Container(
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.03),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: TextField(
+                controller: controller.searchController,
+                onChanged: controller.searchMarkets,
+                style: const TextStyle(fontSize: 14, color: Colors.black87),
+                decoration: InputDecoration(
+                  hintText: "ابحث عن محادثة...",
+                  hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 14),
+                  filled: true,
+                  fillColor: const Color(0xFFF4F6F5), // خلفية رمادية مخضرة خفيفة جداً ومريحة
+
+                  prefixIcon: Icon(
+                    Icons.search_rounded,
+                    color: Colors.green.shade600,
+                    size: 20,
+                  ),
+
+                  suffixIcon: Icon(
+                    Icons.tune_rounded,
+                    color: Colors.grey.shade600,
+                    size: 18,
+                  ),
+
+                  contentPadding: const EdgeInsets.symmetric(vertical: 12),
+
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide.none,
+                  ),
+
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide(
+                      color: Colors.green.shade400,
+                      width: 1.5,
+                    ),
+                  ),
+
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide(
+                      color: Colors.grey.shade200,
+                      width: 1,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
           Expanded(
             child: Obx(() => ListView.builder(
-              itemCount: controller.markets.length,
+              itemCount: controller.filteredMarkets.length,
               itemBuilder: (context, index) {
                 final market = controller.markets[index];
 
                 return ListTile(
-                  /// 🖼️ صورة
                   leading: CircleAvatar(
                     backgroundColor: Colors.grey[300],
                     backgroundImage: market.image.isNotEmpty
@@ -179,7 +233,6 @@ class AdminChatPage extends StatelessWidget {
                         : null,
                   ),
 
-                  /// 🟢 اسم حسب اللغة
                   title: Text(
                     market.getName(controller.lang),
                     style: const TextStyle(color: Constants.waText),
@@ -199,7 +252,6 @@ class AdminChatPage extends StatelessWidget {
     );
   }
 
-  /// 🟢 الرسائل
   Widget _messages() {
     return Obx(() => ListView.builder(
       controller: controller.scrollController,
@@ -210,24 +262,40 @@ class AdminChatPage extends StatelessWidget {
 
         bool isMe = msg.isAdmin;
 
-        return Align(
-          alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-          child: Container(
-            margin: const EdgeInsets.symmetric(vertical: 4),
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            constraints: const BoxConstraints(maxWidth: 350),
-            decoration: BoxDecoration(
-              color: isMe ? Constants.waBubbleMe : Constants.waBubbleOther,
-              borderRadius: BorderRadius.only(
-                topLeft: const Radius.circular(10),
-                topRight: const Radius.circular(10),
-                bottomLeft: Radius.circular(isMe ? 10 : 0),
-                bottomRight: Radius.circular(isMe ? 0 : 10),
+        return GestureDetector(
+          onLongPress: () {
+            AppDeleteDialog.show(
+              title: "حذف الرسالة",
+              message: "هل أنت متأكد من حذف هذه الرسالة؟",
+              icon: Icons.delete_outline,
+              color: Colors.red,
+              onConfirm: () {
+                controller.deleteMessage(
+                  msg.id,
+                  "admin",
+                );
+              },
+            );
+          },
+          child: Align(
+            alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+            child: Container(
+              margin: const EdgeInsets.symmetric(vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              constraints: const BoxConstraints(maxWidth: 350),
+              decoration: BoxDecoration(
+                color: isMe ? Constants.waBubbleMe : Constants.waBubbleOther,
+                borderRadius: BorderRadius.only(
+                  topLeft: const Radius.circular(10),
+                  topRight: const Radius.circular(10),
+                  bottomLeft: Radius.circular(isMe ? 10 : 0),
+                  bottomRight: Radius.circular(isMe ? 0 : 10),
+                ),
               ),
-            ),
-            child: Text(
-              msg.text,
-              style: const TextStyle(fontSize: 14, color: Constants.waText),
+              child: Text(
+                msg.text,
+                style: const TextStyle(fontSize: 14, color: Constants.waText),
+              ),
             ),
           ),
         );

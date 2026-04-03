@@ -7,6 +7,7 @@ import '../features/admin/admin_dashboard/dashboard_binding.dart'
     as admin_binding;
 import '../features/auth/login_view.dart';
 import '../features/auth/singin_view.dart';
+import '../features/splash/splash_screen.dart';
 import '../features/supermarket/supermarket_chat/supermarket_chat_binding.dart';
 import '../features/supermarket/supermarket_chat/supermarket_chat_page.dart';
 import '../features/supermarket/supermarket_dashboard/dashboard_binding.dart'
@@ -45,6 +46,10 @@ class AppPages {
       name: AppRoutes.marketChat,
       page: () => SupermarketChatPage(),
       binding: SupermarketChatBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.splash,
+      page: () => SplashScreen(),
     ),
   ];
 }

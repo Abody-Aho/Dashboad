@@ -2,7 +2,7 @@ import 'package:dashbord2/features/admin/panel_lift/panel_controller.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+// admin
 class LineChartSample2 extends StatefulWidget {
   const LineChartSample2({super.key});
 
@@ -12,7 +12,6 @@ class LineChartSample2 extends StatefulWidget {
 
 class _LineChartSample2State extends State<LineChartSample2> {
 
-  // ✅ مهم: لا تنشئ Controller جديد
   final controller = Get.find<PanelController>();
 
   List<Color> gradientColors = [
@@ -31,15 +30,13 @@ class _LineChartSample2State extends State<LineChartSample2> {
         padding: const EdgeInsets.all(12),
         child: AspectRatio(
           aspectRatio: 1.7,
-          child: Obx(() => LineChart(avgData())), // ✅ reactive
+          child: Obx(() => LineChart(avgData())),
         ),
       ),
     );
   }
 
-  // =======================
-  // 🟢 X Axis (Months)
-  // =======================
+
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
       color: Colors.green,
@@ -58,7 +55,6 @@ class _LineChartSample2State extends State<LineChartSample2> {
       return const SizedBox();
     }
 
-    // ✅ منع الزحمة
     if (value % 2 != 0) return const SizedBox();
 
     return SideTitleWidget(
@@ -67,9 +63,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
     );
   }
 
-  // =======================
-  // 🟢 Y Axis
-  // =======================
+
   Widget leftTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
       color: Colors.green,
@@ -79,7 +73,6 @@ class _LineChartSample2State extends State<LineChartSample2> {
 
     if (value == 0) return const SizedBox();
 
-    // 🔥 يمنع الأرقام الغريبة
     if (value % 1 != 0) return const SizedBox();
 
     String text;
@@ -93,9 +86,6 @@ class _LineChartSample2State extends State<LineChartSample2> {
     return Text(text, style: style);
   }
 
-  // =======================
-  // 🔥 MAIN CHART
-  // =======================
   LineChartData avgData() {
 
     double maxYValue = controller.chartData.isEmpty
@@ -178,14 +168,13 @@ class _LineChartSample2State extends State<LineChartSample2> {
 
       lineBarsData: [
         LineChartBarData(
-          spots: controller.chartData.isEmpty
-              ? [const FlSpot(1, 0)]
-              : controller.chartData.map((e) {
-            return FlSpot(
-              e['month'] as double,
-              e['total_sold'] as double,
-            );
-          }).toList(),
+          spots: controller.chartData
+              .where((e) => (e['total_sold'] as double) > 0)
+              .map((e) => FlSpot(
+            e['month'] as double,
+            e['total_sold'] as double,
+          ))
+              .toList(),
 
           isCurved: true,
 

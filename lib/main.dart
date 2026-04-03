@@ -103,10 +103,12 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.green[50],
         canvasColor: Constants.background,
       ),
-      initialRoute: AppRoutes.login,
+      initialRoute: AppRoutes.splash,
       getPages: AppPages.routes,
       initialBinding: AuthBinding(),
       debugShowCheckedModeBanner: false,
+      defaultTransition: Transition.fade,
+      transitionDuration: const Duration(milliseconds: 1000),
     );
   }
 }

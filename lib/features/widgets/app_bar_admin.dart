@@ -2,9 +2,8 @@ import 'package:dashbord2/features/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../core/constants/app_constants.dart';
-import '../../core/services/lang_service.dart';
+import '../../core/utils/helpers/language_helper.dart';
 import '../../routes/app_routes.dart';
-import '../admin/admin_chat/admin_chat_page.dart';
 import '../admin/profile/admin_profile_controller.dart';
 
 class AppBarAdmin extends StatefulWidget {
@@ -16,99 +15,6 @@ class AppBarAdmin extends StatefulWidget {
 
 class _AppBarAdminState extends State<AppBarAdmin> {
   final AdminProfileController controller = Get.put(AdminProfileController());
-  void changeLanguageDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        // تحسين شكل الزوايا
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Row(
-          children: [
-            const Icon(Icons.language, color: Colors.green),
-            const SizedBox(width: 10),
-            Text(
-              "choose_language".tr,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-            ),
-          ],
-        ),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Divider(color: Colors.greenAccent), // خط فاصل أنيق
-
-              // خيار اللغة العربية
-              _buildLanguageOption(
-                context: context,
-                title: "العربية",
-                localeCode: "ar",
-                icon: Icons.translate_rounded,
-                isSelected: Get.locale?.languageCode == "ar",
-              ),
-
-              const SizedBox(height: 8),
-
-              // خيار اللغة الإنجليزية
-              _buildLanguageOption(
-                context: context,
-                title: "English",
-                localeCode: "en",
-                icon: Icons.abc_rounded,
-                isSelected: Get.locale?.languageCode == "en",
-              ),
-            ],
-          ),
-        ),
-        // إضافة زر إغلاق بسيط
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text("close".tr, style: const TextStyle(color: Colors.grey)),
-          ),
-        ],
-      ),
-    );
-  }
-
-// دالة مساعدة لبناء العناصر بتصميم موحد (Clean Code)
-  Widget _buildLanguageOption({
-    required BuildContext context,
-    required String title,
-    required String localeCode,
-    required IconData icon,
-    required bool isSelected,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: isSelected ? Colors.green.withOpacity(0.1) : Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: isSelected ? Colors.green : Colors.grey.withOpacity(0.2),
-        ),
-      ),
-      child: ListTile(
-        leading: Icon(icon, color: isSelected ? Colors.green : Colors.grey),
-        title: Text(
-          title,
-          style: TextStyle(
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-            color: isSelected ? Colors.green[800] : Colors.black87,
-          ),
-        ),
-        trailing: isSelected
-            ? const Icon(Icons.check_circle, color: Colors.green)
-            : null,
-        onTap: () async {
-          Get.updateLocale(Locale(localeCode));
-          await LangService.saveLang(localeCode);
-          Navigator.pop(context);
-        },
-      ),
-    );
-  }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -174,32 +80,16 @@ class _AppBarAdminState extends State<AppBarAdmin> {
           ),
           IconButton(
             icon: Icon(Icons.language, color: Constants.primary, size: 28),
-            onPressed: () => changeLanguageDialog(context),
+            onPressed: () => LanguageHelper.changeLanguageDialog(),
           ),
 
-          Stack(
-            children: [
-              IconButton(
-                color: Constants.primary,
-                iconSize: 28,
-                onPressed: () {
-                  Get.toNamed(AppRoutes.adminChat);
-                },
-                icon: const Icon(Icons.notifications_none_outlined),
-              ),
-              Positioned(
-                right: 6,
-                top: 6,
-                child: CircleAvatar(
-                  backgroundColor: Constants.error,
-                  radius: 8,
-                  child: const Text(
-                    "3",
-                    style: TextStyle(fontSize: 10, color: Colors.white),
-                  ),
-                ),
-              ),
-            ],
+          IconButton(
+            color: Constants.primary,
+            iconSize: 28,
+            onPressed: () {
+              Get.toNamed(AppRoutes.adminChat);
+            },
+            icon: const Icon(Icons.notifications_none_outlined),
           ),
 
           if (!ResponsiveLayout.isPhone(context))
@@ -217,15 +107,15 @@ class _AppBarAdminState extends State<AppBarAdmin> {
                   ),
                 ],
               ),
-              child:  CircleAvatar(
+              child: CircleAvatar(
                 radius: 30,
                 backgroundColor: Colors.grey.shade100,
                 backgroundImage: controller.imageBytes.value != null
                     ? MemoryImage(controller.imageBytes.value!)
                     : (controller.imageUrl.value.isEmpty
-                    ? const AssetImage("images/profile.png")
-                    : NetworkImage(controller.imageUrl.value))
-                as ImageProvider,
+                              ? const AssetImage("images/profile.png")
+                              : NetworkImage(controller.imageUrl.value))
+                          as ImageProvider,
               ),
             ),
         ],

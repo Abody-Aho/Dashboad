@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/constants/app_constants.dart';
 import 'panel_center_controller.dart';
-
+// admin
 class BarChartSample2 extends StatefulWidget {
   const BarChartSample2({super.key});
 
