@@ -264,6 +264,7 @@ class AuthController extends GetxController {
                   style: TextStyle(
                     color: Colors.blueGrey[900],
                     fontSize: 14,
+                    fontFamily: 'Cairo',
                     fontWeight: FontWeight.bold,
                     decoration: TextDecoration.none,
                   ),
@@ -277,6 +278,7 @@ class AuthController extends GetxController {
                   style: TextStyle(
                     color: Colors.blueGrey[400],
                     fontSize: 11,
+                    fontFamily: 'Cairo',
                     decoration: TextDecoration.none,
                   ),
                 ),

@@ -107,7 +107,7 @@ class MyApp extends StatelessWidget {
       getPages: AppPages.routes,
       initialBinding: AuthBinding(),
       debugShowCheckedModeBanner: false,
-      defaultTransition: Transition.fade,
+      defaultTransition: Transition.fadeIn,
       transitionDuration: const Duration(milliseconds: 1000),
     );
   }

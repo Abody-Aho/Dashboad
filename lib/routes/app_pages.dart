@@ -5,6 +5,7 @@ import '../features/admin/admin_chat/admin_chat_page.dart';
 import '../features/admin/admin_dashboard/admin_dashboard.dart';
 import '../features/admin/admin_dashboard/dashboard_binding.dart'
     as admin_binding;
+import '../features/auth/auth_middleware.dart';
 import '../features/auth/login_view.dart';
 import '../features/auth/singin_view.dart';
 import '../features/splash/splash_screen.dart';
@@ -26,26 +27,31 @@ class AppPages {
       name: AppRoutes.signIn,
       page: () => const SignInView(),
       binding: AuthBinding(),
+      middlewares: [AuthMiddleware()],
     ),
     GetPage(
       name: AppRoutes.dashboardMarket,
       page: () => const SupermarketDashboard(),
       binding: market_binding.DashboardBinding(),
+      middlewares: [AuthMiddleware()],
     ),
     GetPage(
       name: AppRoutes.dashboardAdmin,
       page: () => const AdminDashboard(),
       binding: admin_binding.DashboardBinding(),
+      middlewares: [AuthMiddleware()],
     ),
     GetPage(
       name: AppRoutes.adminChat,
       page: () =>  AdminChatPage(),
-      binding: AdminChatBinding()
+      binding: AdminChatBinding(),
+      middlewares: [AuthMiddleware()],
     ),
     GetPage(
       name: AppRoutes.marketChat,
       page: () => SupermarketChatPage(),
       binding: SupermarketChatBinding(),
+      middlewares: [AuthMiddleware()],
     ),
     GetPage(
       name: AppRoutes.splash,
