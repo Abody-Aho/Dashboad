@@ -27,32 +27,36 @@ class AppPages {
       name: AppRoutes.signIn,
       page: () => const SignInView(),
       binding: AuthBinding(),
-      middlewares: [AuthMiddleware()],
     ),
+
+    // صفحات السوبرماركت
     GetPage(
       name: AppRoutes.dashboardMarket,
       page: () => const SupermarketDashboard(),
       binding: market_binding.DashboardBinding(),
-      middlewares: [AuthMiddleware()],
-    ),
-    GetPage(
-      name: AppRoutes.dashboardAdmin,
-      page: () => const AdminDashboard(),
-      binding: admin_binding.DashboardBinding(),
-      middlewares: [AuthMiddleware()],
-    ),
-    GetPage(
-      name: AppRoutes.adminChat,
-      page: () =>  AdminChatPage(),
-      binding: AdminChatBinding(),
-      middlewares: [AuthMiddleware()],
+      middlewares: [SupermarketMiddleware()], // حماية خاصة بالسوبرماركت
     ),
     GetPage(
       name: AppRoutes.marketChat,
       page: () => SupermarketChatPage(),
       binding: SupermarketChatBinding(),
-      middlewares: [AuthMiddleware()],
+      middlewares: [SupermarketMiddleware()], // حماية خاصة بالسوبرماركت
     ),
+
+    // صفحات الأدمن
+    GetPage(
+      name: AppRoutes.dashboardAdmin,
+      page: () => const AdminDashboard(),
+      binding: admin_binding.DashboardBinding(),
+      middlewares: [AdminMiddleware()], // حماية خاصة بالأدمن
+    ),
+    GetPage(
+      name: AppRoutes.adminChat,
+      page: () => AdminChatPage(),
+      binding: AdminChatBinding(),
+      middlewares: [AdminMiddleware()], // حماية خاصة بالأدمن
+    ),
+
     GetPage(
       name: AppRoutes.splash,
       page: () => SplashScreen(),
