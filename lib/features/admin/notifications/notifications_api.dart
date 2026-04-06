@@ -14,7 +14,12 @@ mixin NotificationsApi on GetxController {
     try {
       controller.isLoadingStats.value = true;
 
-      final res = await http.get(Uri.parse(AppLink.notificationsStats));
+      final res = await http.get(
+        Uri.parse(AppLink.notificationsStats),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
+      );
       final data = jsonDecode(res.body);
 
       if (data['status'] == 'success') {
@@ -33,7 +38,12 @@ mixin NotificationsApi on GetxController {
 
   Future fetchBanners() async {
     try {
-      var response = await http.get(Uri.parse(AppLink.bannerView));
+      var response = await http.get(
+        Uri.parse(AppLink.bannerView),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
+      );
 
       var data = jsonDecode(response.body);
 
@@ -49,6 +59,9 @@ mixin NotificationsApi on GetxController {
     try {
       var response = await http.post(
         Uri.parse(AppLink.bannerDelete),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
         body: {"id": id, "image": image},
       );
 
@@ -76,6 +89,9 @@ mixin NotificationsApi on GetxController {
 
       final response = await http.get(
         Uri.parse("${AppLink.notificationsSearch}?query=${Uri.encodeComponent(query)}"),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
       );
 
       if (response.statusCode == 200) {
@@ -123,6 +139,9 @@ mixin NotificationsApi on GetxController {
       controller.bannerLoading.value = true;
 
       var request = http.MultipartRequest("POST", Uri.parse(AppLink.bannerAdd));
+      request.headers.addAll({
+        "X-API-KEY": "aX9#pL@2026",
+      });
 
       request.files.add(
         http.MultipartFile.fromBytes(
@@ -169,6 +188,9 @@ mixin NotificationsApi on GetxController {
 
       var response = await http.post(
         Uri.parse(AppLink.notificationsCreate),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
         body: {
           "title": title,
           "body": body,
@@ -199,7 +221,12 @@ mixin NotificationsApi on GetxController {
     try {
       controller.isLoading.value = true;
 
-      var response = await http.get(Uri.parse(AppLink.notificationsView));
+      var response = await http.get(
+        Uri.parse(AppLink.notificationsView),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
+      );
 
       var data = jsonDecode(response.body);
 

@@ -18,6 +18,10 @@ class ApiServices {
     try {
       final authUri = Uri.parse(AppLink.signup);
       final request = http.MultipartRequest('POST', authUri);
+      
+      request.headers.addAll({
+        "X-API-KEY": "aX9#pL@2026",
+      });
 
       request.fields['firebase_uid'] = user.firebaseUid;
       request.fields['name'] = user.name;
@@ -55,7 +59,12 @@ class ApiServices {
   static Future<Map<String, dynamic>> getUserData(String uid) async {
     try {
       final uri = Uri.parse('${AppLink.login}?firebase_uid=$uid');
-      final response = await http.get(uri);
+      final response = await http.get(
+        uri,
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
+      );
       return Map<String, dynamic>.from(jsonDecode(response.body));
     } catch (e) {
       print("Error in getUserData: $e");
@@ -82,6 +91,9 @@ class ApiServices {
 
       var response = await http.post(
         url,
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
         body: {
           "role": role,
           "name": name,

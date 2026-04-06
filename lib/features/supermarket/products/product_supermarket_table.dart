@@ -17,6 +17,9 @@ mixin ProductSupermarketTable on GetxController {
 
       final response = await http.post(
         Uri.parse(AppLink.itemsSupermarketView),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
         body: {
           "supermarket_id": superId.toString(),
         },

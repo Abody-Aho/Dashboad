@@ -30,8 +30,39 @@ class AdminChatPage extends StatelessWidget {
                   child: Column(
                     children: [
                       _header(isMobile),
-                      Expanded(child: _messages()),
-                      _input(),
+                      Expanded(
+                        child: Obx(() {
+                          if (!controller.hasSelectedChat.value) {
+                            return Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.chat, size: 80, color: Colors.grey.shade400),
+                                  SizedBox(height: 20),
+                                  Text(
+                                    "مرحباً بك في شات الأدمن 👋",
+                                    style: TextStyle(fontSize: 18, color: Colors.grey),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Text(
+                                    "اختر سوبرماركت لبدء المحادثة",
+                                    style: TextStyle(fontSize: 14, color: Colors.grey.shade500),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+
+                          return _messages();
+                        }),
+                      ),
+                      Obx(() {
+                        if (!controller.hasSelectedChat.value) {
+                          return const SizedBox();
+                        }
+
+                        return _input();
+                      }),
                     ],
                   ),
                 )
@@ -71,68 +102,68 @@ class AdminChatPage extends StatelessWidget {
           const SizedBox(width: 4),
 
           Obx(() {
-            if (controller.markets.isEmpty) {
-              return const CircleAvatar(
-                radius: 20,
-                backgroundColor: Constants.primary,
-                child: Icon(Icons.store, color: Colors.white),
+            if (!controller.hasSelectedChat.value) {
+              return Row(
+                children: [
+                  CircleAvatar(
+                    radius: 20,
+                    backgroundColor: Colors.grey.shade300,
+                    child: Icon(Icons.chat, color: Colors.grey),
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    "شات الأدمن",
+                    style: TextStyle(
+                      color: Colors.grey.shade400,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               );
+            }
+
+            if (controller.markets.isEmpty) {
+              return const SizedBox();
             }
 
             final market = controller.markets[controller.selectedMarket.value];
 
-            return CircleAvatar(
-              radius: 20,
-              backgroundColor: Colors.grey[300],
-              backgroundImage: market.image.isNotEmpty
-                  ? NetworkImage("${AppLink.image}${market.image}")
-                  : null,
-              child: market.image.isEmpty
-                  ? const Icon(Icons.store, color: Colors.white)
-                  : null,
+            return Row(
+              children: [
+                CircleAvatar(
+                  radius: 20,
+                  backgroundColor: Colors.grey[300],
+                  backgroundImage: market.image.isNotEmpty
+                      ? NetworkImage("${AppLink.image}${market.image}")
+                      : null,
+                  child: market.image.isEmpty
+                      ? const Icon(Icons.store, color: Colors.white)
+                      : null,
+                ),
+                const SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      market.getName(controller.lang),
+                      style: const TextStyle(
+                        color: Constants.waText,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      "active".tr,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Constants.waTextSecondary,
+                      ),
+                    )
+                  ],
+                ),
+              ],
             );
           }),
-
-          const SizedBox(width: 10),
-
-          Expanded(
-            child: Obx(() {
-              if (controller.markets.isEmpty) {
-                return const Text("...");
-              }
-
-              final market = controller.markets[controller.selectedMarket.value];
-
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    market.getName(controller.lang),
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: Constants.waText,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    "active".tr,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Constants.waTextSecondary,
-                    ),
-                  )
-                ],
-              );
-            }),
-          ),
-
-          IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.search, color: Colors.white)),
-          IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.more_vert, color: Colors.white))
         ],
       ),
     );
@@ -220,7 +251,7 @@ class AdminChatPage extends StatelessWidget {
             child: Obx(() => ListView.builder(
               itemCount: controller.filteredMarkets.length,
               itemBuilder: (context, index) {
-                final market = controller.markets[index];
+                final market = controller.filteredMarkets[index];
 
                 return ListTile(
                   leading: CircleAvatar(
@@ -240,7 +271,10 @@ class AdminChatPage extends StatelessWidget {
                   selected: controller.selectedMarket.value == index,
                   selectedTileColor: Constants.waBorder,
                   onTap: () {
-                    controller.selectMarket(index);
+                    int realIndex = controller.markets.indexWhere(
+                          (m) => m.id == market.id,
+                    );
+                    controller.selectMarket(realIndex);
                     if (isMobile) Get.back();
                   },
                 );

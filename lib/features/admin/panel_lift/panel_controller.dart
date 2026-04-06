@@ -48,7 +48,12 @@ class PanelController extends GetxController {
         url += "?supermarket_id=$supermarketId";
       }
 
-      var response = await http.get(Uri.parse(url));
+      var response = await http.get(
+        Uri.parse(url),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
+      );
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
@@ -76,7 +81,12 @@ class PanelController extends GetxController {
         url += "?supermarket_id=$supermarketId";
       }
 
-      var response = await http.get(Uri.parse(url));
+      var response = await http.get(
+        Uri.parse(url),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
+      );
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
@@ -118,7 +128,12 @@ class PanelController extends GetxController {
         url += "?supermarket_id=$supermarketId";
       }
 
-      var response = await http.get(Uri.parse(url));
+      var response = await http.get(
+        Uri.parse(url),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
+      );
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);

@@ -24,13 +24,13 @@ class AdminProfileController extends GetxController {
   void onInit() {
     super.onInit();
 
-    _loadUser();
+    loadUser();
     ever(authController.currentUser, (_) {
-      _loadUser();
+      loadUser();
     });
   }
 
-  void _loadUser() {
+  void loadUser() {
     final user = authController.currentUser.value;
 
     if (user == null) return;

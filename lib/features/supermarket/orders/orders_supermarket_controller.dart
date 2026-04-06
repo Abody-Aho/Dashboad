@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'order_supermarket_api.dart';
@@ -26,6 +28,8 @@ class OrdersSupermarketController extends GetxController
   final searchTextController = TextEditingController();
   final box = GetStorage();
   int supermarketId = 0;
+  Timer? _timer;
+  bool isActive = true;
 
 
   @override
@@ -42,6 +46,29 @@ class OrdersSupermarketController extends GetxController
     fetchStats(supermarketId: supermarketId);
   }
 
+  void startAutoRefresh() {
+    _timer = Timer.periodic(const Duration(seconds: 60), (timer) async {
+
+      if (!isActive) return;
+
+      if (isLoading.value || isLoadingStats.value) return;
+
+      try {
+        isLoading.value = true;
+        isLoadingStats.value = true;
+
+        await Future.wait([
+          fetchOrders(),
+         fetchStats(supermarketId: supermarketId)
+        ]);
+
+      } finally {
+        isLoading.value = false;
+        isLoadingStats.value = false;
+      }
+    });
+  }
+
   final selectedValue = 'all_types'.obs;
 
   final options = ['all_types', 'clients', 'agents', 'supermarkets'];
@@ -52,4 +79,11 @@ class OrdersSupermarketController extends GetxController
 
   @override
   OrdersSupermarketController get controller => this;
+
+  @override
+  void onClose() {
+    isActive = false;
+    _timer?.cancel();
+    super.onClose();
+  }
 }

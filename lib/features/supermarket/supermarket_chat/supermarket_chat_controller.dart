@@ -35,9 +35,12 @@ class SupermarketChatController extends GetxController {
 
   Future<void> initChat() async {
 
-    var res = await http.get(Uri.parse(
-        "${AppLink.getOrCreateRoom}?supermarket_id=$supermarketId"
-    ));
+    var res = await http.get(
+      Uri.parse("${AppLink.getOrCreateRoom}?supermarket_id=$supermarketId"),
+      headers: {
+        "X-API-KEY": "aX9#pL@2026",
+      },
+    );
 
     var data = jsonDecode(res.body);
 
@@ -55,9 +58,12 @@ class SupermarketChatController extends GetxController {
   /// 🔥 جلب الرسائل
   Future<void> loadMessages() async {
 
-    var res = await http.get(Uri.parse(
-        "${AppLink.getMessage}?room_id=$roomId"
-    ));
+    var res = await http.get(
+      Uri.parse("${AppLink.getMessage}?room_id=$roomId"),
+      headers: {
+        "X-API-KEY": "aX9#pL@2026",
+      },
+    );
 
     var data = jsonDecode(res.body);
 
@@ -85,6 +91,9 @@ class SupermarketChatController extends GetxController {
   Future<void> deleteMessage(int messageId) async {
     await http.post(
       Uri.parse(AppLink.deleteMessage),
+      headers: {
+        "X-API-KEY": "aX9#pL@2026",
+      },
       body: {
         "message_id": messageId.toString(),
         "sender_role": "supermarket",
@@ -112,6 +121,9 @@ class SupermarketChatController extends GetxController {
 
     await http.post(
       Uri.parse(AppLink.sendMessage),
+      headers: {
+        "X-API-KEY": "aX9#pL@2026",
+      },
       body: {
         "room_id": roomId.toString(),
         "sender_id": supermarketId.toString(),

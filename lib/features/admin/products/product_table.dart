@@ -14,7 +14,12 @@ mixin ProductTable on GetxController {
     try {
       controller.isLoading.value = true;
 
-      final response = await http.get(Uri.parse(AppLink.itemsAdminView));
+      final response = await http.get(
+        Uri.parse(AppLink.itemsAdminView),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
+      );
 
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body);

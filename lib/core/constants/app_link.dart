@@ -41,6 +41,8 @@ class AppLink {
   static const String editCoupon = "${server}admin/coupon/edit.php";
   static const String deleteCoupon = "${server}admin/coupon/delete.php";
   static const String orderDetails = "${server}admin/orders/orders_items_view.php";
+  static const String ordersSupermarkets = "${server}admin/orders/get_order_supermarkets.php";
+  static const String updateSupermarketStatus = "${server}admin/orders/update_order_status.php";
   static const String notificationsView = "${server}admin/notification/notification_view.php";
   static const notificationsCreate = "${server}admin/notification/create_notification.php";
   static const bannerAdd = "${server}admin/notification/add_banner.php";
@@ -77,7 +79,6 @@ class AppLink {
   static const itemsFilterSupermarket = "${server}supermarket/items/items_filter_supermarket.php";
   static const deleteMessage = "${server}supermarket/supermarket_chat/delete_message.php";
   static const saveToken = "${server}save_token.php";
-
 
 
 }

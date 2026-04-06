@@ -19,7 +19,12 @@ mixin ProductApi on GetxController {
 
       String url = AppLink.productsStats;
 
-      final res = await http.get(Uri.parse(url));
+      final res = await http.get(
+        Uri.parse(url),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
+      );
       final data = jsonDecode(res.body);
 
       if (data['status'] == 'success') {
@@ -47,6 +52,9 @@ mixin ProductApi on GetxController {
 
       final response = await http.get(
         Uri.parse("${AppLink.itemsSearch}?query=${Uri.encodeComponent(query)}"),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
       );
 
       final body = jsonDecode(response.body);
@@ -70,7 +78,12 @@ mixin ProductApi on GetxController {
   // تحميل بيانات  المنتجات
 
   Future<void> fetchSupers() async {
-    final response = await http.get(Uri.parse(AppLink.supersView));
+    final response = await http.get(
+      Uri.parse(AppLink.supersView),
+      headers: {
+        "X-API-KEY": "aX9#pL@2026",
+      },
+    );
 
     if (response.statusCode == 200) {
       final body = jsonDecode(response.body);
@@ -103,7 +116,12 @@ mixin ProductApi on GetxController {
         queryParameters: query.isEmpty ? null : query,
       );
 
-      final response = await http.get(uri);
+      final response = await http.get(
+        uri,
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
+      );
 
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body);
@@ -148,6 +166,9 @@ mixin ProductApi on GetxController {
                 : AppLink.addCategoryPrivate);
 
       var request = http.MultipartRequest("POST", Uri.parse(url));
+      request.headers.addAll({
+        "X-API-KEY": "aX9#pL@2026",
+      });
 
       request.fields.addAll({
         "name_ar": controller.catNameArController.text.trim(),
@@ -188,7 +209,12 @@ mixin ProductApi on GetxController {
   }
 
   Future<void> fetchCategoriesAll() async {
-    final response = await http.get(Uri.parse(AppLink.categoriesAll));
+    final response = await http.get(
+      Uri.parse(AppLink.categoriesAll),
+      headers: {
+        "X-API-KEY": "aX9#pL@2026",
+      },
+    );
 
     if (response.statusCode == 200) {
       final body = jsonDecode(response.body);
@@ -253,6 +279,9 @@ mixin ProductApi on GetxController {
 
       // إنشاء الطلب
       var request = http.MultipartRequest("POST", Uri.parse(AppLink.addItem));
+      request.headers.addAll({
+        "X-API-KEY": "aX9#pL@2026",
+      });
 
       // إضافة الحقول
       request.fields.addAll({
@@ -321,6 +350,9 @@ mixin ProductApi on GetxController {
   Future<void> fetchCategoriesBySuper(int superId) async {
     final response = await http.post(
       Uri.parse(AppLink.categoriesBySuper),
+      headers: {
+        "X-API-KEY": "aX9#pL@2026",
+      },
       body: {"super": superId.toString()},
     );
 
@@ -358,6 +390,9 @@ mixin ProductApi on GetxController {
 
       final response = await http.post(
         Uri.parse(url),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
         body: {
           "name_ar": controller.catNameArController.text.trim(),
           "name_en": controller.catNameEnController.text.trim(),
@@ -408,6 +443,9 @@ mixin ProductApi on GetxController {
 
       var request =
       http.MultipartRequest("POST", Uri.parse(AppLink.updateItem));
+      request.headers.addAll({
+        "X-API-KEY": "aX9#pL@2026",
+      });
 
       request.fields.addAll({
         "id": id.toString(),
@@ -483,6 +521,9 @@ mixin ProductApi on GetxController {
 
       final response = await http.post(
         Uri.parse(AppLink.deleteItem),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
         body: {"id": id.toString()},
       );
 

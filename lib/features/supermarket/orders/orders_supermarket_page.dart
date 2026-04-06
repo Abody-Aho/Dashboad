@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../../widgets/custom_card.dart';
 import '../../widgets/custom_dropdown_button.dart';
 import '../../widgets/custom_search_bar.dart';
+import '../../widgets/refresh_button.dart';
 import '../../widgets/responsive_grid.dart';
 import 'orders_supermarket_controller.dart';
 
@@ -116,6 +117,13 @@ class OrdersSupermarketPage extends StatelessWidget {
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
+                                RefreshButton(
+                                  isLoading: controller.isLoading,
+                                  onRefresh: () async {
+                                    await controller.fetchOrders();
+                                    await controller.fetchStats();
+                                  },
+                                ),
                                 CustomSearchBar(
                                   controller: controller,
                                   hintText: 'search'.tr,
@@ -135,6 +143,13 @@ class OrdersSupermarketPage extends StatelessWidget {
                             return Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
+                                RefreshButton(
+                                  isLoading: controller.isLoading,
+                                  onRefresh: () async {
+                                    await controller.fetchOrders();
+                                    await controller.fetchStats();
+                                  },
+                                ),
                                 CustomDropdownButton(
                                   selectedValue: controller.selectedValue,
                                   options: controller.options,

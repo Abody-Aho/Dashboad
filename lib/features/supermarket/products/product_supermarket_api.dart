@@ -20,7 +20,12 @@ mixin ProductSupermarketApi on GetxController {
 
       String url = AppLink.productsStats;
 
-      final res = await http.get(Uri.parse("$url?supermarket_id=$supermarketId"));
+      final res = await http.get(
+        Uri.parse("$url?supermarket_id=$supermarketId"),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
+      );
       final data = jsonDecode(res.body);
 
       if (data['status'] == 'success') {
@@ -52,6 +57,9 @@ mixin ProductSupermarketApi on GetxController {
         Uri.parse(
             "${AppLink.itemsSearchSupermarket}?query=${Uri.encodeComponent(query)}&supermarket_id=$superId"
         ),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
       );
 
       final body = jsonDecode(response.body);
@@ -75,7 +83,12 @@ mixin ProductSupermarketApi on GetxController {
   // تحميل بيانات  المنتجات
 
   Future<void> fetchSupers() async {
-    final response = await http.get(Uri.parse(AppLink.supersView));
+    final response = await http.get(
+      Uri.parse(AppLink.supersView),
+      headers: {
+        "X-API-KEY": "aX9#pL@2026",
+      },
+    );
 
     if (response.statusCode == 200) {
       final body = jsonDecode(response.body);
@@ -108,7 +121,12 @@ mixin ProductSupermarketApi on GetxController {
         queryParameters: query,
       );
 
-      final response = await http.get(uri);
+      final response = await http.get(
+        uri,
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
+      );
 
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body);
@@ -158,6 +176,9 @@ mixin ProductSupermarketApi on GetxController {
                 : AppLink.addCategoryPrivate);
 
       var request = http.MultipartRequest("POST", Uri.parse(url));
+      request.headers.addAll({
+        "X-API-KEY": "aX9#pL@2026",
+      });
 
       request.fields.addAll({
         "name_ar": controller.catNameArController.text.trim(),
@@ -198,7 +219,12 @@ mixin ProductSupermarketApi on GetxController {
   }
 
   Future<void> fetchCategoriesAll() async {
-    final response = await http.get(Uri.parse(AppLink.categoriesAll));
+    final response = await http.get(
+      Uri.parse(AppLink.categoriesAll),
+      headers: {
+        "X-API-KEY": "aX9#pL@2026",
+      },
+    );
 
     if (response.statusCode == 200) {
       final body = jsonDecode(response.body);
@@ -255,6 +281,9 @@ mixin ProductSupermarketApi on GetxController {
 
       // إنشاء الطلب
       var request = http.MultipartRequest("POST", Uri.parse(AppLink.addItemSupermarket));
+      request.headers.addAll({
+        "X-API-KEY": "aX9#pL@2026",
+      });
 
       // إضافة الحقول
       request.fields.addAll({
@@ -325,6 +354,9 @@ mixin ProductSupermarketApi on GetxController {
   Future<void> fetchCategoriesBySuper(int superId) async {
     final response = await http.post(
       Uri.parse(AppLink.categoriesBySuper),
+      headers: {
+        "X-API-KEY": "aX9#pL@2026",
+      },
       body: {"super": superId.toString()},
     );
 
@@ -362,6 +394,9 @@ mixin ProductSupermarketApi on GetxController {
 
       final response = await http.post(
         Uri.parse(url),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
         body: {
           "name_ar": controller.catNameArController.text.trim(),
           "name_en": controller.catNameEnController.text.trim(),
@@ -412,6 +447,9 @@ mixin ProductSupermarketApi on GetxController {
 
       var request =
       http.MultipartRequest("POST", Uri.parse(AppLink.updateItemSupermarket));
+      request.headers.addAll({
+        "X-API-KEY": "aX9#pL@2026",
+      });
 
       request.fields.addAll({
         "item_id": id.toString(),
@@ -486,6 +524,9 @@ mixin ProductSupermarketApi on GetxController {
 
       final response = await http.post(
         Uri.parse(AppLink.deleteItemSupermarket),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
         body: {"item_id": id.toString()},
       );
 

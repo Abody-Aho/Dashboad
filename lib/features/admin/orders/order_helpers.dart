@@ -150,7 +150,6 @@ mixin OrderHelpers on GetxController {
                 onPressed: () {
                   controller.showStatusDialog(
                     int.parse(data['id']),
-                    int.parse(data['status_raw'].toString()),
                     controller,
                   );
                 },

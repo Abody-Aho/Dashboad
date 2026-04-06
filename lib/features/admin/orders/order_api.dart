@@ -19,7 +19,12 @@ mixin OrderApi on GetxController{
       String url = AppLink.ordersStats;
 
 
-      final res = await http.get(Uri.parse(url));
+      final res = await http.get(
+        Uri.parse(url),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
+      );
       final data = jsonDecode(res.body);
 
       if (data['status'] == 'success') {
@@ -39,7 +44,12 @@ mixin OrderApi on GetxController{
   Future<void> fetchOrders() async {
     try {
       controller.isLoading.value = true;
-      final response = await http.get(Uri.parse(AppLink.ordersView));
+      final response = await http.get(
+        Uri.parse(AppLink.ordersView),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
+      );
 
       final body = jsonDecode(response.body);
 
@@ -80,7 +90,12 @@ mixin OrderApi on GetxController{
     try {
       controller.isCouponLoading.value = true;
 
-      final response = await http.get(Uri.parse(AppLink.viewCoupon));
+      final response = await http.get(
+        Uri.parse(AppLink.viewCoupon),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
+      );
       final body = jsonDecode(response.body);
 
       if (body['status'] == "success") {
@@ -127,6 +142,9 @@ mixin OrderApi on GetxController{
 
       final response = await http.post(
         Uri.parse(AppLink.addCoupon),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
         body: data,
       );
 
@@ -155,6 +173,9 @@ mixin OrderApi on GetxController{
 
       final response = await http.post(
         Uri.parse(AppLink.editCoupon),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
         body: data,
       );
 
@@ -184,6 +205,9 @@ mixin OrderApi on GetxController{
     try {
       final response = await http.post(
         Uri.parse(AppLink.deleteCoupon),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
         body: {"id": id.toString()},
       );
 
@@ -214,14 +238,18 @@ mixin OrderApi on GetxController{
     }
   }
 
-  Future updateOrderStatus(int orderId, int status) async {
+  Future updateOrderStatus(int orderId,int superId ,int status) async {
 
     try {
 
       final response = await http.post(
         Uri.parse(AppLink.updateStatus),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
         body: {
           "order_id": orderId.toString(),
+          "super_id": superId.toString(),
           "status": status.toString(),
         },
       );
@@ -262,6 +290,9 @@ mixin OrderApi on GetxController{
 
       final response = await http.post(
         Uri.parse(AppLink.deleteOrder),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
         body: {
           "order_id": orderId.toString(),
         },
@@ -303,6 +334,9 @@ mixin OrderApi on GetxController{
 
     final response = await http.post(
       Uri.parse(AppLink.orderDetails),
+      headers: {
+        "X-API-KEY": "aX9#pL@2026",
+      },
       body: {
         "order_id": orderId.toString(),
       },
@@ -315,5 +349,62 @@ mixin OrderApi on GetxController{
     }
 
     return [];
+  }
+
+  // دالة لجلب المتاجر الخاصة بطلب معين
+  Future<List<Map<String, dynamic>>> getOrderSupermarkets(int orderId) async {
+    try {
+      final response = await http.post(
+        Uri.parse(AppLink.ordersSupermarkets),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
+        body: {
+          "orderid": orderId.toString(),
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+        if (body['status'] == 'success') {
+          return List<Map<String, dynamic>>.from(body['data']);
+        }
+      }
+    } catch (e) {
+      print("Error fetching supermarkets: $e");
+    }
+    return [];
+  }
+
+  Future<bool> updateSupermarketStatus(int orderId, int superId, int status) async {
+    try {
+      var response = await http.post(
+        Uri.parse(AppLink.updateSupermarketStatus), // تأكد من إضافة هذا الرابط في AppLink
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
+        body: {
+          "orderid": orderId.toString(),
+          "superid": superId.toString(),
+          "status": status.toString(),
+        },
+      );
+
+      if (response.statusCode == 200) {
+        var responseBody = jsonDecode(response.body);
+        if (responseBody['status'] == 'success') {
+          return true;
+        } else {
+          // في حال فشل التعديل على السيرفر (مثلا لم يتم تغيير القيمة)
+          Get.snackbar("تنبيه", responseBody['message'] ?? "فشل تحديث الحالة");
+          return false;
+        }
+      }
+      return false;
+    } catch (e) {
+      print("Error updating status: $e");
+      Get.snackbar("خطأ", "حدث خطأ أثناء محاولة الاتصال بالسيرفر");
+      return false;
+    }
   }
 }

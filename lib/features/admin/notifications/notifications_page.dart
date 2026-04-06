@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../widgets/custom_bottom.dart';
 import '../../widgets/custom_card.dart';
 import '../../widgets/custom_search_bar.dart';
+import '../../widgets/refresh_button.dart';
 import '../../widgets/responsive_grid.dart';
 import 'notifications_controller.dart';
 import 'package:dashbord2/core/constants/app_constants.dart';
@@ -86,7 +87,6 @@ class NotificationsPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const SizedBox(height: 10),
-
                       // الصف العلوي (زر + قائمة + بحث)
                       LayoutBuilder(
                         builder: (context, constraints) {
@@ -98,6 +98,13 @@ class NotificationsPage extends StatelessWidget {
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
+                                RefreshButton(
+                                  isLoading: controller.isLoading,
+                                  onRefresh: () async {
+                                    await controller.fetchNotifications();
+                                    await controller.fetchStats();
+                                  },
+                                ),
                                 CustomSearchBar(controller: controller, hintText: 'search'.tr),
                                 const SizedBox(height: 20),
                                 Container(
@@ -129,6 +136,13 @@ class NotificationsPage extends StatelessWidget {
                             return Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
+                                RefreshButton(
+                                  isLoading: controller.isLoading,
+                                  onRefresh: () async {
+                                    await controller.fetchNotifications();
+                                    await controller.fetchStats();
+                                  },
+                                ),
                                 Column(
                                   children: [
                                     CustomBottom(

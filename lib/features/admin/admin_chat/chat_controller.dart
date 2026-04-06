@@ -29,6 +29,7 @@ class ChatController extends GetxController {
   Timer? timer;
 
   String get lang => Get.locale?.languageCode ?? "ar";
+  var hasSelectedChat = false.obs;
 
   @override
   void onInit() {
@@ -48,7 +49,12 @@ class ChatController extends GetxController {
       currentMarketId = markets[selectedMarket.value].id;
     }
 
-    var res = await http.get(Uri.parse(AppLink.getSupermarkets));
+    var res = await http.get(
+      Uri.parse(AppLink.getSupermarkets),
+      headers: {
+        "X-API-KEY": "aX9#pL@2026",
+      },
+    );
     var data = jsonDecode(res.body);
 
     if (data["status"] == "success") {
@@ -68,9 +74,6 @@ class ChatController extends GetxController {
         }
       }
 
-      if (roomId == 0 && markets.isNotEmpty) {
-        initChat();
-      }
     }
   }
 
@@ -88,9 +91,12 @@ class ChatController extends GetxController {
 
     int marketId = markets[selectedMarket.value].id;
 
-    var res = await http.get(Uri.parse(
-        "${AppLink.getOrCreateRoom}?supermarket_id=$marketId"
-    ));
+    var res = await http.get(
+      Uri.parse("${AppLink.getOrCreateRoom}?supermarket_id=$marketId"),
+      headers: {
+        "X-API-KEY": "aX9#pL@2026",
+      },
+    );
 
     var data = jsonDecode(res.body);
 
@@ -107,15 +113,19 @@ class ChatController extends GetxController {
 
   void selectMarket(int index) {
     selectedMarket.value = index;
+    hasSelectedChat.value = true;
     initChat();
   }
 
   // تحميل الرسائل
   Future<void> loadMessages() async {
 
-    var res = await http.get(Uri.parse(
-        "${AppLink.getMessage}?room_id=$roomId&role=admin"
-    ));
+    var res = await http.get(
+      Uri.parse("${AppLink.getMessage}?room_id=$roomId&role=admin"),
+      headers: {
+        "X-API-KEY": "aX9#pL@2026",
+      },
+    );
 
     var data = jsonDecode(res.body);
 
@@ -144,6 +154,9 @@ class ChatController extends GetxController {
   Future<void> deleteMessage(int messageId, String role) async {
     await http.post(
       Uri.parse(AppLink.deleteMessage),
+      headers: {
+        "X-API-KEY": "aX9#pL@2026",
+      },
       body: {
         "message_id": messageId.toString(),
         "sender_role": role,
@@ -171,6 +184,9 @@ class ChatController extends GetxController {
 
     await http.post(
       Uri.parse(AppLink.sendMessage),
+      headers: {
+        "X-API-KEY": "aX9#pL@2026",
+      },
       body: {
         "room_id": roomId.toString(),
         "sender_id": adminId.toString(),
@@ -183,6 +199,8 @@ class ChatController extends GetxController {
 
     await loadMessages();
   }
+
+
 
   @override
   void onClose() {

@@ -17,7 +17,12 @@ class PanelCenterController extends GetxController {
     isLoading.value = true;
     try {
       final url = Uri.parse(AppLink.getProductsStats);
-      final response = await http.get(url);
+      final response = await http.get(
+        url,
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
+      );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         if (data['status'] == 'success') {
@@ -35,7 +40,12 @@ class PanelCenterController extends GetxController {
 
   Future<void> getChartData() async {
     try {
-      final response = await http.get(Uri.parse(AppLink.ordersChart));
+      final response = await http.get(
+        Uri.parse(AppLink.ordersChart),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
+      );
       final data = jsonDecode(response.body);
       if (data['status'] == 'success') {
         chartData.value = List<Map<String, dynamic>>.from(data['data']);

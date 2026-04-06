@@ -66,6 +66,9 @@ mixin OrderTable on GetxController {
     try {
       final response = await http.get(
         Uri.parse("${AppLink.ordersSearch}?query=${Uri.encodeComponent(query)}"),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
       );
 
       if (response.statusCode == 200) {

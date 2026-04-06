@@ -48,7 +48,12 @@ class PanelCenterController extends GetxController {
         url += "?supermarket_id=$supermarketId";
       }
 
-      final response = await http.get(Uri.parse(url));
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
+      );
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -82,7 +87,12 @@ class PanelCenterController extends GetxController {
         url += "?supermarket_id=$supermarketId";
       }
 
-      final response = await http.get(Uri.parse(url));
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
+      );
 
       final data = jsonDecode(response.body);
 

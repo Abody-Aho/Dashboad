@@ -9,182 +9,148 @@ import 'dart:html' as html;
 mixin OrderDialogs on GetxController {
   OrdersController get controller;
 
-  void showStatusDialog(
-    int orderId,
-    int currentStatus,
-    OrdersController controller,
-  ) {
-    int selectedStatus = currentStatus;
+  void showStatusDialog(int orderId, OrdersController controller) async {
+    // 1. إظهار لودينق مؤقت حتى تأتي البيانات
+    Get.dialog(
+      const Center(child: CircularProgressIndicator(color: Colors.green)),
+      barrierDismissible: false,
+    );
 
+    // 2. جلب البيانات من السيرفر
+    List<Map<String, dynamic>> supermarkets = await controller.getOrderSupermarkets(orderId);
+
+    // إغلاق لودينق الجلب
+    if (Get.isDialogOpen ?? false) {
+      Get.back();
+    }
+
+    if (supermarkets.isEmpty) {
+      Get.snackbar("تنبيه", "فشل في جلب بيانات المتاجر");
+      return;
+    }
+
+    // مصفوفة الحالات الثابتة
     final statuses = [
-      {
-        "id": 0,
-        "title": "pending".tr,
-        "color": Colors.orange,
-        "icon": Icons.schedule,
-      },
-      {
-        "id": 1,
-        "title": "accepted".tr,
-        "color": Colors.blue,
-        "icon": Icons.check_circle,
-      },
-      {"id": 2, "title": "ready".tr, "color": Colors.teal, "icon": Icons.store},
-      {
-        "id": 3,
-        "title": "on_delivery".tr,
-        "color": Colors.deepPurple,
-        "icon": Icons.delivery_dining,
-      },
-      {
-        "id": 4,
-        "title": "delivered".tr,
-        "color": Colors.green,
-        "icon": Icons.task_alt,
-      },
-      {
-        "id": 5,
-        "title": "cancelled".tr,
-        "color": Colors.red,
-        "icon": Icons.cancel,
-      },
+      {"id": 0, "title": "pending".tr, "color": Colors.orange},
+      {"id": 1, "title": "accepted".tr, "color": Colors.blue},
+      {"id": 2, "title": "ready".tr, "color": Colors.teal},
+      {"id": 3, "title": "on_delivery".tr, "color": Colors.deepPurple},
+      {"id": 4, "title": "delivered".tr, "color": Colors.green},
+      {"id": 5, "title": "cancelled".tr, "color": Colors.red},
     ];
 
     Get.dialog(
       Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 520),
-
+          constraints: const BoxConstraints(maxWidth: 600),
           child: Material(
             borderRadius: BorderRadius.circular(16),
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "${"change_order_status".tr} #${orderId}",
+                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 15),
 
-            child: StatefulBuilder(
-              builder: (context, setState) {
-                return Padding(
-                  padding: const EdgeInsets.all(24),
+                  // قائمة السوبرماركتس
+                  Flexible(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: supermarkets.length,
+                      itemBuilder: (context, index) {
+                        final shop = supermarkets[index];
+                        int currentStatus = int.tryParse(shop['super_order_status'].toString()) ?? 0;
 
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        "change_order_status".tr,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-
-                      const SizedBox(height: 20),
-                      Wrap(
-                        spacing: 10,
-                        runSpacing: 10,
-                        children: statuses.map((status) {
-                          bool isSelected = selectedStatus == status["id"];
-
-                          return GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                selectedStatus = status["id"] as int;
-                              });
-                            },
-
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 200),
-
-                              width: 150,
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 14,
-                                horizontal: 10,
-                              ),
-
+                        return StatefulBuilder(
+                          builder: (context, setState) {
+                            return Container(
+                              margin: const EdgeInsets.symmetric(vertical: 8),
+                              padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                color: isSelected
-                                    ? (status["color"] as Color).withValues(
-                                        alpha: .15,
-                                      )
-                                    : Colors.grey.withValues(alpha: .08),
-
+                                color: Colors.grey.withValues(alpha: .05),
                                 borderRadius: BorderRadius.circular(12),
-
-                                border: Border.all(
-                                  color: isSelected
-                                      ? status["color"] as Color
-                                      : Colors.transparent,
-                                  width: 2,
-                                ),
+                                border: Border.all(color: Colors.grey.shade200),
                               ),
-
-                              child: Column(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Icon(
-                                    status["icon"] as IconData,
-                                    color: status["color"] as Color,
-                                    size: 28,
+                                  // اسم السوبرماركت
+                                  Expanded(
+                                    child: Text(
+                                      shop['supermarket_name_ar'] ?? "متجر #${shop['super_id']}",
+                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                    ),
                                   ),
 
-                                  const SizedBox(height: 6),
+                                  // القائمة المنسدلة لاختيار الحالة
+                                  DropdownButton<int>(
+                                    value: currentStatus,
+                                    underline: const SizedBox(), // إخفاء الخط السفلي الافتراضي
+                                    items: statuses.map((status) {
+                                      return DropdownMenuItem<int>(
+                                        value: status['id'] as int,
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.circle, color: status['color'] as Color, size: 12),
+                                            const SizedBox(width: 8),
+                                            Text(status['title'] as String),
+                                          ],
+                                        ),
+                                      );
+                                    }).toList(),
+                                    onChanged: (newStatus) async {
+                                      if (newStatus != null && newStatus != currentStatus) {
+                                        // استدعاء ملف الـ php المكتوب في رسالتك لتعديل الحالة
+                                        bool success = await controller.updateSupermarketStatus(
+                                          orderId,
+                                          int.parse(shop['super_id'].toString()),
+                                          newStatus,
+                                        );
 
-                                  Text(
-                                    status["title"] as String,
-                                    style: TextStyle(
-                                      color: status["color"] as Color,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                        if (success) {
+                                          setState(() {
+                                            currentStatus = newStatus;
+                                          });
+                                          Get.snackbar("نجاح", "تم تحديث حالة المتجر بنجاح");
+                                        }
+                                      }
+                                    },
                                   ),
                                 ],
                               ),
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                      const SizedBox(height: 25),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: OutlinedButton(
-                              onPressed: () => Get.back(),
-                              child: Text(
-                                "cancel".tr,
-                                style: const TextStyle(color: Constants.text),
-                              ),
-                            ),
-                          ),
-
-                          const SizedBox(width: 10),
-
-                          Expanded(
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green,
-                              ),
-
-                              onPressed: () {
-                                controller.updateOrderStatus(
-                                  orderId,
-                                  selectedStatus,
-                                );
-
-                                Get.back();
-                              },
-
-                              child: Text(
-                                "update_status".tr,
-                                style: const TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                            );
+                          },
+                        );
+                      },
+                    ),
                   ),
-                );
-              },
+
+                  const SizedBox(height: 20),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                      onPressed: () {
+                        if (Get.isDialogOpen ?? false) {
+                          Get.back();
+                        }
+                        controller.fetchOrders(); // تحديث الجدول الرئيسي
+                      },
+                      child: Text("close".tr, style: const TextStyle(color: Colors.white)),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
-
-      barrierDismissible: false,
+      barrierDismissible: true,
     );
   }
 
@@ -195,6 +161,7 @@ mixin OrderDialogs on GetxController {
     if (items.isNotEmpty && items[0]['orders_image_pay'] != null) {
       image = items[0]['orders_image_pay'];
     }
+
     bool isImage(String file) {
       final f = file.toLowerCase();
       return f.endsWith(".jpg") ||
@@ -257,7 +224,7 @@ mixin OrderDialogs on GetxController {
 
                     const SizedBox(height: 20),
 
-                    /// ORDER INFO
+                    /// ORDER INFO (❌ حذفنا السوبر من هنا)
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
@@ -267,18 +234,8 @@ mixin OrderDialogs on GetxController {
                       child: Column(
                         children: [
                           controller.infoRow("client".tr, order['Column2']),
-                          controller.infoRow(
-                            "supermarket_text".tr,
-                            order['Column3'],
-                          ),
-                          controller.infoRow(
-                            "driver_text".tr,
-                            order['Column4'],
-                          ),
-                          controller.infoRow(
-                            "payment_text".tr,
-                            order['Column6'],
-                          ),
+                          controller.infoRow("driver_text".tr, order['Column4']),
+                          controller.infoRow("payment_text".tr, order['Column6']),
                           controller.infoRow("date_text".tr, order['Column8']),
                         ],
                       ),
@@ -286,7 +243,7 @@ mixin OrderDialogs on GetxController {
 
                     const SizedBox(height: 20),
 
-                    /// ITEMS TABLE
+                    /// 🔥 ITEMS TABLE (مع السوبر)
                     Container(
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey.shade200),
@@ -295,6 +252,7 @@ mixin OrderDialogs on GetxController {
                       child: DataTable(
                         columns: [
                           DataColumn(label: Text("product".tr)),
+                          DataColumn(label: Text("supermarket_text".tr)), // 👈 جديد
                           DataColumn(label: Text("quantity".tr)),
                           DataColumn(label: Text("price_text".tr)),
                           DataColumn(label: Text("total".tr)),
@@ -303,15 +261,23 @@ mixin OrderDialogs on GetxController {
                           return DataRow(
                             cells: [
                               DataCell(Text(item['item_name_ar'] ?? '-')),
+
+                              /// 🔥 اسم السوبر
+                              DataCell(
+                                Text(item['supermarket_name_ar'] ?? '-'),
+                              ),
+
                               DataCell(
                                 Text((item['quantity'] ?? 0).toString()),
                               ),
+
                               DataCell(
                                 Text(
                                   (item['item_price_after_discount'] ?? 0)
                                       .toString(),
                                 ),
                               ),
+
                               DataCell(
                                 Text(
                                   (item['total_items_price'] ?? 0).toString(),
@@ -353,7 +319,7 @@ mixin OrderDialogs on GetxController {
 
                     const SizedBox(height: 20),
 
-                    /// 🔥 PAYMENT IMAGE SECTION
+                    /// PAYMENT IMAGE
                     if (image != null && image.isNotEmpty)
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -367,8 +333,6 @@ mixin OrderDialogs on GetxController {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(12),
                             child: isImage(image)
-
-                            /// 🖼️ صورة
                                 ? InteractiveViewer(
                               child: Image.network(
                                 fileUrl,
@@ -377,14 +341,12 @@ mixin OrderDialogs on GetxController {
                                 fit: BoxFit.contain,
                               ),
                             )
-
-
                                 : isPdf(image)
                                 ? Column(
                               children: [
-                                const Icon(Icons.picture_as_pdf, size: 80, color: Colors.red),
+                                const Icon(Icons.picture_as_pdf,
+                                    size: 80, color: Colors.red),
                                 const SizedBox(height: 10),
-
                                 ElevatedButton(
                                   onPressed: () {
                                     html.window.open(fileUrl, "_blank");
@@ -393,16 +355,16 @@ mixin OrderDialogs on GetxController {
                                 ),
                               ],
                             )
-
-                            ///  غير مدعوم
                                 : Container(
                               height: 120,
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 color: Colors.grey.shade100,
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius:
+                                BorderRadius.circular(12),
                               ),
-                              child: const Text("نوع الملف غير مدعوم"),
+                              child:
+                              const Text("نوع الملف غير مدعوم"),
                             ),
                           )
                         ],
@@ -425,7 +387,7 @@ mixin OrderDialogs on GetxController {
 
                     const SizedBox(height: 20),
 
-                    /// CLOSE BUTTON
+                    /// CLOSE
                     Align(
                       alignment: Alignment.centerLeft,
                       child: ElevatedButton.icon(
@@ -447,7 +409,6 @@ mixin OrderDialogs on GetxController {
           ),
         ),
       ),
-      barrierDismissible: true,
     );
   }
 
@@ -672,7 +633,9 @@ mixin OrderDialogs on GetxController {
                                               controller.deleteCoupon(
                                                 int.parse(item['id']),
                                               );
-                                              Get.back();
+                                              if (Get.isDialogOpen ?? false) {
+                                                Get.back();
+                                              }
                                             },
                                             child: Text("delete_text".tr),
                                           ),
@@ -836,7 +799,9 @@ mixin OrderDialogs on GetxController {
                             "expire": expire.text.trim(),
                           });
 
-                          Get.back();
+                          if (Get.isDialogOpen ?? false) {
+                            Get.back();
+                          }
                         },
                         child: Text(
                           "save".tr,

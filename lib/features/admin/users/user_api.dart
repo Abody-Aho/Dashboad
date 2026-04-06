@@ -30,6 +30,9 @@ mixin UserApi on GetxController {
     try {
       final response = await http.get(
         Uri.parse("${AppLink.searchUsers}?query=${Uri.encodeComponent(query)}"),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
       );
 
       if (response.statusCode == 200) {
@@ -40,22 +43,34 @@ mixin UserApi on GetxController {
 
           filteredDataList.assignAll(
             data.map<Map<String, String>>((user) {
+
+              // تنظيف القيمة وتحويلها لأحرف صغيرة لضمان صحة المقارنة
+              final String statusValue = controller.clean(user['status']).toLowerCase();
+
               return {
-                'id': user['id']?.toString() ?? '',
-                'role_raw': user['role']?.toString() ?? '',
-                'name': user['name']?.toString() ?? '',
-                'name_ar': user['name_ar']?.toString() ?? '',
-                'image': user['image']?.toString() ?? '',
-                'vehicle_number': user['vehicle_number']?.toString() ?? '',
-                'license': user['license']?.toString() ?? '',
-                'supermarket_location': user['supermarket_location']?.toString() ?? '',
-                'supermarket_time_open': user['supermarket_time_open']?.toString() ?? '',
-                'Column1': user['role'] == 'supermarket' ? (user['name_ar'] ?? '') : (user['name'] ?? ''),
-                'Column2': user['email']?.toString() ?? '-',
-                'Column3': user['phone']?.toString() ?? '-',
-                'Column4': user['role']?.toString() ?? '',
-                'Column5': user['status'].toString() == '1' ? 'active'.tr : 'inactive'.tr,
-                'Column6': formatDate(user['created_at']),
+                'id': controller.clean(user['id']),
+                'role_raw': controller.clean(user['role']),
+                'name': controller.clean(user['name']),
+                'name_ar': controller.clean(user['name_ar']),
+                'image': controller.clean(user['image']),
+                'vehicle_number': controller.clean(user['vehicle_number']),
+                'license': controller.clean(user['license']),
+                'supermarket_location': controller.clean(user['supermarket_location']),
+                'supermarket_time_open': controller.clean(user['supermarket_time_open']),
+
+                'Column1': user['role'] == 'supermarket'
+                    ? controller.clean(user['name_ar'])
+                    : controller.clean(user['name']),
+
+                'Column2': controller.clean(user['email']),
+                'Column3': controller.clean(user['phone']),
+                'Column4': controller.clean(user['role']),
+
+                'Column5': (statusValue == '1' || statusValue == 'active')
+                    ? 'active'.tr
+                    : 'inactive'.tr,
+
+                'Column6': formatDate(controller.clean(user['created_at'])),
               };
             }).toList(),
           );
@@ -76,7 +91,12 @@ mixin UserApi on GetxController {
     try {
       controller.isStatusLoading.value = true;
 
-      final response = await http.get(Uri.parse(AppLink.usersStats));
+      final response = await http.get(
+        Uri.parse(AppLink.usersStats),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
+      );
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -108,6 +128,9 @@ mixin UserApi on GetxController {
 
       final response = await http.post(
         Uri.parse(AppLink.delete),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
         body: {"id": id, "role": role},
       );
 
@@ -136,6 +159,9 @@ mixin UserApi on GetxController {
     try {
       final response = await http.post(
         Uri.parse(AppLink.status),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
         body: {"id": id, "status": newStatus, "role": role},
       );
 
@@ -168,7 +194,13 @@ mixin UserApi on GetxController {
     try {
       isLoading.value = true;
       for (var user in selectedUsers) {
-        await http.post(Uri.parse(AppLink.status), body: {"id": user['id'], "status": status, "role": user['role_raw']});
+        await http.post(
+          Uri.parse(AppLink.status),
+          headers: {
+            "X-API-KEY": "aX9#pL@2026",
+          },
+          body: {"id": user['id'], "status": status, "role": user['role_raw']}
+        );
       }
       await fetchUsers();
       Get.snackbar("تم", "تم تحديث حالة المستخدمين");
@@ -186,7 +218,13 @@ mixin UserApi on GetxController {
     try {
       isLoading.value = true;
       for (var user in selectedUsers) {
-        await http.post(Uri.parse(AppLink.delete), body: {"id": user['id'], "role": user['role_raw']});
+        await http.post(
+          Uri.parse(AppLink.delete),
+          headers: {
+            "X-API-KEY": "aX9#pL@2026",
+          },
+          body: {"id": user['id'], "role": user['role_raw']}
+        );
       }
       await fetchUsers();
       Get.snackbar("تم", "تم حذف المستخدمين المحددين");

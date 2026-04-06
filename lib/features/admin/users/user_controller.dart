@@ -29,6 +29,13 @@ class UserController extends GetxController with UserApi, UserForm, UserTable, U
     fetchStats();
   }
 
+  String clean(dynamic value) {
+    if (value == null) return '';
+    final v = value.toString().trim();
+    if (v.isEmpty || v.toLowerCase() == 'null') return '';
+    return v;
+  }
+
   // ======================= API =======================
   @override
   Future<void> fetchUsers({String? role}) async {
@@ -47,7 +54,10 @@ class UserController extends GetxController with UserApi, UserForm, UserTable, U
 
       final response = await http.get(
         uri,
-        headers: {'Accept': 'application/json'},
+        headers: {
+          'Accept': 'application/json',
+          "X-API-KEY": "aX9#pL@2026",
+        },
       );
 
       if (response.statusCode == 200) {
@@ -59,26 +69,31 @@ class UserController extends GetxController with UserApi, UserForm, UserTable, U
           dataList.assignAll(
             users.map<Map<String, String>>((user) {
               return {
-                'id': user['id']?.toString() ?? '',
-                'role_raw': user['role']?.toString() ?? '',
-                'name': user['name']?.toString() ?? '',
-                'name_ar': user['name_ar']?.toString() ?? '',
-                'image': user['image']?.toString() ?? '',
-                'license': user['license']?.toString() ?? '',
-                'rating_avg': user['rating_avg']?.toString() ?? '',
-                'vehicle_number': user['vehicle_number']?.toString() ?? '',
-                'supermarket_location': user['supermarket_location']?.toString() ?? '',
-                'supermarket_time_open': user['supermarket_time_open']?.toString() ?? '',
-                'Column4': user['role']?.toString() ?? '',
+                'id': clean(user['id']),
+                'role_raw': clean(user['role']),
+                'name': clean(user['name']),
+                'name_ar': clean(user['name_ar']),
+                'image': clean(user['image']),
+                'license': clean(user['license']),
+                'rating_avg': clean(user['rating_avg']),
+                'vehicle_number': clean(user['vehicle_number']),
+                'supermarket_location': clean(user['supermarket_location']),
+                'supermarket_time_open': clean(user['supermarket_time_open']),
+
+                'Column4': clean(user['role']),
+
                 'Column1': user['role'] == 'supermarket'
-                    ? user['name_ar'] ?? ''
-                    : user['name'] ?? '',
-                'Column2': user['email'] ?? '-',
-                'Column3': user['phone'] ?? '-',
+                    ? clean(user['name_ar'])
+                    : clean(user['name']),
+
+                'Column2': clean(user['email']),
+                'Column3': clean(user['phone']),
+
                 'Column5': user['status'].toString() == '1'
                     ? 'active'.tr
                     : 'inactive'.tr,
-                'Column6': _formatDate(user['created_at']),
+
+                'Column6': _formatDate(clean(user['created_at'])),
               };
             }).toList(),
           );

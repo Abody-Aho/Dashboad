@@ -111,7 +111,6 @@ class ProductsSupermarketController extends GetxController with ProductSupermark
     selectedCategoryAllId.value = null;
     imageBytes.value = null;
     imageName = "";
-
   }
   void resetDialogState() {
 

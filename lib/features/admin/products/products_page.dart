@@ -9,6 +9,7 @@ import '../../widgets/custom_bottom.dart';
 import '../../widgets/custom_card.dart';
 import '../../widgets/custom_dropdown_button.dart';
 import '../../widgets/custom_search_bar.dart';
+import '../../widgets/refresh_button.dart';
 import '../../widgets/responsive_grid.dart';
 
 class ProductsPage extends StatelessWidget {
@@ -94,6 +95,13 @@ class ProductsPage extends StatelessWidget {
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
+                                RefreshButton(
+                                  isLoading: controller.isLoading,
+                                  onRefresh: () async {
+                                    await controller.fetchProducts();
+                                    await controller.fetchStats();
+                                  },
+                                ),
                                 CustomSearchBar(
                                   controller: controller,
                                   hintText: 'search'.tr,
@@ -158,6 +166,13 @@ class ProductsPage extends StatelessWidget {
                             return Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
+                                RefreshButton(
+                                  isLoading: controller.isLoading,
+                                  onRefresh: () async {
+                                    await controller.fetchProducts();
+                                    await controller.fetchStats();
+                                  },
+                                ),
                                 Column(
                                   children: [
                                     CustomBottom(

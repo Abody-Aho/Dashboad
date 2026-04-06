@@ -197,6 +197,10 @@ mixin UserForm on GetxController {
         ),
       );
 
+      request.headers.addAll({
+        "X-API-KEY": "aX9#pL@2026",
+      });
+
       request.fields['id'] = user.id.toString();
       request.fields['role'] = user.role;
 

@@ -300,6 +300,9 @@ class AuthController extends GetxController {
     if (token == null) return;
     await http.post(
       Uri.parse(AppLink.saveToken),
+      headers: {
+        "X-API-KEY": "aX9#pL@2026",
+      },
       body: {"id": user.id.toString(), "role": user.role, "token": token},
     );
   }
@@ -351,6 +354,9 @@ class AuthController extends GetxController {
       final uid = credential.user!.uid;
 
       var request = http.MultipartRequest("POST", Uri.parse(AppLink.signup));
+      request.headers.addAll({
+        "X-API-KEY": "aX9#pL@2026",
+      });
       request.fields['firebase_uid'] = uid;
       request.fields['name'] = nameController.text.trim();
       request.fields['name_ar'] = nameArController.text.trim();

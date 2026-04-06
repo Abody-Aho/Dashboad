@@ -17,7 +17,12 @@ mixin OrderSupermarketApi on GetxController {
       String url = AppLink.ordersStats;
 
 
-      final res = await http.get(Uri.parse("$url?supermarket_id=$supermarketId"));
+      final res = await http.get(
+        Uri.parse("$url?supermarket_id=$supermarketId"),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
+      );
       final data = jsonDecode(res.body);
 
       if (data['status'] == 'success') {
@@ -40,6 +45,9 @@ mixin OrderSupermarketApi on GetxController {
 
       final response = await http.post(
         Uri.parse(AppLink.ordersViewSupermarket),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
         body: {"supermarket_id": controller.supermarketId.toString()},
       );
 
@@ -81,6 +89,9 @@ mixin OrderSupermarketApi on GetxController {
     try {
       final response = await http.post(
         Uri.parse(AppLink.updateStatusSuper),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
         body: {
           "order_id": orderId.toString(),
           "status": status.toString(),
@@ -115,6 +126,9 @@ mixin OrderSupermarketApi on GetxController {
     try {
       final response = await http.post(
         Uri.parse(AppLink.deleteSuperOrder),
+        headers: {
+          "X-API-KEY": "aX9#pL@2026",
+        },
         body: {
           "order_id": orderId.toString(),
         },
@@ -149,6 +163,9 @@ mixin OrderSupermarketApi on GetxController {
   Future<List<Map<String, dynamic>>> getOrderItems(int orderId) async {
     final response = await http.post(
       Uri.parse(AppLink.ordersViewDetails),
+      headers: {
+        "X-API-KEY": "aX9#pL@2026",
+      },
       body: {
         "order_id": orderId.toString(),
       },
